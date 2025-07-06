@@ -28,6 +28,14 @@ const SettingsView = () => {
     alert('Token saved!');
   };
 
+  // TODO: patch request function
+  const blabla = async () => {
+    const token = await electronAPI.get_value("apiToken");
+
+    //TODO: post a new tag to database via vat api
+    // just vibe code a post request
+  };
+
   return (
     <div className="view-content">
       <div className="panel-header">
