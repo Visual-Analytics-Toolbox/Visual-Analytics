@@ -1,0 +1,70 @@
+.frame_button_list_container {
+    width: 100%;
+    max-width: 100vw;
+    /* Ensure it doesn't overflow */
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.virtualized_list_wrapper {
+    width: 100%;
+    height: 60px;
+    /* This sets the visible height for the virtualized list */
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Important for AutoSizer */
+}
+
+/* Styling for the individual buttons */
+.frame_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    /* Actual button height */
+    margin: 5px 4px;
+    /* Adjust margin to fit ITEM_WIDTH */
+    padding: 0 5px;
+    border: 1px solid #007bff;
+    background-color: #e6f2ff;
+    color: #007bff;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    flex-shrink: 0;
+    /* Prevent shrinking within flex container (react-window creates flex context) */
+    box-sizing: border-box;
+    white-space: nowrap;
+    /* Prevent text wrapping */
+}
+
+.frame_button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.frame_button:active {
+    background-color: #0056b3;
+}
+
+/* Custom scrollbar styling (optional, but good for aesthetics) */
+.frame_list_scrollbar::-webkit-scrollbar {
+    height: 10px;
+    /* For horizontal scrollbar */
+}
+
+.frame_list_scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.frame_list_scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.frame_list_scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
