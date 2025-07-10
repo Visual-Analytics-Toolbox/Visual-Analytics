@@ -1,6 +1,10 @@
 import pytest
 import json
+import factory
 from .factories import AnnotationFactory
+from ..image.factories import NaoImageFactory
+from ..cognition.factories import CognitionFrameFactory
+from ..common.factories import LogFactory
 from annotation.models import Annotation
 
 pytestmark = pytest.mark.django_db
@@ -23,28 +27,25 @@ class TestAnnotationViews:
 
     def test_annotation_viewset_list_and_filter(self, auth_client):
         ann1 = AnnotationFactory.create()
-        ann2 = AnnotationFactory.create()
+        AnnotationFactory.create()
         response = auth_client.get('/api/annotations/')
         assert response.status_code == 200
-        assert len(json.loads(response.content)) >= 2
+        assert len(json.loads(response.content)) == 2
         # Filter by image
         response = auth_client.get('/api/annotations/', {'image': ann1.image.id})
         assert response.status_code == 200
         assert all(a['image'] == ann1.image.id for a in json.loads(response.content))
-
+   
+    
     def test_annotation_viewset_create_and_duplicate(self, admin_client):
-        ann = AnnotationFactory.build()
-        data = {
-            'image': ann.image.id,
-            'type': ann.type,
-            'class_name': ann.class_name,
-            'concealed': ann.concealed,
-            'data': ann.data,
-        }
-        response = admin_client.post('/api/annotations/', data, format='json')
+         # we need to do create to insert related data into db otherwise post is not working for this annotation
+        img = NaoImageFactory.create()
+        # we can create JSON Objects directly with factory boy
+        ann = factory.build(dict,FACTORY_CLASS=AnnotationFactory,image=img.id)
+        response = admin_client.post('/api/annotations/', ann, format='json')
         assert response.status_code == 201
         # Try to create duplicate
-        response2 = admin_client.post('/api/annotations/', data, format='json')
+        response2 = admin_client.post('/api/annotations/', ann, format='json')
         assert response2.status_code == 200
         assert response2.json()['id'] == response.json()['id']
 
@@ -57,6 +58,40 @@ class TestAnnotationViews:
         assert any(str(ann.image.frame.log.id) in link for link in data['result'])
 
     def test_annotation_task_prio_only(self, auth_client):
-        response = auth_client.get('/api/annotation-task/', {'prio_only': 'true'})
+        log = LogFactory.create(is_favourite=False)
+        frame = CognitionFrameFactory.create(log=log)
+        image = NaoImageFactory.create(frame=frame)
+        AnnotationFactory.create_batch(4,image=image,validated=False)
+        response = auth_client.get('/api/annotation-task/', {'prio_only': "true"})
         assert response.status_code == 200
         assert json.loads(response.content)['result'] == []
+        log = LogFactory.create(is_favourite=True)
+        frame = CognitionFrameFactory.create(log=log)
+        image = NaoImageFactory.create(frame=frame)
+        AnnotationFactory.create_batch(5,image=image,validated=False)
+        response = auth_client.get('/api/annotation-task/', {'prio_only': "true"})
+        assert response.status_code == 200
+        assert len(json.loads(response.content)['result']) == 5
+        
+
+    def test_validate(self,admin_client):
+        ann = AnnotationFactory.create(validated=False)
+        data = {'validated':'true'}
+        response = admin_client.patch(f'/api/annotations/{ann.id}/',data,format='json')
+        assert response.status_code == 200
+        assert Annotation.objects.get(id=ann.id).validated
+
+    def test_move(self,admin_client):
+        ann = AnnotationFactory.create(validated=False)
+        data = {'data':factory.build(dict,FACTORY_CLASS=AnnotationFactory).get('data')}
+        print(data)
+        response = admin_client.patch(f'/api/annotations/{ann.id}/',data,format='json')
+        assert response.status_code == 200
+        assert Annotation.objects.get(id=ann.id).data == data.get('data')
+
+    def test_delete(self,admin_client):
+        ann = AnnotationFactory.create()
+        response = admin_client.delete(f'/api/annotations/{ann.id}/')
+        assert response.status_code == 204
+        assert Annotation.objects.filter(id=ann.id).count() == 0
+    
