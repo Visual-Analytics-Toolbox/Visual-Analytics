@@ -156,3 +156,17 @@ class LogStatus(models.Model):
 
     class Meta:
         verbose_name_plural = "Log status"
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+
+    def __str__(self):
+        return self.name
