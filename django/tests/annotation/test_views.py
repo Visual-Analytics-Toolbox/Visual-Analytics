@@ -36,7 +36,6 @@ class TestAnnotationViews:
         assert response.status_code == 200
         assert all(a['image'] == ann1.image.id for a in json.loads(response.content))
    
-    
     def test_annotation_viewset_create_and_duplicate(self, admin_client):
          # we need to do create to insert related data into db otherwise post is not working for this annotation
         img = NaoImageFactory.create()

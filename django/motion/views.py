@@ -11,7 +11,6 @@ from django.apps import apps
 from psycopg2.extras import execute_values
 from pathlib import Path
 import mmap
-from django.db.models.query import QuerySet
 
 
 class CustomPagination(PageNumberPagination):

@@ -8,10 +8,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from django.db.models import Q, Count
 from django.db import connection
 from psycopg2.extras import execute_values
-import random
 from . import serializers
 from . import models
-from rest_framework.decorators import authentication_classes, permission_classes
 import time
 from behavior.models import BehaviorFrameOption
 from cognition.models import CognitionFrame
