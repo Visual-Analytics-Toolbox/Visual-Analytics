@@ -9,10 +9,12 @@ class AnnotationSerializer(serializers.ModelSerializer):
     frame_number = serializers.CharField(read_only=True)
     tags = TagSerializer(many=True, read_only=True) 
 
-    tag_ids = serializers.ListField(
-        child=serializers.IntegerField(), 
-        write_only=True,
-        required=False 
+    tag_ids = serializers.PrimaryKeyRelatedField(
+        many=True, 
+        write_only=True, 
+        queryset=Tag.objects.all(),
+        source='tags', 
+        required=False
     )
 
     class Meta:
@@ -21,19 +23,3 @@ class AnnotationSerializer(serializers.ModelSerializer):
 
     def get_color(self, obj):
         return Annotation.Classes.get_color(obj.class_name)
-    
-    def update(self, instance, validated_data):
-        """
-        Handle the update logic for the Annotation and its tags.
-        """
-        tag_ids = validated_data.pop('tag_ids', None)
-
-        annotation_instance = super().update(instance, validated_data)
-
-        # If tag_ids were provided in the PATCH request, update the relationship.
-        if tag_ids is not None:
-            # we don't do anything if a tag does not exist
-            if Tag.objects.filter(id__in=tag_ids).count() == len(tag_ids):
-                annotation_instance.tags.set(tag_ids)
-
-        return annotation_instance

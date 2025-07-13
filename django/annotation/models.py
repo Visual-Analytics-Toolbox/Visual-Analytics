@@ -98,7 +98,8 @@ class VideoAnnotation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-#we can filter for Annotations with a specific tag like this Annotation.objects.filter(tags__tag__name=tag_name_to_find)
+#we can filter for Annotations with a specific tag like this Annotation.objects.filter(tags__name=tag_name_to_find)
+#we probably don't need a backwards relation here since we already use a many to many field
 class AnnotationTag(models.Model):
     annotation = models.ForeignKey(Annotation,on_delete=models.CASCADE,related_name='tag_links')
     tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='annotation_links')

@@ -21,7 +21,11 @@ class NaoImage(models.Model):
     blurredness_value = models.IntegerField(blank=True, null=True)
     brightness_value = models.IntegerField(blank=True, null=True)
     resolution = models.CharField(max_length=11, blank=True, null=True)  # 1640x1480x2
-
+    tags = models.ManyToManyField(
+        Tag,
+        through='NaoImageTag',
+        related_name='images_set'
+    )
     class Meta:
         unique_together = ("frame", "camera", "type")
 
@@ -32,10 +36,11 @@ class NaoImage(models.Model):
     def frame_number(self):
         return self.frame.frame_number
 
-#we can filter for images with a specific tag like this NaoImage.objects.filter(tags__tag__name=tag_name_to_find)
+#we can filter for images with a specific tag like this NaoImage.objects.filter(tags__name=tag_name_to_find)
+#we probably don't need a backwards relation here since we already use a many to many field
 class NaoImageTag(models.Model):
-    image = models.ForeignKey(NaoImage,on_delete=models.CASCADE,related_name='tags')
-    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='images')
+    image = models.ForeignKey(NaoImage,on_delete=models.CASCADE,related_name='tag_link')
+    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='images_link')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

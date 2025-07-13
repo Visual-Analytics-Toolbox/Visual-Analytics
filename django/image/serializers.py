@@ -5,11 +5,15 @@ from common.models import Tag
 
 class ImageSerializer(serializers.ModelSerializer):
     frame_number = serializers.ReadOnlyField()
-    tags = serializers.SerializerMethodField()
+    tags = TagSerializer(many=True, read_only=True) 
+
+    tag_ids = serializers.PrimaryKeyRelatedField(
+        many=True, 
+        write_only=True, 
+        queryset=Tag.objects.all(),
+        source='tags', 
+        required=False
+    )
     class Meta:
         model = NaoImage
         fields = "__all__"
-
-    def get_tags(self, obj):
-        tags = Tag.objects.filter(images__image=obj)
-        return TagSerializer(tags, many=True).data
