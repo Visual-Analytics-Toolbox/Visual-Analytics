@@ -59,6 +59,11 @@ class Annotation(models.Model):
     # labels = models.JSONField(blank=True, null=True)
     validated = models.BooleanField(default=False)
     data = models.JSONField(blank=True, null=True)
+    tags = models.ManyToManyField(
+        Tag,
+        through='AnnotationTag',
+        related_name='annotations_set'
+    )
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -95,8 +100,8 @@ class VideoAnnotation(models.Model):
 
 #we can filter for Annotations with a specific tag like this Annotation.objects.filter(tags__tag__name=tag_name_to_find)
 class AnnotationTag(models.Model):
-    annotation = models.ForeignKey(Annotation,on_delete=models.CASCADE,related_name='tags')
-    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='annotations')
+    annotation = models.ForeignKey(Annotation,on_delete=models.CASCADE,related_name='tag_links')
+    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='annotation_links')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
