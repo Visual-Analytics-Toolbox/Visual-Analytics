@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Annotation,AnnotationTag
+from .models import Annotation
 from common.serializers import TagSerializer
 from common.models import Tag
 
