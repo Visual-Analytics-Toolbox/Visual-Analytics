@@ -288,18 +288,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         if is_many:
             return self.bulk_update()
         else:
-            return self.single_update()
-
-    def single_update(self):
-        image_id = self.kwargs["pk"]  # image id from the url: /api/image/17018/
-        data = self.request.data
-
-        #
-        update_fields = {k: v for k, v in data.items()}
-        updated = models.NaoImage.objects.filter(id=image_id).update(**update_fields)
-        # FIXME can we use get instead of filter and can we return the image we updated here???
-        status_code = status.HTTP_201_CREATED if updated else status.HTTP_200_OK
-        return Response({}, status=status_code)
+            return super().update(request, *args, **kwargs)
 
     def single_create(self, data):
         serializer = self.get_serializer(data, many=False)

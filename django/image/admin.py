@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import NaoImage
+from .models import NaoImage,NaoImageTag
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import SingleNumericFilter
 
@@ -24,5 +24,7 @@ class ImageAdmin(ModelAdmin):
     get_log_id.short_description = "Log ID"
     get_frame_number.short_description = "Frame Number"
 
-
+@admin.register(NaoImageTag)
+class UnfoldAdminClass(ModelAdmin):
+    raw_id_fields = ("image",)
 admin.site.register(NaoImage, ImageAdmin)

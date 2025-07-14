@@ -84,3 +84,9 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
         fields = "__all__"
+
+class TagSerializer(serializers.ModelSerializer):
+    """Used for reading/displaying tags."""
+    class Meta:
+        model = models.Tag
+        fields = ['id', 'name']

@@ -332,3 +332,7 @@ class VideoViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status_code)
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = models.Tag.objects.all()
+    serializer_class = serializers.TagSerializer
