@@ -5,9 +5,8 @@
     "main": "electron/main/index.js",
     "type": "module",
     "scripts": {
-        "dev:web": "vite --mode web",
-        "dev:electron-renderer": "cross-env VITE_APP_TARGET=electron vite --mode electron",
-        "dev:electron": "npm run dev:electron-renderer && electron .",
+        "web": "vite --mode web",
+        "ui": "cross-env VITE_APP_TARGET=electron vite --mode electron",
         "build:web": "vite build --mode web",
         "build:electron-renderer": "cross-env VITE_APP_TARGET=electron vite build --mode electron",
         "build:electron-main": "electron-builder --dir",
@@ -24,21 +23,21 @@
     "dependencies": {
         "@electron-toolkit/preload": "^3.0.1",
         "@electron-toolkit/utils": "^4.0.0",
-        "@primer/octicons-react": "^19.15.3",
-        "@tanstack/react-query": "^5.80.10",
+        "@primer/octicons-react": "^19.15.5",
+        "@tanstack/react-query": "^5.83.0",
         "electron-conf": "^1.3.0",
         "express": "^5.1.0",
-        "react-konva": "^19.0.6",
+        "react-konva": "^19.0.7",
         "react-resizable-panels": "^3.0.3",
-        "react-router-dom": "^7.6.2"
+        "react-router-dom": "^7.7.1"
     },
     "devDependencies": {
-        "@vitejs/plugin-react": "^4.3.4",
-        "cross-env": "^7.0.3",
-        "electron": "^35.1.5",
-        "electron-builder": "^25.1.8",
-        "react": "^19.1.0",
-        "react-dom": "^19.1.0",
-        "vite": "^6.2.6"
+        "@vitejs/plugin-react": "^4.7.0",
+        "cross-env": "^10.0.0",
+        "electron": "^37.2.4",
+        "electron-builder": "^26.0.12",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "vite": "^7.0.6"
     }
 }
