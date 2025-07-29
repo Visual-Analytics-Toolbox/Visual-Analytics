@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from './EventCard.module.css';
 import robocup_img from '@shared/assets/robocup.jpeg';
 
-const EventCard = ({ event }) => {
+export const EventCard = ({ event }) => {
     const navigate = useNavigate();
 
     return (
@@ -23,4 +23,20 @@ const EventCard = ({ event }) => {
     );
 };
 
-export default EventCard;
+export const CreateEventCard = () => {
+    return (
+        <div className={styles.event_card}>
+            <div className={styles.event_header}>
+                <img src={robocup_img} alt="RoboCup Image" />
+            </div>
+            <div className={styles.event_content}>
+                <p className={styles.event_title}>
+                    Create Event
+                </p>
+            </div>
+            <div className={styles.event_footer}>
+                <progress className={styles.event_progressbar} value="40" max="100">40%</progress>
+            </div>
+        </div>
+    );
+};

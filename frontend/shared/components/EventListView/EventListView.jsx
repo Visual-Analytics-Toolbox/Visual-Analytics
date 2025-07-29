@@ -1,6 +1,6 @@
 
 import { useQuery } from '@tanstack/react-query';
-import EventCard from '@shared/components/EventCard/EventCard';
+import { EventCard, CreateEventCard } from '@shared/components/EventCard/EventCard';
 import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
 
 import styles from './EventListView.module.css';
@@ -39,15 +39,19 @@ const EventListView = () => {
       </div>
       <div className={styles.projects_section}>
         <div className={`${styles.project_boxes} ${styles.jsGridView}`}>
+
           {events.isLoading ? (
             <SkeletonCard />
           ) : events.data.length > 0 ? (
-            events.data.map((event) => (
-              <EventCard
-                event={event}
-                key={event.name}
-              ></EventCard>
-            ))
+            <>
+              {events.data.map((event) => (
+                <EventCard
+                  event={event}
+                  key={event.name}
+                ></EventCard>
+              ))}
+              <CreateEventCard />
+            </>
           ) : (
             <div className={styles.emptyState}>
               No events found
@@ -55,7 +59,7 @@ const EventListView = () => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
