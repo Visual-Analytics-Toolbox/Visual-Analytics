@@ -12,7 +12,7 @@ import VideoPlayerCanvas from '@shared/components/VideoPlayerCanvas/VideoPlayerC
 
 import { Routes, Route } from "react-router-dom";
 
-const ResizableLayoutContent = ({ appVersion }) => {
+const MainLayout = ({ appVersion }) => {
   const containerRef = useRef(null);
 
   return (
@@ -39,10 +39,4 @@ const ResizableLayoutContent = ({ appVersion }) => {
   );
 };
 
-const ResizableLayout = ({ appVersion }) => {
-  return (
-    <ResizableLayoutContent appVersion={appVersion} />
-  );
-};
-
-export default ResizableLayout;
+export default MainLayout;
