@@ -5,3 +5,36 @@
     padding: 16px;
     margin: 10px;
 }
+
+.form_group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.form_group label {
+    font-size: 0.95em;
+    color: #fff;
+    min-width: 70px;
+    /* Align labels */
+}
+
+.form_group input {
+    padding: 5px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95em;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-sizing: border-box;
+    /* Ensure padding and border are included in the element's total width and height */
+}
+
+.form_group button {
+    font-size: 0.95em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px 12px;
+}

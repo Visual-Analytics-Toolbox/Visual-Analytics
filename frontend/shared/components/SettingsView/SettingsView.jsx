@@ -35,25 +35,29 @@ const SettingsView = () => {
       </div>
       <div className="panel-content">
         <div className={styles.info_card}>
-          <label>Api Token: </label>
-          <input
-            type="password"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            placeholder="Enter API token"
-          />
-          <button onClick={handleSave}>Save</button>
+          <h2>Backend Settings</h2>
+          <div className={styles.form_group}>
+            <label>Api Token: </label>
+            <input
+              type="password"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="Enter API token"
+            />
+            <button onClick={handleSave}>Save</button>
+          </div>
+          <div className={styles.form_group}>
+            <label>Log Folder: </label>
+            <input
+              type="text"
+              value={log_root}
+              onChange={(e) => setlogRoot(e.target.value)}
+              placeholder="Enter Root of log folder"
+            />
+            <button onClick={handleSave}>Save</button>
+          </div>
         </div>
-        <div className={styles.info_card}>
-          <label>Log Folder: </label>
-          <input
-            type="text"
-            value={log_root}
-            onChange={(e) => setlogRoot(e.target.value)}
-            placeholder="Enter Root of log folder"
-          />
-          <button onClick={handleSave}>Save</button>
-        </div>
+
       </div>
     </div>
   );
