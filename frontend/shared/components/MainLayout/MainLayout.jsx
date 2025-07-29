@@ -24,30 +24,10 @@ const ResizableLayoutContent = ({ appVersion }) => {
         <Routes>
           <Route path="/" element={<HomeView />} />
           <Route element={<EventListView />} />
-          <Route
-            path="/events"
-            element={
-              <EventListView />
-            }
-          />
-          <Route
-            path="/events/:id"
-            element={
-              <GameListView />
-            }
-          />
-          <Route
-            path="/games/:id"
-            element={
-              <LogListView />
-            }
-          />
-          <Route
-            path="/video/:id"
-            element={
-              <VideoAnalysisView />
-            }
-          />
+          <Route path="/events" element={<EventListView />} />
+          <Route path="/events/:id" element={<GameListView />} />
+          <Route path="/games/:id" element={<LogListView />} />
+          <Route path="/video/:id" element={<VideoAnalysisView />} />
           <Route path="/settings" element={<SettingsView />} />
           <Route path="/debug" element={<DebuggerView />} />
         </Routes>
