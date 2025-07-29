@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path';
 
 // Determine if we are building for Electron or Web based on an environment variable
@@ -7,7 +8,7 @@ import { resolve } from 'path';
 const isElectron = process.env.VITE_APP_TARGET === 'electron';
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [tailwindcss(), react(),],
     // Set the root directory for Vite based on the target.
     // This tells Vite where to find the index.html for the dev server
     // and how to resolve paths starting with '/' in your HTML/JS files.
@@ -18,6 +19,8 @@ export default defineConfig({
 
     resolve: {
         alias: {
+            // important for shadcn
+            "@": resolve(__dirname, "shared"),
             // Alias for shared components to simplify imports
             '@shared': resolve(__dirname, 'shared'),
             // Alias for web-specific code

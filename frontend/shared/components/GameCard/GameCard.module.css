@@ -7,7 +7,7 @@
 }
 
 .event_header {
-  
+
   flex-direction: column;
   display: flex;
   position: relative;
@@ -22,13 +22,13 @@
 .event_header h2 {
   color: white;
   text-align: center;
-  font-size: 1.2rem;;
+  font-size: 1.2rem;
 }
 
 .event_header h3 {
   color: white;
   text-align: center;
-  font-size: 1.0rem;;
+  font-size: 1.0rem;
 }
 
 .event_content {
@@ -38,7 +38,8 @@
   display: inline-flex;
   justify-content: space-between;
 }
-.my_button{
+
+.my_button {
   background-color: #3e3e42;
   padding: 8px;
   border-radius: 8px;
@@ -49,9 +50,8 @@
   color: black;
 }
 
-.event_content a{
+.event_content a {
   color: white;
-  
 }
 
 .event_footer {
@@ -67,10 +67,10 @@
 }
 
 .event_progressbar::-webkit-progress-bar {
-    height: 8px;
-    border-radius: 8px;
-    width: 100%;
-    background-color: #3e3e42;
+  height: 8px;
+  border-radius: 8px;
+  width: 100%;
+  background-color: #3e3e42;
 }
 
 .event_progressbar::-webkit-progress-value {
