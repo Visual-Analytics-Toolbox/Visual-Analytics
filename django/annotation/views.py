@@ -20,6 +20,21 @@ def generic_filter(queryset, query_params):
     # apply filters if provided
     return queryset.filter(filters)
 
+class ImageValidationView(APIView):
+    def get(self,request):
+        query_params = request.query_params.copy()
+        qs = Annotation.objects.filter(validated=False)
+        amount = int(query_params.pop("amount", [50])[0])
+        amount = min(amount, qs.count())
+        qs = generic_filter(qs,query_params)[:amount]
+        
+        
+        links = [
+            f"https://logs.berlin-united.com/{ann.image.image_url}"
+            for ann in qs
+        ]
+
+        return Response({"images": links}, status=status.HTTP_200_OK)
 
 class AnnotationTaskMultiple(APIView):
     def get(self, request):
