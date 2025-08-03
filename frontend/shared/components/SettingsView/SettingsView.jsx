@@ -4,6 +4,8 @@ import styles from './SettingsView.module.css';
 const SettingsView = () => {
   const [token, setToken] = useState('');
   const [log_root, setlogRoot] = useState('');
+  const [dev_token, setDevToken] = useState('');
+  const [use_dev, setUseDev] = useState(false);
 
   useEffect(() => {
     async function loadSavedToken() {
@@ -18,13 +20,29 @@ const SettingsView = () => {
         setlogRoot(savedLogRoot);
       }
     }
+    async function loadSavedDevToken() {
+      const savedDevToken = await electronAPI.get_value("devToken");
+      if (savedDevToken) {
+        setDevToken(savedDevToken);
+      }
+    }
+    async function loadUseDev() {
+      const savedUseDev = await electronAPI.get_value("useDev");
+      if (savedUseDev) {
+        setUseDev(savedUseDev);
+      }
+    }
     loadSavedToken();
     loadSavedLogRoot();
+    loadSavedDevToken();
+    loadUseDev();
   }, []);
 
   const handleSave = async () => {
     await electronAPI.set_value("apiToken", token);
     await electronAPI.set_value("logRoot", log_root);
+    await electronAPI.set_value("devToken", dev_token);
+    await electronAPI.set_value("useDev", use_dev);
     alert('Token saved!');
   };
 
@@ -53,6 +71,28 @@ const SettingsView = () => {
               value={log_root}
               onChange={(e) => setlogRoot(e.target.value)}
               placeholder="Enter Root of log folder"
+            />
+            <button onClick={handleSave}>Save</button>
+          </div>
+        </div>
+        <div className={styles.info_card}>
+          <h2>Dev Settings</h2>
+          <div className={styles.form_group}>
+            <label>Dev Token</label>
+            <input
+              type="password"
+              value={dev_token}
+              onChange={(e) => setDevToken(e.target.value)}
+              placeholder="Enter Dev API Token"
+            />
+            <button onClick={handleSave}>Save</button>
+          </div>
+          <div className={styles.form_group}>
+            <label>Use Dev Settings</label>
+            <input
+              type="checkbox"
+              checked={use_dev}
+              onChange={(e) => setUseDev(e.target.checked)}
             />
             <button onClick={handleSave}>Save</button>
           </div>

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams } from "react-router-dom";
 import { useQueries } from '@tanstack/react-query';
+import { getToken, getUrl } from '@shared/utils/api';
 
 import VideoPlayer from '@shared/components/VideoPlayer/VideoPlayer';
 import VideoControls from '@shared/components/VideoControls/VideoControls';
@@ -37,8 +38,9 @@ const FPS = 30;
 
 
 const fetch_logs = async (game_id) => {
-    const token = await electronAPI.get_value("apiToken");
-    const response = await fetch(`https://vat.berlin-united.com/api/logs?game=${game_id}`, {
+    const token = await getToken();
+    const url = await getUrl();
+    const response = await fetch(`${url}/api/logs?game=${game_id}`, {
         headers: {
             'Authorization': `Token ${token}`
         }
@@ -51,8 +53,9 @@ const fetch_logs = async (game_id) => {
 }
 
 const fetch_videos = async (game_id) => {
-    const token = await electronAPI.get_value("apiToken");
-    const response = await fetch(`https://vat.berlin-united.com/api/video?game=${game_id}`, {
+    const token = await getToken();
+    const url = await getUrl();
+    const response = await fetch(`${url}/api/video?game=${game_id}`, {
         headers: {
             'Authorization': `Token ${token}`
         }
