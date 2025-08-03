@@ -1,14 +1,16 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { EventCard, CreateEventCard } from '@shared/components/EventCard/EventCard';
-import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
+import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
 import styles from './EventListView.module.css';
 
 
 const fetch_events = async () => {
-  const token = await electronAPI.get_value("apiToken");
-  const response = await fetch(`https://vat.berlin-united.com/api/events/`, {
+  const token = await getToken();
+  const url = await getUrl();
+  const response = await fetch(`${url}/api/events/`, {
     headers: {
       'Authorization': `Token ${token}`
     }
