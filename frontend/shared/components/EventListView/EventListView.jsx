@@ -32,6 +32,23 @@ const EventListView = () => {
     return <div>Error fetching logs: {events.error.message}</div>;
   }
 
+  if (events.isLoading) {
+    return (
+      <div className="view-content">
+        <div className="panel-header">
+          <h3>EventView</h3>
+        </div>
+        <div className={styles.projects_section}>
+          <div className={`${styles.project_boxes} ${styles.jsGridView}`}>
+            <SkeletonCard />
+          </div>
+        </div>
+      </div >
+    )
+  }
+
+  console.log("Events", events.data)
+
   return (
     <div className="view-content">
       <div className="panel-header">
@@ -40,9 +57,7 @@ const EventListView = () => {
       <div className={styles.projects_section}>
         <div className={`${styles.project_boxes} ${styles.jsGridView}`}>
 
-          {events.isLoading ? (
-            <SkeletonCard />
-          ) : events.data.length > 0 ? (
+          {events.data.length > 0 ? (
             <>
               {events.data.map((event) => (
                 <EventCard

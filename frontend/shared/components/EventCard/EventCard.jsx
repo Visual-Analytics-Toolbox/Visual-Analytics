@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import styles from './EventCard.module.css';
 import robocup_img from '@shared/assets/robocup.jpeg';
-
+import { PenLine } from "lucide-react"
 import { Button } from "@shared/components/ui/button"
 import {
     Dialog,
@@ -29,6 +29,37 @@ export const EventCard = ({ event }) => {
                 <p className={styles.event_title}>
                     Event: {event.name}
                 </p>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <PenLine />
+                    </DialogTrigger>
+                    <DialogContent className={styles.dialog_content}>
+                        <DialogHeader>
+                            <DialogTitle>Update Event</DialogTitle>
+                        </DialogHeader>
+
+                        <div className={styles.form_group}>
+                            <label htmlFor="name">Name:</label>
+                            <input type="text" id="name" value="" />
+                        </div>
+                        <div className={styles.form_group}>
+                            <label htmlFor="folder">Folder:</label>
+                            <input type="text" id="folder" value="" />
+                        </div>
+                        <div className={styles.form_group}>
+                            <label htmlFor="country">Country:</label>
+                            <input type="text" id="country" value="" />
+                        </div>
+                        <DialogFooter className="sm:justify-start">
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary">
+                                    Close
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
             </div>
             <div className={styles.event_footer}>
                 <progress className={styles.event_progressbar} value="40" max="100">40%</progress>
