@@ -182,6 +182,8 @@ class ImagePageSet(viewsets.ModelViewSet):
         query_params = self.request.query_params.copy()
 
         qs = self.queryset
+        #FIXME: only for test purposes
+        qs = qs.filter(annotation__isnull=False).distinct()
 
         print(query_params)
         if "log" in query_params.keys():
@@ -205,6 +207,11 @@ class ImagePageSet(viewsets.ModelViewSet):
 
         qs = qs.filter(filters)
 
+        # Optional prefetch only when requested
+        include_annotations = self.request.query_params.get("include_annotations") == "1"
+        if include_annotations:
+            qs = qs.prefetch_related("annotation")
+
         # check if the frontend wants to use a frame filter
         # FIXME select frame_filter by name
         if "use_filter" in query_params and query_params.get("use_filter") == "1":
@@ -216,8 +223,14 @@ class ImagePageSet(viewsets.ModelViewSet):
 
             if frames:
                 qs = qs.filter(frame_number__in=frames.frames["frame_list"])
-
+    
         return qs.order_by("frame")
+
+    def get_serializer_class(self):
+        include_annotations = self.request.query_params.get("include_annotations") == "1"
+        if include_annotations:
+            return serializers.ImageWithAnnotationsSerializer
+        return serializers.ImageSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):

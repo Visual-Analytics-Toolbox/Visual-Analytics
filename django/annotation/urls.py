@@ -17,7 +17,6 @@ urlpatterns = [
         views.AnnotationTaskMultiple.as_view(),
         name="annotation-task-border",
     ),
-    path("image-validation/",views.ImageValidationView.as_view(),name="validation-view")
 ]
 
 router = routers.DefaultRouter()
