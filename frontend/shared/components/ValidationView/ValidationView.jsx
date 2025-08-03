@@ -1,16 +1,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
 const fetch_annotation_tasks = async () => {
-    const token = await electronAPI.get_value("apiToken");
-    // const response = await fetch(`https://vat.berlin-united.com/api/image-validation/`, {
-    //     headers: {
-    //         'Authorization': `Token ${token}`
-    //     }
-    const response = await fetch(`http://127.0.0.1:8000/api/image-list/?include_annotations=1`, {
+    const token = await getToken();
+    const url = await getUrl();
+    const response = await fetch(`${url}/api/image-list/?include_annotations=1`, {
         headers: {
-            'Authorization': `Token `
+            'Authorization': `Token ${token}`
         }
     });
     if (!response.ok) {
