@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams } from "react-router-dom";
 import { useQueries } from '@tanstack/react-query';
-import { getToken, getUrl } from '@shared/utils/api';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
 import VideoPlayer from '@shared/components/VideoPlayer/VideoPlayer';
 import VideoControls from '@shared/components/VideoControls/VideoControls';

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { getToken, getUrl } from '@shared/utils/api';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
 import GameCard from "@shared/components/GameCard/GameCard.jsx";
 import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';

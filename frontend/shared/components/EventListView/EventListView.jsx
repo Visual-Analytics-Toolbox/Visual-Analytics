@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { EventCard, CreateEventCard } from '@shared/components/EventCard/EventCard';
-import { getToken, getUrl } from '@shared/utils/api';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
 import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
 import styles from './EventListView.module.css';
