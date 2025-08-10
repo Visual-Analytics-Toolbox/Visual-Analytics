@@ -1,14 +1,16 @@
 
 import { useQuery } from '@tanstack/react-query';
-import EventCard from '@shared/components/EventCard/EventCard';
-import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
+import { EventCard, CreateEventCard } from '@shared/components/EventCard/EventCard';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
+import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
 import styles from './EventListView.module.css';
 
 
 const fetch_events = async () => {
-  const token = await electronAPI.get_value("apiToken");
-  const response = await fetch(`https://vat.berlin-united.com/api/events/`, {
+  const token = await getToken();
+  const url = await getUrl();
+  const response = await fetch(`${url}/api/events/`, {
     headers: {
       'Authorization': `Token ${token}`
     }
@@ -32,6 +34,23 @@ const EventListView = () => {
     return <div>Error fetching logs: {events.error.message}</div>;
   }
 
+  if (events.isLoading) {
+    return (
+      <div className="view-content">
+        <div className="panel-header">
+          <h3>EventView</h3>
+        </div>
+        <div className={styles.projects_section}>
+          <div className={`${styles.project_boxes} ${styles.jsGridView}`}>
+            <SkeletonCard />
+          </div>
+        </div>
+      </div >
+    )
+  }
+
+  console.log("Events", events.data)
+
   return (
     <div className="view-content">
       <div className="panel-header">
@@ -39,15 +58,17 @@ const EventListView = () => {
       </div>
       <div className={styles.projects_section}>
         <div className={`${styles.project_boxes} ${styles.jsGridView}`}>
-          {events.isLoading ? (
-            <SkeletonCard />
-          ) : events.data.length > 0 ? (
-            events.data.map((event) => (
-              <EventCard
-                event={event}
-                key={event.name}
-              ></EventCard>
-            ))
+
+          {events.data.length > 0 ? (
+            <>
+              {events.data.map((event) => (
+                <EventCard
+                  event={event}
+                  key={event.name}
+                ></EventCard>
+              ))}
+              <CreateEventCard />
+            </>
           ) : (
             <div className={styles.emptyState}>
               No events found
@@ -55,7 +76,7 @@ const EventListView = () => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

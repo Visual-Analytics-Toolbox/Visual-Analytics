@@ -20,7 +20,6 @@ def generic_filter(queryset, query_params):
     # apply filters if provided
     return queryset.filter(filters)
 
-
 class AnnotationTaskMultiple(APIView):
     def get(self, request):
         query_params = request.query_params.copy()

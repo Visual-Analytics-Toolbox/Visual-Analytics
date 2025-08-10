@@ -9,19 +9,22 @@ import LogListView from '@shared/components/LogListView/LogListView';
 import VideoAnalysisView from '@shared/components/VideoAnalysisView/VideoAnalysisView';
 import DebuggerView from '@shared/components/DebuggerView/DebuggerView';
 import VideoPlayerCanvas from '@shared/components/VideoPlayerCanvas/VideoPlayerCanvas'
+import ValidationView from '../ValidationView/ValidationView';
 
 import { Routes, Route } from "react-router-dom";
+
+import styles from './MainLayout.module.css';
 
 const MainLayout = ({ appVersion }) => {
   const containerRef = useRef(null);
 
   return (
-    <div className="app-container" ref={containerRef}>
+    <div className={styles.app_container} ref={containerRef}>
       <Sidebar
         appVersion={appVersion}
       />
 
-      <div className="main-content">
+      <div className={styles.main_content}>
         <Routes>
           <Route path="/" element={<HomeView />} />
           <Route element={<EventListView />} />
@@ -32,7 +35,7 @@ const MainLayout = ({ appVersion }) => {
           <Route path="/settings" element={<SettingsView />} />
           <Route path="/debug" element={<DebuggerView />} />
           <Route path="/test" element={<VideoPlayerCanvas />} />
-
+          <Route path="/validation" element={<ValidationView />} />
         </Routes>
       </div>
     </div>

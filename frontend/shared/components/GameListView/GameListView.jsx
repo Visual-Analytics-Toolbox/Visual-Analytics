@@ -1,13 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
+import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
 
 import GameCard from "@shared/components/GameCard/GameCard.jsx";
 import SkeletonCard from '@shared/components/SkeletonCard/SkeletonCard';
 import styles from './GameListView.module.css';
 
 const fetch_games = async (id) => {
-    const token = await electronAPI.get_value("apiToken");
-    const response = await fetch(`https://vat.berlin-united.com/api/games?event=${id}`, {
+    const token = await getToken();
+    const url = await getUrl();
+    const response = await fetch(`${url}/api/games?event=${id}`, {
         headers: {
             'Authorization': `Token ${token}`
         }
