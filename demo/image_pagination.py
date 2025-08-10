@@ -14,9 +14,10 @@ default_headers = {
 # filtering still works
 query_params = {
     "log": 282,
-    "offset": 25000,  # starting point
-    "limit": 30,  # max images per page
-    "camera": "TOP",
+    "offset": 0,  # starting point
+    "limit": 100,  # max images per page
+    "frame_number": 13194,
+    "validated": False
 }
 
 
@@ -24,8 +25,15 @@ resp = requests.get(
     f"{base_url}api/image-list", headers=default_headers, params=query_params
 )
 
+for a in resp.json()["results"]:
+    if len(a["annotations"]) > 1:
+        print(a)
+
 # next contains url to next page including query_params
 while resp.json()["next"]:
+    print(resp.json()["next"])
     resp = requests.get(resp.json()["next"], headers=default_headers)
 
-    print(resp.json()["results"])
+    for a in resp.json()["results"]:
+        if len(a["annotations"]) > 1:
+            print(a)
