@@ -8,6 +8,7 @@ import psycopg2
 import shutil
 from psycopg2 import sql
 import time
+from operator import attrgetter
 
 
 def replace_string_in_first_lines(file_path, old_string, new_string, num_lines):
@@ -316,6 +317,34 @@ def export_split_table(log_id, force=False, export_tables=None):
     export_annotation_tables(log_id, force, export_tables)
 
 
+def keep_newest_targz(directory, keep=20):
+    # Get all .tar.gz files in the directory
+    targz_files = list(Path(directory).glob('*.tar.gz'))
+    
+    if len(targz_files) <= keep:
+        print(f"Found {len(targz_files)} .tar.gz files, which is less than or equal to {keep}. Nothing to delete.")
+        return
+    
+    # Sort files by modification time (newest first)
+    sorted_files = sorted(targz_files, 
+                         key=attrgetter('stat().st_mtime'), 
+                         reverse=True)
+    
+    # Separate files to keep and files to delete
+    files_to_keep = sorted_files[:keep]
+    files_to_delete = sorted_files[keep:]
+    
+    # Delete the older files
+    for file in files_to_delete:
+        try:
+            file.unlink()  # Delete the file
+            print(f"Deleted: {file}")
+        except Exception as e:
+            print(f"Error deleting {file}: {e}")
+    
+    print(f"Kept {len(files_to_keep)} newest files, deleted {len(files_to_delete)} older files.")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--all", action="store_true", default=False)
@@ -399,3 +428,6 @@ if __name__ == "__main__":
 
     print("cleanup sql files")
     shutil.rmtree(str(output_folder))
+
+    print("remove old backups")
+    keep_newest_targz(args.output, 20)
