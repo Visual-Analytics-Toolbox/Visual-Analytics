@@ -25,7 +25,7 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 0.95em;
-    color: #333;
+    color: #fff;
     outline: none;
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     box-sizing: border-box;
