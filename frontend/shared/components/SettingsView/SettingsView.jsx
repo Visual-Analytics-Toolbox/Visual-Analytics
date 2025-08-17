@@ -54,11 +54,12 @@ const SettingsView = () => {
     loadUseDev();
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
     await electronAPI.set_value("apiToken", token);
     await electronAPI.set_value("logRoot", log_root);
     await electronAPI.set_value("devToken", dev_token);
     await electronAPI.set_value("useDev", use_dev);
+    e.target.classList.add(styles.success_button);
   };
 
   return (
@@ -109,7 +110,7 @@ const SettingsView = () => {
 
           </div>
           <div className={styles.form_group}>
-            <button onClick={handleSave}>Save</button>
+            <button id="save_button" onClick={(e) => handleSave(e)}>Save</button>
           </div>
 
         </div>

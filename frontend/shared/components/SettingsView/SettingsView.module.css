@@ -39,18 +39,23 @@
     padding: 5px 12px;
 }
 
-.form_group button:active {
-    font-size: 0.95em;
-    background-color: #2a2d2e;
-    border: 1px solid var(--magenta);
-    border-radius: 6px;
-    padding: 5px 12px;
+.success_button {
+    background-color: green;
 }
 
-.form_group button:focus {
+.error_button {
+    background-color: red;
+}
+
+#save_button {
+    background-color: #2a2d2e;
+    border: 1px solid var(--magenta);
+}
+
+/* .form_group button:focus {
     font-size: 0.95em;
     background-color: #2a2d2e;
     border: 1px solid var(--magenta);
     border-radius: 6px;
     padding: 5px 12px;
-}
+} */
