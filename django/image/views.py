@@ -169,7 +169,7 @@ class ImageUpdateView(APIView):
 
 class ImagePageSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
-    serializer_class = serializers.ImageSerializer
+    serializer_class = serializers.ImageWithAnnotationsSerializer
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
@@ -189,8 +189,6 @@ class ImagePageSet(viewsets.ModelViewSet):
 
         return qs.order_by("frame")
 
-    def get_serializer_class(self):
-        return serializers.ImageWithAnnotationsSerializer
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
