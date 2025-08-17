@@ -29,7 +29,21 @@ class ImageFilter:
     def filter_image_tag(self) -> Self:
         pass
 
-    # filter on annotation values
+    """
+    filter on annotation related values
+    """
+    #FIXME using annotation and validated together gives weird results
+    # together gives more results then using just validated
+    def filter_annotation(self) -> Self:
+        if "annotation" in self._params:
+            annotation_exist = self._params["annotation"]
+            # Convert annotation to boolean if it's a string
+            if isinstance(annotation_exist, str):
+                annotation_exist = annotation_exist.lower() == "true"
+                print(annotation_exist)
+                self.qs = self.qs.filter(annotation__isnull= not annotation_exist)
+        return self
+
     def filter_validated(self) -> Self:
         """
         Note that setting validated to either true or false will only return images that have annotations
@@ -40,7 +54,7 @@ class ImageFilter:
             # Convert validated to boolean if it's a string
             if isinstance(validated, str):
                 validated = validated.lower() == "true"
-            self.qs = self.qs.filter(annotation__validated=validated)
+                self.qs = self.qs.filter(annotation__validated=validated)
         return self
     
     def filter_annotation_type(self) -> Self:

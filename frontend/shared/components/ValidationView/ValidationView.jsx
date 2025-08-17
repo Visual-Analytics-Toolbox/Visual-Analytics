@@ -1,12 +1,13 @@
 
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
+import { Stage, Layer, Rect, Text } from 'react-konva';
 
 const fetch_annotation_tasks = async () => {
     const token = await getToken();
     const url = await getUrl();
-    const response = await fetch(`${url}/api/image-list/?include_annotations=1`, {
+    const response = await fetch(`${url}/api/image-list/?annotation=true&validation=true`, {
         headers: {
             'Authorization': `Token ${token}`
         }
@@ -20,6 +21,9 @@ const fetch_annotation_tasks = async () => {
 
 const ValidationView = ({ }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [lines, setLines] = useState([]);
+    const isDrawing = useRef(false);
+
     const images = useQuery({
         queryKey: ['results'],
         queryFn: () => fetch_annotation_tasks(),
@@ -47,6 +51,31 @@ const ValidationView = ({ }) => {
         }
     };
 
+    const handleMouseDown = (e) => {
+        isDrawing.current = true;
+        const pos = e.target.getStage().getPointerPosition();
+        setLines([...lines, { points: [pos.x, pos.y], color: 'red', strokeWidth: 5 }]);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDrawing.current) {
+            return;
+        }
+        const stage = e.target.getStage();
+        const point = stage.getPointerPosition();
+        let lastLine = lines[lines.length - 1];
+        // add a new point to the current line
+        lastLine.points = lastLine.points.concat([point.x, point.y]);
+
+        // replace the last line with the updated one
+        lines.splice(lines.length - 1, 1, lastLine);
+        setLines([...lines]);
+    };
+
+    const handleMouseUp = () => {
+        isDrawing.current = false;
+    };
+
     return (
         <div className="view-content">
             <div className="panel-header">
@@ -54,14 +83,44 @@ const ValidationView = ({ }) => {
             </div>
             <div className="max-w-2xl mx-auto p-4">
                 <div className=" rounded-lg shadow-lg overflow-hidden">
-                    <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
-                        <img
-                            src={`https://logs.berlin-united.com/${images.data.results[currentIndex].image_url}`}
-                            alt={`Validation content ${currentIndex + 1}`}
-                            className="absolute inset-0 w-full h-full object-cover"
-                        />
-                    </div>
+                    <div style={{ position: 'relative', width: 640, height: 480 }}>
+                        <img src={`https://logs.berlin-united.com/${images.data.results[currentIndex].image_url}`} alt="for annotation" style={{ display: 'block' }} />
+                        <div style={{ position: 'absolute', top: 0, left: 0, 'width': '100%', 'height': '100%' }}>
+                            <Stage
+                                width={640}
+                                height={480}
+                                onMouseDown={handleMouseDown}
+                                onMousemove={handleMouseMove}
+                                onMouseup={handleMouseUp}
+                            >
+                                <Layer>
+                                    {images.data.results[currentIndex].annotations.map((box) => (
+                                        <React.Fragment key={box.id}>
+                                            {/* Bounding Box */}
+                                            <Rect
+                                                x={box.data.x * 640}
+                                                y={box.data.y * 480}
+                                                width={box.data.width * 640}
+                                                height={box.data.height * 480}
+                                                stroke="yellow"
+                                                strokeWidth={2}
+                                                dash={[10, 5]} // Optional: makes the line dashed
+                                            />
+                                            {/* Label Text */}
+                                            <Text
+                                                x={box.x}
+                                                y={box.y - 20} // Position the text slightly above the box
+                                                text={box.label}
+                                                fontSize={16}
+                                                fill="yellow"
+                                            />
+                                        </React.Fragment>
+                                    ))}
+                                </Layer>
+                            </Stage>
+                        </div>
 
+                    </div>
                     <div className="mt-4 flex justify-center gap-4 p-4">
                         <button
                             onClick={handlePrevious}

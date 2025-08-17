@@ -15,9 +15,9 @@ default_headers = {
 query_params = {
     "log": 282,
     "offset": 0,  # starting point
-    "limit": 100,  # max images per page
-    "frame_number": 13194,
-    "validated": False
+    "limit": 20,  # max images per page
+    "annotation": True,
+    "validated": True,
 }
 
 
@@ -25,10 +25,9 @@ resp = requests.get(
     f"{base_url}api/image-list", headers=default_headers, params=query_params
 )
 
-for a in resp.json()["results"]:
-    if len(a["annotations"]) > 1:
-        print(a)
+print(resp.json())
 
+quit()
 # next contains url to next page including query_params
 while resp.json()["next"]:
     print(resp.json()["next"])

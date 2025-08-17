@@ -30,7 +30,7 @@ class AnnotationFilter:
             # Convert validated to boolean if it's a string
             if isinstance(validated, str):
                 validated = validated.lower() == "true"
-            self.qs = self.qs.filter(validated=validated)
+                self.qs = self.qs.filter(validated=validated)
         return self
 
     def filter_type(self) -> Self:
@@ -48,6 +48,6 @@ class AnnotationFilter:
             # Convert concealed to boolean if it's a string
             if isinstance(concealed, str):
                 concealed = concealed.lower() == "true"
-            self.qs = self.qs.filter(concealed=concealed)
+                self.qs = self.qs.filter(concealed=concealed)
         return self
     

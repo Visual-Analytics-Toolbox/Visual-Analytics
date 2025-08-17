@@ -182,6 +182,7 @@ class ImagePageSet(viewsets.ModelViewSet):
             filter.filter_log()
             .filter_camera()
             .filter_framenumber()
+            .filter_annotation()
             .filter_validated()
             .qs
         )
