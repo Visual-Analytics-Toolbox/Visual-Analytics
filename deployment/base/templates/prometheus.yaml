@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:BerlinUnited/Visual-Analytics.git'
+    path: deployment/prometheus
+    targetRevision: HEAD
+    helm:
+      releaseName: prometheus
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prometheus
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
