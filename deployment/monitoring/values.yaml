@@ -127,3 +127,34 @@ loki:
     replicas: 0
   bloomGateway:
     replicas: 0
+
+vector:
+  role: Agent
+
+  sources:
+    kubernetes_logs:
+      type: kubernetes_logs
+      max_read_bytes: 1048576
+
+  sinks:
+    loki:
+      type: loki
+      inputs:
+        - modify
+      endpoint: http://monitoring-loki.monitoring.svc.cluster.local:3100
+      labels:
+        namespace: "{{ namespace }}"
+        pod: "{{ pod }}"
+        container: "{{ container }}"
+      encoding:
+        codec: json
+
+  extraVolumeMounts:
+    - name: varlibkubeletpods
+      mountPath: /var/lib/kubelet/pods
+      readOnly: true
+
+  extraVolumes:
+    - name: varlibkubeletpods
+      hostPath:
+        path: /var/lib/kubelet/pods

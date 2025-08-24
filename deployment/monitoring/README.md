@@ -8,3 +8,6 @@ helm pull grafana/loki
 Values in https://github.com/grafana/loki/tree/main/production/helm/loki
 
 we deploy it in SingleBinary mode since our log volume is not that large
+
+Vector:
+helm repo add vector https://helm.vector.dev
