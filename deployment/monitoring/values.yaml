@@ -141,25 +141,53 @@ vector:
       type: kubernetes_logs
       max_read_bytes: 1048576
 
+  transforms:
+    add_kubernetes_metadata:
+      type: remap
+      inputs:
+        - kubernetes_logs
+      source: |
+        source: |
+        .namespace = .kubernetes.pod_namespace
+        .pod = .kubernetes.pod_name
+        .container = .kubernetes.container_name
+        .node = .kubernetes.pod_node_name
+        .app = .kubernetes.pod_labels.app | .kubernetes.pod_labels."app.kubernetes.io/name" | "unknown"
+
   sinks:
     loki:
       type: loki
       inputs:
-        - modify
+        - add_kubernetes_metadata  
       endpoint: http://monitoring-loki.monitoring.svc.cluster.local:3100
       labels:
         namespace: "{{ namespace }}"
         pod: "{{ pod }}"
         container: "{{ container }}"
+        # Optional: Add more labels for better filtering
+        node: "{{ node }}"
+        app: "{{ app }}"
       encoding:
-        codec: json
+        codec: text
 
   extraVolumeMounts:
+    - name: varlog
+      mountPath: /var/log
+      readOnly: true
+    - name: varlibcontainerd
+      mountPath: /var/lib/containerd
+      readOnly: true
     - name: varlibkubeletpods
       mountPath: /var/lib/kubelet/pods
       readOnly: true
 
   extraVolumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+    - name: varlibcontainerd
+      hostPath:
+        path: /var/lib/containerd
     - name: varlibkubeletpods
       hostPath:
         path: /var/lib/kubelet/pods
