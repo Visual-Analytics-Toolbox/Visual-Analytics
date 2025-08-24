@@ -1,13 +1,15 @@
 
 import { useQuery } from '@tanstack/react-query';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
-import { Stage, Layer, Rect, Text } from 'react-konva';
+import { Stage, Layer, Rect, Transformer, Image as KonvaImage } from 'react-konva';
+import styles from './ValidationView.module.css';
 
-const fetch_annotation_tasks = async () => {
+const fetch_annotation_tasks = async ({ currentOffset }) => {
     const token = await getToken();
     const url = await getUrl();
-    const response = await fetch(`${url}/api/image-list/?annotation=true&validation=true`, {
+
+    const response = await fetch(`${url}/api/image-list/?limit=8&annotation=true&validated=false&offset=${currentOffset}`, {
         headers: {
             'Authorization': `Token ${token}`
         }
@@ -18,62 +20,112 @@ const fetch_annotation_tasks = async () => {
     return await response.json();
 }
 
+const URLImage = ({ src, x, y, width, height }) => {
+    const [image, setImage] = useState(null);
+
+    useEffect(() => {
+        const img = new window.Image();
+        img.src = src;
+
+        img.onload = () => {
+            setImage(img);
+        };
+    }, [src]);
+
+    return (
+        <KonvaImage
+            image={image}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+        />
+    );
+};
 
 const ValidationView = ({ }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [lines, setLines] = useState([]);
-    const isDrawing = useRef(false);
+    const [currentOffset, setCurrentOffset] = useState(0);
+    const [selectedIds, setSelectedIds] = useState({}); // { [imageId]: boxId }
+    const transformerRefs = useRef({}); // { [imageId]: transformerRef }
 
-    const images = useQuery({
-        queryKey: ['results'],
-        queryFn: () => fetch_annotation_tasks(),
-        staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
-        cacheTime: 5 * 60 * 1000,
+    const {
+        data,
+        error,
+        isLoading,
+        isFetching,
+        isPreviousData,
+    } = useQuery({
+        queryKey: ['results', currentOffset], // The offset is part of the query key
+        queryFn: () => fetch_annotation_tasks({ currentOffset }),
+        keepPreviousData: true, // Optional: keeps old data visible while fetching new data
     });
-    if (images.isError) {
+
+    const handleBoxClick = (e) => {
+        const shape = e.target;
+        console.log("handleBoxClick", shape)
+
+    };
+
+    const handleStageClick = (e) => {
+        //const shape = e.target;
+        console.log("clicked on stage", e)
+    };
+
+    useEffect(() => {
+        Object.entries(selectedIds).forEach(([imageId, boxId]) => {
+            const transformer = transformerRefs.current[imageId];
+            if (!transformer) return;
+
+            if (boxId) {
+                const stage = transformer.getStage();
+                const selectedNode = stage.findOne('.' + boxId);
+                if (selectedNode) {
+                    transformer.nodes([selectedNode]);
+                    transformer.getLayer().batchDraw();
+                }
+            } else {
+                transformer.nodes([]);
+                transformer.getLayer().batchDraw();
+            }
+        });
+    }, [selectedIds]);
+
+    if (error) {
         return <div>Error fetching images</div>;
     }
 
-    if (images.isLoading) {
+    if (isLoading) {
         return <div>Loading</div>;
     }
 
-    console.log(images.data)
-    const handleNext = () => {
-        if (images.data.results && currentIndex < images.data.results.length - 1) {
-            setCurrentIndex(prev => prev + 1);
+    //console.log(data)
+
+
+
+    const handleNextPage = () => {
+        // Assuming the API response provides the next offset.
+        // In this example, we'll parse it from the 'next' URL.
+        if (data?.next) {
+            const url = new URL(data.next);
+            const nextOffset = url.searchParams.get("offset");
+            if (nextOffset !== null) {
+                setCurrentOffset(parseInt(nextOffset, 10));
+            }
         }
     };
 
-    const handlePrevious = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(prev => prev - 1);
+    // You'll need a similar function for "Previous" as well.
+    const handlePreviousPage = () => {
+        if (data?.previous) {
+            const url = new URL(data.previous);
+            const prevOffset = url.searchParams.get("offset");
+            if (prevOffset !== null) {
+                setCurrentOffset(parseInt(prevOffset, 10));
+            } else {
+                // Handle the case where there is no 'previous' link (e.g., set to 0)
+                setCurrentOffset(0);
+            }
         }
-    };
-
-    const handleMouseDown = (e) => {
-        isDrawing.current = true;
-        const pos = e.target.getStage().getPointerPosition();
-        setLines([...lines, { points: [pos.x, pos.y], color: 'red', strokeWidth: 5 }]);
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isDrawing.current) {
-            return;
-        }
-        const stage = e.target.getStage();
-        const point = stage.getPointerPosition();
-        let lastLine = lines[lines.length - 1];
-        // add a new point to the current line
-        lastLine.points = lastLine.points.concat([point.x, point.y]);
-
-        // replace the last line with the updated one
-        lines.splice(lines.length - 1, 1, lastLine);
-        setLines([...lines]);
-    };
-
-    const handleMouseUp = () => {
-        isDrawing.current = false;
     };
 
     return (
@@ -81,75 +133,75 @@ const ValidationView = ({ }) => {
             <div className="panel-header">
                 <h3>Validation View</h3>
             </div>
-            <div className="max-w-2xl mx-auto p-4">
-                <div className=" rounded-lg shadow-lg overflow-hidden">
-                    <div style={{ position: 'relative', width: 640, height: 480 }}>
-                        <img src={`https://logs.berlin-united.com/${images.data.results[currentIndex].image_url}`} alt="for annotation" style={{ display: 'block' }} />
-                        <div style={{ position: 'absolute', top: 0, left: 0, 'width': '100%', 'height': '100%' }}>
-                            <Stage
-                                width={640}
-                                height={480}
-                                onMouseDown={handleMouseDown}
-                                onMousemove={handleMouseMove}
-                                onMouseup={handleMouseUp}
-                            >
-                                <Layer>
-                                    {images.data.results[currentIndex].annotations.map((box) => (
-                                        <React.Fragment key={box.id}>
-                                            {/* Bounding Box */}
-                                            <Rect
-                                                x={box.data.x * 640}
-                                                y={box.data.y * 480}
-                                                width={box.data.width * 640}
-                                                height={box.data.height * 480}
-                                                stroke="yellow"
-                                                strokeWidth={2}
-                                                dash={[10, 5]} // Optional: makes the line dashed
-                                            />
-                                            {/* Label Text */}
-                                            <Text
-                                                x={box.x}
-                                                y={box.y - 20} // Position the text slightly above the box
-                                                text={box.label}
-                                                fontSize={16}
-                                                fill="yellow"
-                                            />
-                                        </React.Fragment>
-                                    ))}
-                                </Layer>
-                            </Stage>
-                        </div>
 
-                    </div>
-                    <div className="mt-4 flex justify-center gap-4 p-4">
-                        <button
-                            onClick={handlePrevious}
-                            disabled={currentIndex === 0}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            <div className={styles.image_grid}>
+                {data.results.map(image => (
+                    <div className={styles.konva_overlay}>
+                        <Stage
+                            width={640}
+                            height={480}
+                            onClick={handleStageClick}
+                            onTap={handleStageClick}
                         >
-                            Previous
-                        </button>
-                        <span className="px-4 py-2 bg-gray-800 text-white rounded-lg">
-                            {currentIndex + 1} / {images.data.results.length}
-                        </span>
-                        <button
-                            onClick={handleNext}
-                            disabled={currentIndex === images.data.results.length - 1}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
-                        >
-                            Next
-                        </button>
-                    </div>
-                    <div className="mt-4 flex justify-center gap-4 p-4">
-                        <div className="w-full bg-gray-800 p-4 rounded-lg overflow-auto">
-                            <pre className="text-white text-sm whitespace-pre-wrap">
-                                {JSON.stringify(images.data.results[currentIndex].annotations, null, 2)}
-                            </pre>
-                        </div>
+                            <Layer>
+                                <URLImage
+                                    src={`https://logs.berlin-united.com/${image.image_url}`}
+                                    x={0}
+                                    y={0}
+                                    width={640}
+                                    height={480}
+                                />
+                                {image.annotations.map((box) => (
+                                    <Rect
+                                        className={box.id}
+                                        key={box.id}
+                                        x={box.data.x * 640}
+                                        y={box.data.y * 480}
+                                        width={box.data.width * 640}
+                                        height={box.data.height * 480}
+                                        stroke="000"
+                                        opacity={0.5}
+                                        strokeWidth={2}
+                                        validated={box.validated}
+                                        color={box.color}
+                                        fill={box.validated == true ? "green" : box.color}
+                                        dash={[10, 5]} // Optional: makes the line dashed
+                                        draggable
+
+                                    />
+
+                                ))}
+                                <Transformer
+                                    ref={ref => transformerRefs.current[image.id] = ref}
+                                    rotateEnabled={false}
+                                    flipEnabled={false}
+                                    anchorStroke="000"
+                                    anchorFill="white"
+                                    keepRatio={false}
+                                    ignoreStroke={true}
+                                    borderStrokeWidth={0}
+                                    enabledAnchors={[
+                                        "top-left",
+                                        "top-right",
+                                        "bottom-left",
+                                        "bottom-right",
+                                    ]}
+                                    anchorCornerRadius={10}
+                                />
+                            </Layer>
+                        </Stage>
                     </div>
 
-
-                </div>
+                ))}
+            </div>
+            <div>
+                <button onClick={handlePreviousPage} disabled={!data.previous}>
+                    Previous
+                </button>
+                <button onClick={handleNextPage} disabled={!data.next}>
+                    Next
+                </button>
+                {isFetching && <span>Fetching...</span>}
             </div>
         </div>
     );
