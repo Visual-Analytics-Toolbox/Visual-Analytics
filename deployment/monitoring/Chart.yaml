@@ -15,6 +15,6 @@ dependencies:
   - name: loki
     repository: https://grafana.github.io/helm-charts
     version: 6.37.0
-  - name: vector
-    repository: https://helm.vector.dev
-    version: 0.45.0
+  - name: promtail
+    repository: https://grafana.github.io/helm-charts
+    version: 6.17.0
