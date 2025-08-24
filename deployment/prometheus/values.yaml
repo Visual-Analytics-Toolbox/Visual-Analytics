@@ -1,3 +1,0 @@
-prometheus:
-  alertmanager:
-    enabled: false

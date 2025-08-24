@@ -53,3 +53,7 @@ grafana:
    
   dashboardsConfigMaps:
     default: "grafana-dashboards"
+
+prometheus:
+  alertmanager:
+    enabled: false

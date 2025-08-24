@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana
+  name: monitoring
 spec:
   project: default
   source:
     repoURL: 'git@github.com:BerlinUnited/Visual-Analytics.git'
-    path: deployment/grafana
+    path: deployment/monitoring
     targetRevision: HEAD
     helm:
-      releaseName: grafana
+      releaseName: monitoring
   destination:
     server: https://kubernetes.default.svc
-    namespace: grafana
+    namespace: monitoring
   syncPolicy:
     automated: {}
     syncOptions:
