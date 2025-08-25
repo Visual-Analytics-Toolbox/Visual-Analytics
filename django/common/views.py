@@ -32,7 +32,7 @@ def scalar_doc(request):
 def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
-class TeamViewSet(viewsets.ModelViewset):
+class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
 
