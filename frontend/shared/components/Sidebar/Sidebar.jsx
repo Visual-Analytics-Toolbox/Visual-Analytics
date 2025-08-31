@@ -21,6 +21,7 @@ const Sidebar = ({ appVersion }) => {
           <NavLink to="/debug" className={getNavLinkClass(styles)}>Debugger</NavLink >
           <NavLink to="/test" className={getNavLinkClass(styles)}>Test</NavLink >
           <NavLink to="/validation" className={getNavLinkClass(styles)}>Validation</NavLink>
+          <NavLink to="/teams" className={getNavLinkClass(styles)}>Teams</NavLink>
         </nav>
         <SidebarBottom />
       </div>
