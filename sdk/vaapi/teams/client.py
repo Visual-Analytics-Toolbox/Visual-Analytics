@@ -149,7 +149,7 @@ class TeamClient:
     ) -> Team:
         """ """
         _response = self._client_wrapper.httpx_client.request(
-            "api/games/",
+            "api/teams/",
             method="POST",
              json={
                 "team_id": team_id,

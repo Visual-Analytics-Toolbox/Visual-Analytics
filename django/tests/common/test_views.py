@@ -105,12 +105,15 @@ class TestCommonViews:
         response_data = json.loads(response.content)
         assert response_data["team_id"] == team_json['team_id']
         assert response_data["name"] == team_json['name']
-        
+    
+    #we already have teams in the test database because of a migration
+    #create without team_id set to a specific value could just return an existing object because of 
+    #the way the team factory was created      
     @pytest.mark.django_db
     def test_team_list(self,admin_client):
         init_team_count = Team.objects.all().count()
-        teams = TeamFactory.create_batch(5)
+        TeamFactory.create(team_id=200)
         response = admin_client.get('/api/teams/',format='json')
         response_data = json.loads(response.content)
         assert response.status_code == 200
-        assert len(response_data) - init_team_count == 5
+        assert len(response_data) - init_team_count == 1
