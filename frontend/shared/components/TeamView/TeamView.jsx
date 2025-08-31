@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getToken, getUrl } from '@shared/components/SettingsView/SettingsView';
-import styles from './SettingsView.module.css';
+import styles from './TeamView.module.css';
 
 const fetch_teams = async () => {
     const token = await getToken();
@@ -46,12 +46,8 @@ const TeamView = ({ }) => {
                             ))}
                     </table>
                 </div>
-                
-            
-                
-
             </div>
-                
+        
         </div>
     );
 };
