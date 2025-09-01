@@ -8,3 +8,4 @@ venv/
 django/staticfiles/
 # ignore secrets
 .envrc
+.env.dev

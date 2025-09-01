@@ -45,3 +45,16 @@ export VAT_POSTGRES_PORT=5432
 
 NOTE: backups won't work with diffrent user or db names
 
+
+# Setup Postgres with Docker
+```bash
+cd django
+cp .env.dev.example .env.dev
+docker compose --env-file .env.dev up -d
+```
+stop with
+```bash
+docker compose --env-file .env.dev down
+```
+you can add the -v flag to delete the database
+

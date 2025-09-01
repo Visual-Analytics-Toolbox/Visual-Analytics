@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - ${VAT_POSTGRES_PORT}:${VAT_POSTGRES_PORT}
+    volumes:
+      - psql-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${VAT_POSTGRES_PASS}
+      - POSTGRES_USER=${VAT_POSTGRES_USER}
+      - POSTGRES_DB=${VAT_POSTGRES_DB}
+
+volumes:
+  psql-data:
