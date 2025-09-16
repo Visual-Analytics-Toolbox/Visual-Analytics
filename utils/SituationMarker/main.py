@@ -92,12 +92,19 @@ class SituationMarker():
                 
             
 if __name__ == "__main__":
-    m = SituationMarker()
-    try:
-        # Keep the main thread alive
-        while True:
-            pass
-    except KeyboardInterrupt:
-        print("Shutting down...")
+    client = Vaapi(
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
+    )
+    
+    response = client.situation.create()
+    print(response)
+    # m = SituationMarker()
+    # try:
+    #     # Keep the main thread alive
+    #     while True:
+    #         pass
+    # except KeyboardInterrupt:
+    #     print("Shutting down...")
     
     

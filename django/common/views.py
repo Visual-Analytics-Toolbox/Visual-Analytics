@@ -1,4 +1,3 @@
-import os
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from . import serializers
@@ -343,7 +342,6 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = models.Tag.objects.all()
     serializer_class = serializers.TagSerializer
 
-    
 class FileUploadBaseView(APIView):
     """
     A base class for file uploads to avoid code duplication.
@@ -410,3 +408,8 @@ class DatasetUploadView(FileUploadBaseView):
     Handles file uploads to the 'datasets/' directory.
     """
     destination_folder = '/mnt/datasets'
+
+class SituationViewSet(viewsets.ModelViewSet):
+    queryset = models.Situation.objects.all()
+    serializer_class = serializers.SituationSerializer
+

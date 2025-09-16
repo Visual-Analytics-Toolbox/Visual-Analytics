@@ -140,7 +140,35 @@ class GameControlData(Struct):
             raw += t.pack()
 
         return raw
+    
+    def json(self):
+        # Handle the boolean logic for firstHalf
+        if self.firstHalf == 1:
+            first_half_value = True
+        elif self.firstHalf == 0:
+            first_half_value = False
+        else:
+            # Represent undefined cases as a string or null
+            first_half_value = f"undefined({self.firstHalf})"
 
+        # Construct a dictionary with all the data points
+        data = {
+            "Header": str(self.GAMECONTROLLER_TRUE_DATA_HEADER if self.trueData else self.GAMECONTROLLER_STRUCT_HEADER, 'utf-8'),
+            "Version": self.GAMECONTROLLER_STRUCT_VERSION,
+            "Packet Number": self.packetNumber & 0xFF,
+            "Players per Team": self.playersPerTeam,
+            "competitionPhase": self.getCompetitionPhase(),
+            "competitionType": self.getCompetitionType(),
+            "gamePhase": self.getGamePhase(),
+            "gameState": self.getGameState(),
+            "setPlay": self.getSetPlay(),
+            "firstHalf": first_half_value,
+            "kickingTeam": self.kickingTeam,
+            "secsRemaining": self.secsRemaining,
+            "secondaryTime": self.secondaryTime
+        }
+        
+        return data
     def __str__(self):
         out = "              Header: " + str(self.GAMECONTROLLER_TRUE_DATA_HEADER if self.trueData else self.GAMECONTROLLER_STRUCT_HEADER, 'utf-8') + "\n"
         out += "            Version: " + str(self.GAMECONTROLLER_STRUCT_VERSION) + "\n"

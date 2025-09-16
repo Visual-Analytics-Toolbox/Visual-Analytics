@@ -90,3 +90,8 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tag
         fields = ['id', 'name']
+        
+class SituationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Situation
+        fields = "__all__"
