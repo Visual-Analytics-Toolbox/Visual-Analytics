@@ -17,6 +17,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
+from pathlib import Path
 User = get_user_model()
 
 
@@ -367,7 +368,7 @@ class FileUploadBaseView(APIView):
         filename = os.path.basename(uploaded_file.name)
 
         # Create the destination directory if it doesn't exist
-        destination_dir = self.destination_folder
+        destination_dir = Path(self.destination_folder)
         destination_dir.mkdir(parents=True, exist_ok=True)
         
         file_path = destination_dir / filename
