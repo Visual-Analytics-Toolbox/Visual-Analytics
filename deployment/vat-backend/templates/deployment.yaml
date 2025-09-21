@@ -67,5 +67,12 @@ spec:
           value: "postgres-postgresql.postgres.svc.cluster.local"
         - name: VAT_POSTGRES_PORT
           value: "5432"
+        volumeMounts:
+        - name: modelmount
+          mountPath: /mnt/models
       imagePullSecrets:
       - name: github-access
+      volumes:
+      - name: modelmount
+        hostPath:
+          path: /mnt/models

@@ -367,7 +367,7 @@ class FileUploadBaseView(APIView):
         filename = os.path.basename(uploaded_file.name)
 
         # Create the destination directory if it doesn't exist
-        destination_dir = settings.MEDIA_ROOT / self.destination_folder
+        destination_dir = self.destination_folder
         destination_dir.mkdir(parents=True, exist_ok=True)
         
         file_path = destination_dir / filename
@@ -402,10 +402,10 @@ class ModelUploadView(FileUploadBaseView):
     """
     Handles file uploads to the 'models/' directory.
     """
-    destination_folder = 'models'
+    destination_folder = '/mnt/models'
 
 class DatasetUploadView(FileUploadBaseView):
     """
     Handles file uploads to the 'datasets/' directory.
     """
-    destination_folder = 'datasets'
+    destination_folder = '/mnt/datasets'
