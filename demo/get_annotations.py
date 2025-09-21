@@ -9,9 +9,9 @@ client = Vaapi(
     base_url=os.environ.get("VAT_API_URL"),
     api_key=os.environ.get("VAT_API_TOKEN"),
 )
-mylist = client.annotations.task(class_name="ball", amount=20, prio_only=False)[
-    "result"
-]
+my_list = client.annotations.list(log=282, validated=True)
+if my_list:
+    print(my_list[0])
 
-print(len(mylist))
-print(mylist)
+print()
+print(len(my_list))

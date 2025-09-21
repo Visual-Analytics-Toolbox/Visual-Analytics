@@ -4,18 +4,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.pagination import LimitOffsetPagination
 from django.db.models import Q, Count
 from django.db import connection
 from psycopg2.extras import execute_values
 from . import serializers
 from . import models
-import time
+from core.pagination import LargeResultsSetPagination
 from behavior.models import BehaviorFrameOption
 from cognition.models import CognitionFrame
 from django.forms.models import model_to_dict
+from .image_filter import ImageFilter
 import numpy as np
-
+import time
 
 class ImageCountView(APIView):
     @method_decorator(cache_page(60 * 60 * 2))
@@ -167,70 +167,27 @@ class ImageUpdateView(APIView):
         print(time.time() - starttime)
 
 
-class LargeResultsSetPagination(LimitOffsetPagination):
-    default_limit = 10
-    page_size_query_param = "page_size"
-
-
 class ImagePageSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
-    serializer_class = serializers.ImageSerializer
+    serializer_class = serializers.ImageWithAnnotationsSerializer
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        # we use copy here so that the QueryDict object query_params become mutable
-        query_params = self.request.query_params.copy()
+        qs =  models.NaoImage.objects.all()
+        qs = qs.prefetch_related("annotation")
+        
+        filter = ImageFilter(qs, self.request.query_params)
 
-        qs = self.queryset
-        #FIXME: only for test purposes
-        qs = qs.filter(annotation__isnull=False).distinct()
+        qs = (
+            filter.filter_log()
+            .filter_camera()
+            .filter_framenumber()
+            .filter_annotation()
+            .filter_validated()
+            .qs
+        )
 
-        print(query_params)
-        if "log" in query_params.keys():
-            log_id = int(query_params.pop("log")[0])
-            qs = qs.filter(frame__log=log_id)
-
-        if "frame_number" in query_params.keys():
-            frame_number = int(query_params.pop("frame_number")[0])
-            qs = qs.filter(frame__frame_number=frame_number)
-
-        # This is a generic filter on the queryset, the supplied filter must be a field in the Image model
-        filters = Q()
-        for field in models.NaoImage._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value == "None" or param_value == "null":
-                filters &= Q(**{f"{field.name}__isnull": True})
-                # print(f"filter with {field.name} = {param_value}")
-            elif param_value:
-                # print(f"filter with {field.name} = {param_value}")
-                filters &= Q(**{field.name: param_value})
-
-        qs = qs.filter(filters)
-
-        # Optional prefetch only when requested
-        include_annotations = self.request.query_params.get("include_annotations") == "1"
-        if include_annotations:
-            qs = qs.prefetch_related("annotation")
-
-        # check if the frontend wants to use a frame filter
-        # FIXME select frame_filter by name
-        if "use_filter" in query_params and query_params.get("use_filter") == "1":
-            # check if we have a list of frames set here
-            frames = models.FrameFilter.objects.filter(
-                log_id=query_params.get("log"),
-                user=self.request.user,
-            ).first()
-
-            if frames:
-                qs = qs.filter(frame_number__in=frames.frames["frame_list"])
-    
         return qs.order_by("frame")
-
-    def get_serializer_class(self):
-        include_annotations = self.request.query_params.get("include_annotations") == "1"
-        if include_annotations:
-            return serializers.ImageWithAnnotationsSerializer
-        return serializers.ImageSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):

@@ -394,7 +394,7 @@ if __name__ == "__main__":
         password=os.environ.get("PGPASSWORD"),
     )
     today = datetime.now()
-    datestring = today.strftime("%Y%m%d%H")
+    datestring = today.strftime("%Y%m%d%H") # FIXME add minute
     output_folder = Path(args.output) / Path(datestring)
     Path(output_folder).mkdir(exist_ok=True, parents=True)
 
