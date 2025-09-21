@@ -37,6 +37,8 @@ mlflow:
       service:
         ports:
           postgresql: 5333
+    volumePermissions:
+      enabled: true
     auth:
       existingSecret: mlflow-postgresql
 
