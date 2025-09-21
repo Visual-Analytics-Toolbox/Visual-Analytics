@@ -70,9 +70,14 @@ spec:
         volumeMounts:
         - name: modelmount
           mountPath: /mnt/models
+        - name: datasetmount
+          mountPath: /mnt/datasets
       imagePullSecrets:
       - name: github-access
       volumes:
       - name: modelmount
         hostPath:
           path: /mnt/models
+      - name: datasetmount
+        hostPath:
+          path: /mnt/datasets    
