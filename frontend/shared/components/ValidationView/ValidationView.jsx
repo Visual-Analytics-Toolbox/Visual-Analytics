@@ -98,7 +98,7 @@ const ValidationView = ({ }) => {
         return <div>Loading</div>;
     }
 
-    //console.log(data)
+    console.log(data)
 
 
 
@@ -135,8 +135,8 @@ const ValidationView = ({ }) => {
             </div>
 
             <div className={styles.image_grid}>
-                {data.results.map(image => (
-                    <div className={styles.konva_overlay}>
+                {data.results.map((image, i) => (
+                    <div className={styles.konva_overlay} key={i}>
                         <Stage
                             width={640}
                             height={480}
@@ -151,6 +151,7 @@ const ValidationView = ({ }) => {
                                     width={640}
                                     height={480}
                                 />
+                                {/* FIXME handle the case that annotations is empty */}
                                 {image.annotations.map((box) => (
                                     <Rect
                                         className={box.id}
