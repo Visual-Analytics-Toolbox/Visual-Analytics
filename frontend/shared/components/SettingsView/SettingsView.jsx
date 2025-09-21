@@ -22,6 +22,7 @@ const SettingsView = () => {
   const [log_root, setlogRoot] = useState('');
   const [dev_token, setDevToken] = useState('');
   const [use_dev, setUseDev] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     async function loadSavedToken() {
@@ -48,6 +49,7 @@ const SettingsView = () => {
         setUseDev(savedUseDev);
       }
     }
+
     loadSavedToken();
     loadSavedLogRoot();
     loadSavedDevToken();
@@ -55,11 +57,14 @@ const SettingsView = () => {
   }, []);
 
   const handleSave = async (e) => {
+    setIsAnimating(true);
     await electronAPI.set_value("apiToken", token);
     await electronAPI.set_value("logRoot", log_root);
     await electronAPI.set_value("devToken", dev_token);
     await electronAPI.set_value("useDev", use_dev);
-    e.target.classList.add(styles.success_button);
+
+    // Reset animation state after it completes
+    setTimeout(() => setIsAnimating(false), 900);
   };
 
   return (
@@ -110,7 +115,11 @@ const SettingsView = () => {
 
           </div>
           <div className={styles.form_group}>
-            <button id="save_button" onClick={(e) => handleSave(e)}>Save</button>
+            <button
+              className={`${styles.save_btn} ${isAnimating ? styles.animate : ''}`}
+              disabled={isAnimating}
+              onClick={(e) => handleSave(e)}>Save
+            </button>
           </div>
 
         </div>

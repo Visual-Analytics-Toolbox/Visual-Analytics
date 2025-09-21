@@ -39,23 +39,44 @@
     padding: 5px 12px;
 }
 
-.success_button {
-    background-color: green;
-}
+.success_button {}
 
 .error_button {
     background-color: red;
 }
 
-#save_button {
-    background-color: #2a2d2e;
-    border: 1px solid var(--magenta);
+
+/* Button.css */
+.save_btn {
+    padding: 10px 20px;
+
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.9s ease;
 }
 
-/* .form_group button:focus {
-    font-size: 0.95em;
-    background-color: #2a2d2e;
-    border: 1px solid var(--magenta);
-    border-radius: 6px;
-    padding: 5px 12px;
-} */
+.save_btn.animate {
+    animation: pulse 0.9s ease;
+}
+
+.save_btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+
+    }
+
+    50% {
+        transform: scale(1.2);
+        background-color: green;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

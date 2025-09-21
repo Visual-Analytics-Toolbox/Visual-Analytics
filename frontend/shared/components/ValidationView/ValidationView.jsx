@@ -168,7 +168,6 @@ const ValidationView = ({ }) => {
                                         fill={box.validated == true ? "green" : box.color}
                                         dash={[10, 5]} // Optional: makes the line dashed
                                         draggable
-
                                     />
 
                                 ))}
