@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datasets-filesystem 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: datasets-filesystem
+  template:
+    metadata:
+      labels:
+        app: datasets-filesystem
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-conf2
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf2
+          readOnly: true
+        - name: datasetmount
+          mountPath: /mnt/datasets
+        resources:
+          requests:
+            memory: "800Mi"
+            cpu: "1"
+          limits:
+            memory: "1000Mi"
+            cpu: "2"
+      volumes:
+      - name: nginx-conf2
+        configMap:
+          name: nginx-conf2
+          items:
+            - key: nginx.conf2
+              path: nginx.conf2
+      - name: datasetmount
+        hostPath:
+          path: /mnt/datasets
+      revisionHistoryLimit: 3

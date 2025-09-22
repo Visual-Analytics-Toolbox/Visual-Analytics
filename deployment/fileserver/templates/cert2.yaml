@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: certificate-datasets
+  namespace: {{ .Values.namespace }}
+spec:
+  secretName: tls-cert-datasets
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  commonName: datasets.berlin-united.com
+  dnsNames:
+  - datasets.berlin-united.com
+  issuerRef:
+    name: letsencrypt-prod-datasets
+    kind: Issuer
