@@ -13,11 +13,11 @@ from django.db import connection
 from psycopg2.extras import execute_values
 from django.db import models as django_models
 from django.template import loader
-from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
+import os
 
 User = get_user_model()
 
@@ -424,4 +424,3 @@ class SituationViewSet(viewsets.ModelViewSet):
             .qs
         )
         return qs
-
