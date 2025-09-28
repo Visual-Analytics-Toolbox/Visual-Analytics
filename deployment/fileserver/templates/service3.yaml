@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: models-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: models-filesystem 
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: models-filesystem 
