@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: log-filesystem 
+  name: fileserver
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: log-filesystem
+      app: fileserver
   template:
     metadata:
       labels:
-        app: log-filesystem
+        app: fileserver
     spec:
       containers:
       - name: nginx
@@ -24,6 +24,10 @@ spec:
           readOnly: true
         - name: replmount
           mountPath: /mnt/repl
+        - name: datasetmount
+          mountPath: /mnt/datasets
+        - name: modelsmount
+          mountPath: /mnt/models
         resources:
           requests:
             memory: "800Mi"
@@ -40,5 +44,11 @@ spec:
               path: nginx.conf
       - name: replmount
         hostPath:
-          path: /mnt/repl # path to a folder on the actual node
+          path: /mnt/repl
+      - name: datasetmount
+        hostPath:
+          path: /mnt/datasets
+      - name: modelsmount
+        hostPath:
+          path: /mnt/models
       revisionHistoryLimit: 3
