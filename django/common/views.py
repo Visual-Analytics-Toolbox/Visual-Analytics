@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from . import serializers
 from . import models
+from .filter import SituationFilter
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_GET
 from rest_framework.response import Response
@@ -17,8 +18,8 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
-User = get_user_model()
 
+User = get_user_model()
 
 @require_GET
 def scalar_doc(request):
@@ -412,4 +413,15 @@ class DatasetUploadView(FileUploadBaseView):
 class SituationViewSet(viewsets.ModelViewSet):
     queryset = models.Situation.objects.all()
     serializer_class = serializers.SituationSerializer
+
+    def get_queryset(self):
+        qs = models.Situation.objects.all()
+        # filter all possible arguments here via the builder pattern
+        filter = SituationFilter(qs, self.request.query_params)
+        qs = (
+            filter.filter_log()
+            .filter_game()
+            .qs
+        )
+        return qs
 

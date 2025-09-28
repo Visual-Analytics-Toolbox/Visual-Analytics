@@ -172,14 +172,14 @@ class Tag(models.Model):
         return self.name
     
 class Situation(models.Model):
-    GameControllerMessage = models.JSONField(blank=True, null=True)
+    message = models.JSONField(blank=True, null=True)
     game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
     log = models.ForeignKey(Log, null=True, blank=True, on_delete=models.CASCADE)
     
     @property
     def time(self):
     # TODO: parse json here so the timestamp of the Situation is easier to retrieve
-        pass
+        return self.message["secsRemaining"]
     
     
     @property

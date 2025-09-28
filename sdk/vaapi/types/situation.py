@@ -15,7 +15,7 @@ class Situation(pydantic_v1.BaseModel):
     # Foreign key to the log this situation is from
     log: typing.Optional[int] = None
     # Message from GameController in JSON Format
-    GameControllerMessage: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(
+    message: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(
         default=None
     )
     def json(self, **kwargs: typing.Any) -> str:

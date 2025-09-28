@@ -1,12 +1,12 @@
 import socket
 from utils.GameControlData import GameControlData
 from utils.logging import get_logger
-from pynput import keyboard
 from vaapi.client import Vaapi
 import os
 from queue import Queue
 import threading
 from iterfzf import iterfzf
+logging = get_logger()
 
 class GameController():
     """
@@ -25,7 +25,7 @@ class GameController():
         self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.__socket.bind(('', 3838))
         self.__socket.settimeout(1)  # in sec
-        self.logger = get_logger()
+        
         
     def run(self):
         try:
@@ -34,10 +34,10 @@ class GameController():
             if len(data) > 0:
                 if self.__source is None or address[0] == self.__source:
                     message = GameControlData(data)
-                    self.logger.info(message.secsRemaining)
+                    logging.info(message.secsRemaining)
                     return message
         except Exception as e:
-            self.logger.error(e)
+            logging.error(e)
             return None
 
 class SituationMarker():
@@ -53,33 +53,44 @@ class SituationMarker():
         self.game = None
         
         self.menu()
+        print('press enter to mark a situation\n enter q to stop the programm')
         self.start_threads()
-        
+        try:
+            while True:
+                import time
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print("Exiting application.")
 
     def start_threads(self):
-        listener_thread = threading.Thread(target=self.key_listener,args=(self.queue,),daemon=True)
-        listener_thread.start()
         game_thread = threading.Thread(target=self.game_listener,args=(self.queue,),daemon=True)
         game_thread.start()
+        key_thread = threading.Thread(target=self.key_listener, args=(self.queue,), daemon=True)
+        key_thread.start()
         
     def menu(self):
-        games = self.client.games.list()
-        
-        game_map = {f"{game.start_time}: {game.team1} vs {game.team2} {game.half}": game for game in games}
-        selected_str = iterfzf(game_map.keys())
-        if selected_str:
-            selected_game = game_map[selected_str]
-            self.game = selected_game.id    
+        try:
+            games = self.client.games.list()
+            if games:
+                game_map = {f"{game.start_time}: {game.team1} vs {game.team2} {game.half}": game for game in games}
+                selected_str = iterfzf(game_map.keys())
+                if selected_str:
+                    selected_game = game_map[selected_str]
+                    self.game = selected_game.id
+            else:
+                print('couldn''nt find any games')    
+        except Exception as e:
+            logging.error(e)
+       
                 
-    def key_listener(self,q):
-        def on_release(key):
-            if key == keyboard.KeyCode.from_char(self.key):            
+    def key_listener(self, q):
+        while True:
+            # TODO: find better way for input
+            a = input()
+            if a != 'q':
                 q.put('msg')
-            elif key == keyboard.Key.esc:
+            else:
                 quit()
-        with keyboard.Listener(
-        on_release=on_release,suppress=True) as listener:
-            listener.join()
             
     def game_listener(self,q):
         while True:
@@ -87,24 +98,9 @@ class SituationMarker():
             if msg == 'msg':
                 message = self.controller.run()
                 if message:
-                    print(f'sending this time  {message.secsRemaining} to db')
+                    self.client.situation.create(game=self.game,message=message.json())
             q.task_done()
                 
             
 if __name__ == "__main__":
-    client = Vaapi(
-        base_url=os.environ.get("VAT_API_URL"),
-        api_key=os.environ.get("VAT_API_TOKEN"),
-    )
-    
-    response = client.situation.create()
-    print(response)
-    # m = SituationMarker()
-    # try:
-    #     # Keep the main thread alive
-    #     while True:
-    #         pass
-    # except KeyboardInterrupt:
-    #     print("Shutting down...")
-    
-    
+    main = SituationMarker()

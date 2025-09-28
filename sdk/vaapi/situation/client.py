@@ -112,7 +112,7 @@ class SituationClient:
         *,
         game: typing.Optional[int] = OMIT,
         log: typing.Optional[int] = OMIT,
-        GameControllerMessage: typing.Optional[typing.Dict[str, typing.Any]]= OMIT,
+        message: typing.Optional[typing.Dict[str, typing.Any]]= OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Situation:
         """
@@ -126,7 +126,7 @@ class SituationClient:
             Foreign key to the game this situation is from.
         log : typing.Optional[int]
             Foreign key to the log this situation is from.
-        GameControllerMessage : typing.Optional[typing.Dict[str, typing.Any]]
+        message : typing.Optional[typing.Dict[str, typing.Any]]
             Message from GameController in JSON Format
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -155,7 +155,7 @@ class SituationClient:
             json={
                 "game": game,
                 "log": log,
-                "GameControllerMessage": GameControllerMessage,
+                "message": message,
             },
             request_options=request_options,
             omit=OMIT,
@@ -225,7 +225,7 @@ class SituationClient:
         *,
         game: typing.Optional[int] = OMIT,
         log: typing.Optional[int] = OMIT,
-        GameControllerMessage: typing.Optional[typing.Dict[str, typing.Any]]= OMIT,
+        message: typing.Optional[typing.Dict[str, typing.Any]]= OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Situation:
         """
@@ -237,7 +237,7 @@ class SituationClient:
             Foreign key to the game this situation is from.
         log : typing.Optional[int]
             Foreign key to the log this situation is from.
-        GameControllerMessage : typing.Optional[typing.Dict[str, typing.Any]]
+        message : typing.Optional[typing.Dict[str, typing.Any]]
             Message from GameController in JSON Format
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -257,7 +257,7 @@ class SituationClient:
         )
         new_situation = client.situation.create(
             game=1,
-            GameControllerMessage=JSONMessage
+            message=JSONMessage
         )
         """
         _response = self._client_wrapper.httpx_client.request(
@@ -266,7 +266,7 @@ class SituationClient:
             json={
                 "game": game,
                 "log": log,
-                "GameControllerMessage": GameControllerMessage,
+                "message": message,
             },
             request_options=request_options,
             omit=OMIT,
