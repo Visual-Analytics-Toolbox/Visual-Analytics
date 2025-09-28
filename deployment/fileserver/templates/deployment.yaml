@@ -4,6 +4,7 @@ metadata:
   name: fileserver
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: fileserver
@@ -12,6 +13,7 @@ spec:
       labels:
         app: fileserver
     spec:
+      
       containers:
       - name: nginx
         image: nginx
@@ -51,4 +53,4 @@ spec:
       - name: modelsmount
         hostPath:
           path: /mnt/models
-      revisionHistoryLimit: 3
+      
