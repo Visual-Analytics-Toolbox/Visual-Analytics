@@ -1,5 +1,7 @@
 # Local Developer Setup
 
+## Setup uv
+see https://docs.astral.sh/uv/getting-started/installation/
 
 ## Setup direnv
 In order to setup everything correctly you need to set up a bunch of environment variables. We recommend to use [direnv](https://direnv.net/). However this is optional.
