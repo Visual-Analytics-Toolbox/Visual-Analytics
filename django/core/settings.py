@@ -245,7 +245,7 @@ if not DEBUG:
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis-master.redis.svc.cluster.local:6379/1",
+            "LOCATION": "redis://redis.redis.svc.cluster.local:6379/1",
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 "IGNORE_EXCEPTIONS": True,  # if redis is down django can still function
