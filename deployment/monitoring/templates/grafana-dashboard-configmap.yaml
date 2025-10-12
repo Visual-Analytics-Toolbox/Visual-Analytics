@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana-dashboards
-  labels:
-    grafana_dashboard: "1"
-data:
-  vat.json: |
-{{ .Files.Get "grafana-dashboards/vat.json" | indent 4 }}
