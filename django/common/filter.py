@@ -16,7 +16,7 @@ class VideoFilter:
         if "log" in self._params:
             log_id = int(self._params["log"])
             # TODO: get game_id here
-            game_id=Log.objects.get(id=log_id)
+            game_id=Log.objects.get(id=log_id).game
             self.qs = self.qs.filter(game=game_id)
         return self
 
