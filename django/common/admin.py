@@ -119,6 +119,11 @@ class LogStatusAdmin(ModelAdmin):
     get_log_id.short_description = "Log ID"
     get_log_path.short_description = "Log Path"
 
+class VideoRecordingAdmin(ModelAdmin):
+    list_display = ["get_game_id", "video_path", "url", "type"]
+
+    def get_game_id(self, obj):
+        return obj.game.id
 
 class TeamAdmin(ModelAdmin):
     list_display = ["id", "get_team_id", "get_team_name"]
@@ -137,7 +142,6 @@ class TeamAdmin(ModelAdmin):
 @admin.register(Tag)
 @admin.register(Event)
 @admin.register(Experiment)
-@admin.register(VideoRecording)
 class CustomAdminClass(ModelAdmin):
     pass
 
@@ -146,3 +150,4 @@ admin.site.register(Game, GameAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)
 admin.site.register(Team, TeamAdmin)
+admin.site.register(VideoRecording, VideoRecordingAdmin)
