@@ -13,11 +13,12 @@ from django.db import connection
 from psycopg2.extras import execute_values
 from django.db import models as django_models
 from django.template import loader
-from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
+from .filter import VideoFilter
+
 User = get_user_model()
 
 
@@ -300,24 +301,19 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.VideoRecordingSerializer
 
     def get_queryset(self):
-        queryset = models.VideoRecording.objects.all()
-        query_params = self.request.query_params
+        qs = models.VideoRecording.objects.all()
 
-        filters = Q()
-        for field in models.VideoRecording._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                if isinstance(field, django_models.BooleanField):
-                    # Convert string to boolean for boolean fields
-                    if param_value.lower() in ("true", "1", "yes"):
-                        param_value = True
-                    elif param_value.lower() in ("false", "0", "no"):
-                        param_value = False
-                    else:
-                        continue  # Skip invalid boolean values
-                filters &= Q(**{field.name: param_value})
+        filter = VideoFilter(qs, self.request.query_params)
 
-        return queryset.filter(filters)
+        qs = (
+            filter.filter_game()
+            .filter_log()
+            .filter_experiment()
+            .filter_type()
+            .qs
+        )
+
+        return qs
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
