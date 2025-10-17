@@ -10,6 +10,7 @@ import VideoAnalysisView from '@shared/components/VideoAnalysisView/VideoAnalysi
 import DebuggerView from '@shared/components/DebuggerView/DebuggerView';
 import VideoPlayerCanvas from '@shared/components/VideoPlayerCanvas/VideoPlayerCanvas'
 import ValidationView from '../ValidationView/ValidationView';
+import TeamView from '../TeamView/TeamView';
 
 import { Routes, Route } from "react-router-dom";
 
@@ -36,6 +37,7 @@ const MainLayout = ({ appVersion }) => {
           <Route path="/debug" element={<DebuggerView />} />
           <Route path="/test" element={<VideoPlayerCanvas />} />
           <Route path="/validation" element={<ValidationView />} />
+          <Route path="/teams" element = {<TeamView />}/>
         </Routes>
       </div>
     </div>

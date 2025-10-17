@@ -52,6 +52,10 @@ class LogStatusSerializer(serializers.ModelSerializer):
         model = models.LogStatus
         fields = "__all__"
 
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Team
+        fields = "__all__"
 
 class VideoRecordingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,3 +94,4 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tag
         fields = ['id', 'name']
+        

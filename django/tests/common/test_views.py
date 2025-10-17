@@ -1,6 +1,6 @@
 import pytest
-from .factories import EventFactory
-from common.models import Event
+from .factories import EventFactory,TeamFactory
+from common.models import Event,Team
 import json
 pytestmark = pytest.mark.unit
 
@@ -92,3 +92,28 @@ class TestCommonViews:
 
         #Verify the event was actually created in the database
         assert Event.objects.count() == 5
+    @pytest.mark.django_db
+    def test_team_create(self,admin_client):
+        team_data = TeamFactory.build()
+        team_json = {
+            'team_id' : team_data.team_id,
+            'name': team_data.name
+        }
+        response = admin_client.post('/api/teams/',team_json,format='json')
+        
+        assert response.status_code == 201
+        response_data = json.loads(response.content)
+        assert response_data["team_id"] == team_json['team_id']
+        assert response_data["name"] == team_json['name']
+    
+    #we already have teams in the test database because of a migration
+    #create without team_id set to a specific value could just return an existing object because of 
+    #the way the team factory was created      
+    @pytest.mark.django_db
+    def test_team_list(self,admin_client):
+        init_team_count = Team.objects.all().count()
+        TeamFactory.create(team_id=200)
+        response = admin_client.get('/api/teams/',format='json')
+        response_data = json.loads(response.content)
+        assert response.status_code == 200
+        assert len(response_data) - init_team_count == 1

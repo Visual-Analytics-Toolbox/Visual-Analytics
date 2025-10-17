@@ -19,6 +19,7 @@ router.register("logs", views.LogViewSet)
 router.register("log-status", views.LogStatusViewSet)
 router.register("video", views.VideoViewSet)
 router.register("tags",views.TagViewSet)
+router.register("teams",views.TeamViewSet)
 
 
 urlpatterns += router.urls
