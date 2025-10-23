@@ -173,7 +173,12 @@ class Tag(models.Model):
 
 
 class Robot(models.Model):
-    model = models.CharField(max_length=30, blank=False, null=False) # Nao, Booster
+
+    class RobotModel(models.TextChoices):
+        Nao = "Nao", _("Nao")
+        BoosterK1 = "Booster K1", _("Booster K1")
+
+    model = models.CharField(max_length=30, choices=RobotModel, blank=False, null=False) # Nao, Booster
     head_number = models.IntegerField(blank=True, null=True)
     body_serial = models.CharField(max_length=20, blank=True, null=True)
     head_serial = models.CharField(max_length=20, blank=True, null=True)
