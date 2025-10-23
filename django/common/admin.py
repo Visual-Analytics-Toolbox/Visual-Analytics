@@ -12,23 +12,13 @@ site.unregister(Group)
 
 
 class GameAdmin(ModelAdmin):
-    list_display = ("event_id", "get_id", "get_team1", "get_team2", "half", "is_testgame")
+    list_display = ("event_id", "get_id", "team1__name", "team2__name", "half", "is_testgame")
+    list_select_related = ["team1", "team2"]
 
     def get_id(self, obj):
         return obj.id
 
-    def get_team1(self, obj):
-        if obj.team1:
-            return obj.team1.name
-
-    def get_team2(self, obj):
-        if obj.team2:
-            return obj.team2.name
-
     get_id.short_description = "Game ID"
-    get_team1.short_description = "Team 1"
-    get_team2.short_description = "Team 2"
-
 
 class GameExperimentFilter(DropdownFilter):
     title = "Content Type"
