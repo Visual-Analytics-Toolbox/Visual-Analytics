@@ -1,5 +1,4 @@
 import typing
-import datetime as dt
 from json.decoder import JSONDecodeError
 
 from ..core.api_error import ApiError
@@ -97,7 +96,7 @@ class TeamClient:
         *,
         team_id: typing.Optional[int] = OMIT,
         name: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> Team:
         """ """
         _response = self._client_wrapper.httpx_client.request(
@@ -145,13 +144,13 @@ class TeamClient:
         *,
         team_id: typing.Optional[int] = OMIT,
         name: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None
+        request_options: typing.Optional[RequestOptions] = None,
     ) -> Team:
         """ """
         _response = self._client_wrapper.httpx_client.request(
             "api/teams/",
             method="POST",
-             json={
+            json={
                 "team_id": team_id,
                 "name": name,
             },
