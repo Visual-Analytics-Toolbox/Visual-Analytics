@@ -138,11 +138,14 @@ class TeamAdmin(ModelAdmin):
     get_team_name.short_description = "Team Name"
 
 
+class RobotAdmin(ModelAdmin):
+    list_display = ["id", "model", "version", "head_number", "body_serial", "head_serial"]
+
+
 # this is required for every model
 @admin.register(Tag)
 @admin.register(Event)
 @admin.register(Experiment)
-@admin.register(Robot)
 class CustomAdminClass(ModelAdmin):
     pass
 
@@ -152,3 +155,4 @@ admin.site.register(Log, LogAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(VideoRecording, VideoRecordingAdmin)
+admin.site.register(Robot, RobotAdmin)
