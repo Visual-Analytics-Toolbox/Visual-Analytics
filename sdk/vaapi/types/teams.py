@@ -4,16 +4,16 @@ import typing
 from ..core.datetime_utils import serialize_datetime
 from ..core.pydantic_utilities import deep_union_pydantic_dicts, pydantic_v1
 
-#TODO make sure that the optional attribute is removed if team has no optional attributes
+# TODO make sure that the optional attribute is removed if team has no optional attributes
+
 
 class Team(pydantic_v1.BaseModel):
     # Id assigned by django
     id: typing.Optional[int] = None
 
-    team_id: typing.Optional[int]= None
-    
-    name: typing.Optional[str] = pydantic_v1.Field(default=None)
+    team_id: typing.Optional[int] = None
 
+    name: typing.Optional[str] = pydantic_v1.Field(default=None)
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {

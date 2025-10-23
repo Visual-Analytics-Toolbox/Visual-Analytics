@@ -17,7 +17,9 @@ class MotionRepresentationClient:
         self._client_wrapper = client_wrapper
         self.endpoint = endpoint
 
-    def get(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> MotionRepresentation:
+    def get(
+        self, id: int, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> MotionRepresentation:
         """
         Examples
         --------
@@ -43,7 +45,9 @@ class MotionRepresentationClient:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
 
-    def delete(self, id: int, *, request_options: typing.Optional[RequestOptions] = None) -> None:
+    def delete(
+        self, id: int, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> None:
         """
         Delete a Motion Representation.
 
@@ -163,7 +167,9 @@ class MotionRepresentationClient:
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(typing.List[MotionRepresentation], _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(
+                    typing.List[MotionRepresentation], _response.json()
+                )  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
@@ -254,7 +260,9 @@ class MotionRepresentationClient:
         )
         try:
             if 200 <= _response.status_code < 300:
-                return pydantic_v1.parse_obj_as(typing.Dict[str, typing.Any], _response.json())  # type: ignore
+                return pydantic_v1.parse_obj_as(
+                    typing.Dict[str, typing.Any], _response.json()
+                )  # type: ignore
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)

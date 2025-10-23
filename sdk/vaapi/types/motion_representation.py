@@ -18,7 +18,9 @@ class MotionRepresentation(pydantic_v1.BaseModel):
     size: typing.Optional[int] = pydantic_v1.Field(default=None)
 
     # representation_data as json
-    representation_data: typing.Optional[typing.Dict[str, typing.Any]] = pydantic_v1.Field(default=None)
+    representation_data: typing.Optional[typing.Dict[str, typing.Any]] = (
+        pydantic_v1.Field(default=None)
+    )
 
     def json(self, **kwargs: typing.Any) -> str:
         kwargs_with_defaults: typing.Any = {
