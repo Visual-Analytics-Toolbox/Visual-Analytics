@@ -30,7 +30,7 @@ class GameListView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["games"] = Game.objects.filter(event_id=context["event"]).order_by(
+        context["games"] = Game.objects.select_related("team1").select_related("team2").filter(event_id=context["event"]).order_by(
             "start_time"
         )
 
