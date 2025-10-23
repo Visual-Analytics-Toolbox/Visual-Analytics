@@ -139,7 +139,7 @@ class TeamAdmin(ModelAdmin):
 
 
 class RobotAdmin(ModelAdmin):
-    list_display = ["head_number", "model", "version", "body_serial", "head_serial"]
+    list_display = ["head_number", "model", "version", "body_serial", "head_serial", "purchased", "warranty_end"]
 
 
 # this is required for every model

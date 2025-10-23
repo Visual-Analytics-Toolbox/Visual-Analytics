@@ -27,6 +27,7 @@ def import_global_tables():
         "common_event.sql",
         "common_experiment.sql",
         "common_game.sql",
+        "common_robot.sql",
         "common_log.sql",
         "common_logstatus.sql",
         "common_videorecording.sql",

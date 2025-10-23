@@ -109,6 +109,7 @@ def export_full_tables():
         "common_event",
         "common_experiment",
         "common_game",
+        "common_robot",
         "common_log",
         "common_logstatus",
         "common_videorecording",
