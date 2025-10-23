@@ -1,0 +1,14 @@
+.env
+.envrc
+.dockerignore
+Dockerfile
+.ruff_cache
+venv
+.venv/
+designs/
+demo/
+.vscode/
+frontend/
+sdk/
+utils/
+django/staticfiles

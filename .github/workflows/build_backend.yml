@@ -8,6 +8,7 @@ on:
 # This creates an environment variable called `IMAGE_NAME ` with the value `ghtoken_product_demo`.
 env:
   IMAGE_NAME: django_backend
+  PYTHON_VERSION: '3.12'
 #
 jobs:
   # This pushes the image to GitHub Packages.
@@ -16,7 +17,7 @@ jobs:
     permissions:
       packages: write
       contents: read
-      #
+
     steps:
       - uses: actions/checkout@v4
 
