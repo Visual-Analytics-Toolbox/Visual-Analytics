@@ -84,7 +84,7 @@ class Log(models.Model):
     log_path = models.CharField(max_length=200, blank=True, null=True)
     combined_log_path = models.CharField(max_length=200, blank=True, null=True)
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
-
+    comment = models.TextField(blank=True, null=True)
     git_commit = models.CharField(max_length=60, blank=True, null=True)
     is_favourite = models.BooleanField(default=False)
 
