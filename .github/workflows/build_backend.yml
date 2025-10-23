@@ -3,7 +3,6 @@ name: Build Django Image
 on:
   push:
     branches: ['main']
-    paths: ['django/**']
     
 # This creates an environment variable called `IMAGE_NAME ` with the value `ghtoken_product_demo`.
 env:
@@ -22,7 +21,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build image
-        working-directory: ./django
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry

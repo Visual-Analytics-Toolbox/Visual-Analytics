@@ -19,4 +19,4 @@ COPY --from=builder /django/staticfiles /django/staticfiles
 RUN uv sync --no-dev --frozen
 EXPOSE 8000
 
-CMD ["uv", "run", "gunicorn", "core.wsgi:application", "--workers=2", "--threads=4", "--worker-class", "gthread", "--bind", "0.0.0.0:8000"]
+CMD ["uv", "run", "--no-sync", "gunicorn", "core.wsgi:application", "--workers=2", "--threads=4", "--worker-class", "gthread", "--bind", "0.0.0.0:8000"]
