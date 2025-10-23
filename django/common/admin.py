@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Game, Log, LogStatus, Experiment, VideoRecording, Team,Tag
+from .models import Event, Game, Log, LogStatus, Experiment, VideoRecording, Team,Tag, Robot
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import (
     DropdownFilter,
@@ -142,6 +142,7 @@ class TeamAdmin(ModelAdmin):
 @admin.register(Tag)
 @admin.register(Event)
 @admin.register(Experiment)
+@admin.register(Robot)
 class CustomAdminClass(ModelAdmin):
     pass
 

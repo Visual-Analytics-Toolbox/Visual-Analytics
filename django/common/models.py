@@ -170,3 +170,14 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Robot(models.Model):
+    model = models.CharField(max_length=30, blank=False, null=False) # Nao, Booster
+    head_number = models.IntegerField(blank=True, null=True)
+    body_serial = models.CharField(max_length=20, blank=True, null=True)
+    head_serial = models.CharField(max_length=20, blank=True, null=True)
+    version = models.CharField(max_length=10, blank=True, null=True)
+    purchased = models.DateField(blank=True, null=True)
+    warranty_end = models.DateField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
