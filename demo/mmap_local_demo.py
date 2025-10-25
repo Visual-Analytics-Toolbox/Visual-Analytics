@@ -3,10 +3,10 @@ Parse log data locally
 """
 
 from vaapi.client import Vaapi
-from google.protobuf.json_format import MessageToDict
-from naoth.log import Reader as LogReader
+# from google.protobuf.json_format import MessageToDict
+# from naoth.log import Reader as LogReader
 from naoth.log import Parser
-import mmap
+# import mmap
 import os
 
 client = Vaapi(
