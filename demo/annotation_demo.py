@@ -18,8 +18,8 @@ def list_annotations_per_log():
 
 def print_annotation_stats():
     # FIXME we cant filter for camera yet
-    all_annotations = client.annotations.count(class_name="ball")["count"]
-    validated_annotations = client.annotations.count(class_name="ball", validated=True)[
+    all_annotations = client.annotations.count(type='bbox',class_name="ball")["count"]
+    validated_annotations = client.annotations.count(type='bbox',class_name="ball", validated=True)[
         "count"
     ]
 
