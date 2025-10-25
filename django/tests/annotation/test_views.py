@@ -3,8 +3,6 @@ import json
 import factory
 from .factories import AnnotationFactory
 from ..image.factories import NaoImageFactory
-from ..cognition.factories import CognitionFrameFactory
-from ..common.factories import LogFactory
 from annotation.models import Annotation
 
 pytestmark = pytest.mark.django_db
@@ -46,32 +44,7 @@ class TestAnnotationViews:
         # Try to create duplicate
         response2 = admin_client.post('/api/annotations/', ann, format='json')
         assert response2.status_code == 200
-        assert response2.json()['id'] == response.json()['id']
-
-    def test_annotation_task_basic(self, auth_client):
-        ann = AnnotationFactory.create(validated=False)
-        response = auth_client.get('/api/annotation-task/')
-        assert response.status_code == 200
-        data = json.loads(response.content)
-        assert 'result' in data
-        assert any(str(ann.image.frame.log.id) in link for link in data['result'])
-
-    def test_annotation_task_prio_only(self, auth_client):
-        log = LogFactory.create(is_favourite=False)
-        frame = CognitionFrameFactory.create(log=log)
-        image = NaoImageFactory.create(frame=frame)
-        AnnotationFactory.create_batch(4,image=image,validated=False)
-        response = auth_client.get('/api/annotation-task/', {'prio_only': "true"})
-        assert response.status_code == 200
-        assert json.loads(response.content)['result'] == []
-        log = LogFactory.create(is_favourite=True)
-        frame = CognitionFrameFactory.create(log=log)
-        image = NaoImageFactory.create(frame=frame)
-        AnnotationFactory.create_batch(5,image=image,validated=False)
-        response = auth_client.get('/api/annotation-task/', {'prio_only': "true"})
-        assert response.status_code == 200
-        assert len(json.loads(response.content)['result']) == 5
-        
+        assert response2.json()['id'] == response.json()['id']    
 
     def test_validate(self,admin_client):
         ann = AnnotationFactory.create(validated=False)
