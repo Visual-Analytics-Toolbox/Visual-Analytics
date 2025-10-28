@@ -1,24 +1,13 @@
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
 import os
 
-# loads a .env file. There is no .env file ?
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# used to provide cryptographic signing, and should be set to a unique, unpredictable value.
-# read more at https://docs.djangoproject.com/en/5.1/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = str(os.getenv("DJANGO_SECRET_KEY"))
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG") == "True"
+SECRET_KEY="django-insecure-n!-hggli0wd1(2=4!gsrbpt3=px4xxbed$ocvvw2v2+3cq+xz*"
+DEBUG=True
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -240,16 +229,3 @@ LOGGING = {
         },
     },
 }
-
-
-if not DEBUG:
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis.redis.svc.cluster.local:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "IGNORE_EXCEPTIONS": True,  # if redis is down django can still function
-            },
-        }
-    }

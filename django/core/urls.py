@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView
+from django.conf import settings
 
 urlpatterns = [
     path("", include("user.urls")),
@@ -14,3 +15,9 @@ urlpatterns = [
     path("api/", include("annotation.urls")),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
 ]
+
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+    urlpatterns = urlpatterns + debug_toolbar_urls()
+
+
