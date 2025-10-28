@@ -72,6 +72,13 @@ def print_image_stats():
         f"Bottom Images where blurredness factor is calculated: {bottom_calculated_perc}%"
     )
 
+def print_image_count():
+    client = Vaapi(
+        base_url=os.environ.get("VAT_API_URL"),
+        api_key=os.environ.get("VAT_API_TOKEN"),
+    )   
+    count = client.image.get_image_count()
+    print(f"There are {count} images matching the filter criterias")
 
 if __name__ == "__main__":
     client = Vaapi(
@@ -80,3 +87,4 @@ if __name__ == "__main__":
     )
 
     print_image_stats()
+    print_image_count()
