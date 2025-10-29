@@ -150,3 +150,38 @@ class VideoClient:
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, body=_response.text)
         raise ApiError(status_code=_response.status_code, body=_response_json)
+
+    def slice(
+        self,
+        *,
+        path: str,
+        start: int,
+        end: int,
+        request_options: typing.Optional[RequestOptions] = None
+    ) -> Video:
+        """
+        Examples
+        --------
+        from vaapi.client import Vaapi
+
+        client = Vaapi(
+            base_url='https://vat.berlin-united.com/',
+            api_key="YOUR_API_KEY",
+        )
+        """
+
+        query_params = {
+            "path": path,
+            "start": start,
+            "end": end,
+        }
+
+        with self._client_wrapper.httpx_client.stream(
+            f"api/video/slice",
+            method="GET",
+            request_options=request_options,
+            params=query_params,
+        ) as r:
+            with open("test4.mp4", 'wb') as f:
+                for chunk in r.iter_bytes():
+                    f.write(chunk)

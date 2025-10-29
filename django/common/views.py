@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from . import serializers
 from . import models
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseServerError
 from django.views.decorators.http import require_GET
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -18,7 +18,10 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
 from .filter import VideoFilter
+import logging
+import requests
 
+logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
@@ -336,6 +339,43 @@ class VideoViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status_code)
+
+class VideoSliceView(APIView):
+    def get(self, request):
+        # Get filter parameters from query string
+        path = request.query_params.get("path")
+        start = float(request.query_params.get("start"))
+        end = float(request.query_params.get("end"))
+
+        # Make the blocking HTTP call to the FFmpeg service
+        base_url = "http://ffmpeg-svc.ffmpeg.svc.cluster.local:80/video"
+        params = {
+            "path": path,
+            "start": start,
+            "end": end
+        }
+        ffmpeg_response = requests.get(base_url, params=params, timeout=300) # 5 min timeout
+        if ffmpeg_response.status_code not in [200, 202]:
+            logger.error(f"FFmpeg API failed with status {ffmpeg_response.status_code}: {ffmpeg_response.text}")
+            return HttpResponseServerError("Video generation service failed to start or complete.")
+
+        try:
+            # Open the file in binary mode
+            json_response = ffmpeg_response.json()
+            video_file = open(json_response["output"], 'rb')
+
+            # Create the FileResponse
+            response = FileResponse(video_file, content_type='video/mp4')
+            
+            # Set the Content-Disposition header to trigger a download
+            response['Content-Disposition'] = f'attachment; filename="{json_response["output"]}"'
+
+            logger.info(f"Successfully created FileResponse for {json_response["output"]}")
+            return response
+
+        except Exception as e:
+            logger.error(f"Error serving file {json_response["output"]}: {e}")
+            return HttpResponseServerError("Error reading the generated video file.")
 
 
 class TagViewSet(viewsets.ModelViewSet):
