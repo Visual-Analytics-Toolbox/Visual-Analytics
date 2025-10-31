@@ -6,6 +6,7 @@ from ..core.client_wrapper import SyncClientWrapper
 from ..core.jsonable_encoder import jsonable_encoder
 from ..core.pydantic_utilities import pydantic_v1
 from ..core.request_options import RequestOptions
+from pathlib import Path
 from ..types.video import Video
 
 # this is used as the default value for optional parameters
@@ -182,6 +183,16 @@ class VideoClient:
             request_options=request_options,
             params=query_params,
         ) as r:
-            with open("test4.mp4", 'wb') as f:
-                for chunk in r.iter_bytes():
-                    f.write(chunk)
+            print(r.headers)
+            content_disposition = r.headers.get("Content-Disposition")
+            if content_disposition:
+                # Example: attachment; filename="1a2b3c4d.mp4"
+                filename = Path(content_disposition.split("filename=")[-1].strip('"')).name
+                print(filename)
+                with open(str(filename), 'wb') as f:
+                    for chunk in r.iter_bytes():
+                        f.write(chunk)
+            else:
+                with open("test4.mp4", 'wb') as f:
+                    for chunk in r.iter_bytes():
+                        f.write(chunk)
