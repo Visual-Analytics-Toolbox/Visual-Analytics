@@ -343,14 +343,20 @@ class VideoViewSet(viewsets.ModelViewSet):
 class VideoSliceView(APIView):
     def get(self, request):
         # Get filter parameters from query string
-        path = request.query_params.get("path")
+        game_id = request.query_params.get("game")
         start = float(request.query_params.get("start"))
         end = float(request.query_params.get("end"))
+
+        qs = models.VideoRecording.objects.filter(game=game_id)
+        if not qs.exists():
+            return HttpResponseServerError("No Video file found")
+        
+        # FIXME: how to select gopro or picam if both exists - maybe prefer picam if exist
 
         # Make the blocking HTTP call to the FFmpeg service
         base_url = "http://ffmpeg-svc.ffmpeg.svc.cluster.local:80/video"
         params = {
-            "path": path,
+            "path": qs.first().video_path,
             "start": start,
             "end": end
         }

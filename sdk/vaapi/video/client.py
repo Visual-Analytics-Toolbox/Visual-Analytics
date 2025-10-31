@@ -155,7 +155,7 @@ class VideoClient:
     def slice(
         self,
         *,
-        path: str,
+        game: int,
         start: int,
         end: int,
         request_options: typing.Optional[RequestOptions] = None
@@ -172,17 +172,30 @@ class VideoClient:
         """
 
         query_params = {
-            "path": path,
+            "game": game,
             "start": start,
             "end": end,
         }
 
         with self._client_wrapper.httpx_client.stream(
-            f"api/video/slice",
+            "api/video/slice",
             method="GET",
             request_options=request_options,
             params=query_params,
         ) as r:
+            if r.status_code >= 400:
+                # Read the error body (often JSON) if the status code indicates an error
+                try:
+                    r.read()
+                    error_details = r.json()  # Tries to parse the body as JSON
+                except JSONDecodeError:
+                    error_details = r.read()  # Reads body as raw bytes/text if not JSON
+
+                # You can raise an exception or handle the error
+                print(f"ERROR: Received status code {r.status_code} - {error_details}")
+
+                # Depending on your desired flow, you might want to 'return' or 'raise' here
+                return
             print(r.headers)
             content_disposition = r.headers.get("Content-Disposition")
             if content_disposition:
