@@ -26,6 +26,21 @@ const TeamView = ({ }) => {
         staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
         cacheTime: 5 * 60 * 1000,
     });
+
+    if (teams.isError) {
+        return <div>Error fetching logs: {teams.error.message}</div>;
+    }
+
+    if (teams.isLoading) {
+        return (
+            <div className="view-content">
+                <div className="panel-header">
+                    <h3>TeamView</h3>
+                </div>
+            </div >
+        )
+    }
+
     return (
         <div className="view-content">
             <div className="panel-header">
@@ -35,19 +50,19 @@ const TeamView = ({ }) => {
                 <div className={styles.info_card}>
                     <table>
                         <tr>
-                        <th>ID</th>
-                        <th>Name</th>
+                            <th>ID</th>
+                            <th>Name</th>
                         </tr>
-                    {teams.data.map((team) => (
-                                <tr>
-                                    <td>{team.team_id}</td>
-                                    <td>{team.name}</td>
-                                </tr>
-                            ))}
+                        {teams.data.map((team) => (
+                            <tr>
+                                <td>{team.team_id}</td>
+                                <td>{team.name}</td>
+                            </tr>
+                        ))}
                     </table>
                 </div>
             </div>
-        
+
         </div>
     );
 };
