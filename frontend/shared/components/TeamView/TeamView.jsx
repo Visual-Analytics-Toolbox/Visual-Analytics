@@ -28,7 +28,7 @@ const TeamView = ({ }) => {
     });
 
     if (teams.isError) {
-        return <div>Error fetching logs: {teams.error.message}</div>;
+        return <div>Error fetching teams: {teams.error.message}</div>;
     }
 
     if (teams.isLoading) {
@@ -49,16 +49,20 @@ const TeamView = ({ }) => {
             <div className="panel-content">
                 <div className={styles.info_card}>
                     <table>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                        </tr>
-                        {teams.data.map((team) => (
+                        <thead>
                             <tr>
-                                <td>{team.team_id}</td>
-                                <td>{team.name}</td>
+                                <th>ID</th>
+                                <th>Name</th>
                             </tr>
-                        ))}
+                        </thead>
+                        <tbody>
+                            {teams.data.map((team) => (
+                                <tr key={team.id}>
+                                    <td>{team.team_id}</td>
+                                    <td>{team.name}</td>
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
             </div>

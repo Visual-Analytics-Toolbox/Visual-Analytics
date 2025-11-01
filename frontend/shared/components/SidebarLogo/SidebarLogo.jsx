@@ -8,7 +8,8 @@ const SidebarLogo = ({ appVersion }) => {
     <div className={styles.sidebar_header}>
       <img src={logo} className={styles.logo} alt="logo" />
       <p className={styles.version}>v{appVersion}</p>
-      <p className={styles.username}>Logged in as {user}</p>
+      {!loading && <p className={styles.username}>Logged in as: <br /> {user}</p>}
+      {!loading && isAdmin && <p className={styles.admin}>Admin<br /></p>}
     </div>
   );
 };

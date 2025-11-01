@@ -5,61 +5,58 @@ const UserContext = createContext({
   isAdmin: false,
   loading: true,
   user: '',
-  refreshAdminStatus: () => {}
+  refreshUser: () => { }
 });
 
 export const UserProvider = ({ children }) => {
-  const [user,setUser] = useState(false);
+  const [user, setUser] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const checkUser = async () => {
-      setLoading(true);
-      const token = await getToken();
-      const url = await getUrl();
-      
-      const response = await fetch(`${url}/user`, {
-        headers: {
-          'Authorization': `Token ${token}`,
-        }
-      });
+    setLoading(true);
+    const token = await getToken();
+    const url = await getUrl();
 
-      if (!response.ok) {
-        setLoading(false);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } 
-      const data = await response.json();
-      setIsAdmin(data.is_admin);
-      setUser(data.username);
+    const response = await fetch(`${url}/user`, {
+      headers: {
+        'Authorization': `Token ${token}`,
+      }
+    });
+
+    if (!response.ok) {
       setLoading(false);
+      console.log(`HTTP error while fetching user! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setIsAdmin(data.is_admin);
+    setUser(data.username);
+    setLoading(false);
   };
 
-  // Function to refresh admin status
   const refreshUser = () => {
     checkUser();
   };
 
-  // Check admin status on initial load
   useEffect(() => {
     checkUser();
   }, []);
 
-  // Provide the context value
   const value = {
     isAdmin,
     user,
     loading,
     refreshUser: refreshUser
   };
-  // ??? why ?
+  // passing down values to all children
   return (
-    <UserContext.Provider value={value}>
+    <UserContext value={value}>
       {children}
-    </UserContext.Provider>
+    </UserContext>
   );
 };
 
-// why do we do this hook ? 
+// easier way to access context data in components
 export const useUser = () => {
   return useContext(UserContext);
 };
