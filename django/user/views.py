@@ -2,7 +2,9 @@ from user.forms import SignupForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-
+from rest_framework import viewsets
+from .serializers import UserInfoSerializer
+from django.contrib.auth import get_user_model
 
 def LoginView(request):
     if request.method == "POST":
@@ -20,7 +22,6 @@ def LoginView(request):
 
     context = {}
     return render(request, "frontend/login.html", context)
-
 
 def SignupView(request):
     form = SignupForm()
@@ -46,3 +47,14 @@ def DummyView(request):
 def LogoutView(request):
     logout(request)
     return redirect("mylogin")
+
+class CurrentUserViewSet(viewsets.ReadOnlyModelViewSet):
+    User = get_user_model()
+    queryset = User.objects.all()
+    serializer_class=UserInfoSerializer
+    
+    def get_object(self):
+        return self.request.user
+
+    def list(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)

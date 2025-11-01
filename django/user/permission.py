@@ -8,14 +8,12 @@ class IsBerlinUnited(BasePermission):
 
     def has_permission(self, request, view):
         # Ensure the user is authenticated
-        if not request.user or not request.user.is_authenticated:
+        if not request.user or not request.user.is_authenticated or not request.user.organization:
             return False
-
+    
         # check if user is member of berlin_united
-        return (
-            request.user.organization
-            and request.user.organization.name == "berlin_united"
-        )
+        return request.user.organization.name == "berlin_united"
+    
 
 
 class IsBerlinUnitedOrReadOnly(BasePermission):
