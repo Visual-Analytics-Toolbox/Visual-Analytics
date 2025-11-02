@@ -1,9 +1,11 @@
 import { NavLink } from "react-router-dom";
+import { useUser } from "../UserContext/UserContext";
 import SidebarLogo from '@shared/components/SidebarLogo/SidebarLogo'
 import SidebarBottom from '@shared/components/SidebarBottom/SidebarBottom'
 import styles from './Sidebar.module.css';
 
 const Sidebar = ({ appVersion }) => {
+  const { isAdmin, loading } = useUser();
 
   const getNavLinkClass = (styles) => {
     return ({ isActive }) =>
@@ -22,6 +24,7 @@ const Sidebar = ({ appVersion }) => {
           <NavLink to="/test" className={getNavLinkClass(styles)}>Test</NavLink >
           <NavLink to="/validation" className={getNavLinkClass(styles)}>Validation</NavLink>
           <NavLink to="/teams" className={getNavLinkClass(styles)}>Teams</NavLink>
+          {!loading && isAdmin && <NavLink to="/admin" className={getNavLinkClass(styles)}>Admin</NavLink>}
         </nav>
         <SidebarBottom />
       </div>

@@ -12,7 +12,8 @@
         "build:electron-main": "electron-builder --dir",
         "build:all": "npm run build:web && npm run build:electron-renderer && npm run build:electron-main",
         "package:electron": "npm run build:electron-renderer && electron-builder",
-        "start": "electron . --dev"
+        "start": "electron . --dev",
+        "startapp": "cross-env VITE_APP_TARGET=electron vite --mode electron & electron . --dev"
     },
     "build": {
         "linux": {

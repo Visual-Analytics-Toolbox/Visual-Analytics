@@ -1,4 +1,7 @@
 import { useRef } from 'react';
+import { Routes, Route} from "react-router-dom";
+import { useUser } from "../UserContext/UserContext";
+
 import Sidebar from '@shared/components/Sidebar/Sidebar';
 
 import HomeView from '@shared/components/HomeView/HomeView';
@@ -11,13 +14,13 @@ import DebuggerView from '@shared/components/DebuggerView/DebuggerView';
 import VideoPlayerCanvas from '@shared/components/VideoPlayerCanvas/VideoPlayerCanvas'
 import ValidationView from '../ValidationView/ValidationView';
 import TeamView from '../TeamView/TeamView';
-
-import { Routes, Route } from "react-router-dom";
+import AdminView from '../AdminView/AdminView';
 
 import styles from './MainLayout.module.css';
 
 const MainLayout = ({ appVersion }) => {
   const containerRef = useRef(null);
+  const { isAdmin, loading } = useUser();
 
   return (
     <div className={styles.app_container} ref={containerRef}>
@@ -28,7 +31,6 @@ const MainLayout = ({ appVersion }) => {
       <div className={styles.main_content}>
         <Routes>
           <Route path="/" element={<HomeView />} />
-          <Route element={<EventListView />} />
           <Route path="/events" element={<EventListView />} />
           <Route path="/events/:id" element={<GameListView />} />
           <Route path="/games/:id" element={<LogListView />} />
@@ -37,7 +39,17 @@ const MainLayout = ({ appVersion }) => {
           <Route path="/debug" element={<DebuggerView />} />
           <Route path="/test" element={<VideoPlayerCanvas />} />
           <Route path="/validation" element={<ValidationView />} />
-          <Route path="/teams" element = {<TeamView />}/>
+          <Route path="/teams" element={<TeamView />} />
+          <Route 
+            path="/admin" 
+            element={
+             !loading && isAdmin ? (
+                <AdminView />
+              ) : (
+                <HomeView />
+              )
+            } 
+          />
         </Routes>
       </div>
     </div>

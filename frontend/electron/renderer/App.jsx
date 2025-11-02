@@ -2,6 +2,7 @@
 import { HashRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import MainLayout from '@shared/components/MainLayout/MainLayout';
+import { UserProvider } from "../../shared/components/UserContext/UserContext";
 
 const queryClient = new QueryClient();
 
@@ -12,7 +13,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HashRouter>
-        <MainLayout appVersion={appVersion} />
+        <UserProvider>
+          <MainLayout appVersion={appVersion} />
+        </UserProvider>
       </HashRouter>
     </QueryClientProvider>
   );

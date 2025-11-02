@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from './SettingsView.module.css';
+import { useUser } from "../UserContext/UserContext";
 
 export async function getToken() {
   if (await electronAPI.get_value('useDev')) {
@@ -23,6 +24,7 @@ const SettingsView = () => {
   const [dev_token, setDevToken] = useState('');
   const [use_dev, setUseDev] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { refreshUser } = useUser();
 
   useEffect(() => {
     async function loadSavedToken() {
@@ -62,6 +64,7 @@ const SettingsView = () => {
     await electronAPI.set_value("logRoot", log_root);
     await electronAPI.set_value("devToken", dev_token);
     await electronAPI.set_value("useDev", use_dev);
+    await refreshUser();
 
     // Reset animation state after it completes
     setTimeout(() => setIsAnimating(false), 900);
