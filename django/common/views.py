@@ -128,46 +128,19 @@ class GameViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        row_tuple = [
-            (
-                request.data.get("event"),
-                request.data.get("team1"),
-                request.data.get("team2"),
-                request.data.get("half"),
-                request.data.get("is_testgame"),
-                request.data.get("head_ref"),
-                request.data.get("assistent_ref"),
-                request.data.get("field"),
-                request.data.get("start_time"),
-                request.data.get("score"),
-                request.data.get("game_folder"),
-                request.data.get("comment"),
-            )
-        ]
-        with connection.cursor() as cursor:
-            query = """
-            INSERT INTO common_game (event_id, team1_id, team2_id, half, is_testgame, head_ref, assistent_ref, field, start_time, score, game_folder, comment)
-            VALUES %s
-            ON CONFLICT (event_id, start_time, half) DO NOTHING
-            RETURNING id;
-            """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        instance, created = models.Game.objects.get_or_create(
+            event_id=request.data.get("event"),
+            start_time=request.data.get("start_time"),
+            half=request.data.get("half"),
+            defaults=validated_data
+        )
 
-            execute_values(cursor, query, row_tuple, page_size=1)
-            result = cursor.fetchone()
-            if result:
-                serializer = self.get_serializer(models.Game.objects.get(id=result[0]))
-                # If insert was successful, get the object
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                # If ON CONFLICT DO NOTHING prevented insert, get the existing object
-                instance = models.Game.objects.get(
-                    event_id=request.data.get("event"),
-                    start_time=request.data.get("start_time"),
-                    half=request.data.get("half"),
-                )
-                serializer = self.get_serializer(instance)
-
-                return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(instance)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(serializer.data, status=status_code)
 
 
 class ExperimentViewSet(viewsets.ModelViewSet):
