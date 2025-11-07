@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "asgiref>=3.10.0",
-    "django==5.2.7",
+    "django==5.2.8",
     "django-cors-headers>=4.9.0",
     "django-environ>=0.12.0",
     "django-redis>=6.0.0",
@@ -15,7 +15,7 @@ dependencies = [
     "djangorestframework-api-key==3.*",
     "djangorestframework-simplejwt>=5.5.1",
     "drf-orjson-renderer>=1.7.3",
-    "drf-spectacular>=0.28.0",
+    "drf-spectacular>=0.29.0",
     "gunicorn==23.0.0",
     "inflection>=0.5.1",
     "numpy==2.2.6",
@@ -28,13 +28,13 @@ dependencies = [
     "sqlparse>=0.5.3",
     "tzdata==2024.2",
     "uritemplate>=4.2.0",
-    "whitenoise==6.9.0",
+    "whitenoise==6.11.0",
 ]
 
 [dependency-groups]
 dev = [
-    "django-debug-toolbar>=6.0.0",
-    "ruff==0.14.3",
+    "django-debug-toolbar>=6.1.0",
+    "ruff==0.14.4",
     "factory-boy==3.3.3",
     "pytest-django==4.11.1",
 ]
