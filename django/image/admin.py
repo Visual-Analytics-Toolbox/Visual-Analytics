@@ -7,7 +7,9 @@ from unfold.contrib.filters.admin import SingleNumericFilter
 # Register your models here.
 class ImageAdmin(ModelAdmin):
     search_fields = ["get_log_id"]
-    list_display = ["get_log_id", "get_frame_number", "camera", "type"]
+    list_display = ["frame__log__id", "frame__frame_number", "camera", "type"]
+    list_select_related = ["frame", "frame__log"]
+
     list_filter_submit = True
     list_filter = [
         ("frame__frame_number", SingleNumericFilter),

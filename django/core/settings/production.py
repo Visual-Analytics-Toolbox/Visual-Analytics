@@ -61,6 +61,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_filters",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    "allauth.socialaccount.providers.openid_connect",
     "common",
     "image",
     "annotation",
@@ -86,6 +90,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    'allauth.account.auth_backends.AuthenticationBackend',
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.TokenAuthMiddleware",
 ]
@@ -147,6 +152,37 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+SOCIALACCOUNT_PROVIDERS = {
+    "openid_connect": {
+        # Optional PKCE defaults to False, but may be required by your provider
+        # Can be set globally, or per app (settings).
+        "OAUTH_PKCE_ENABLED": True,
+        "APPS": [
+            {
+                "provider_id": "keycloak",
+                "name": "My Login Server", # https://vat.berlin-united.com/
+                "client_id": "VisualAnalytics",
+                "secret": "d4MLwz7VEQGXIigLbGEfZYHzBlsWj7U4",
+                "settings": {
+                    # When enabled, an additional call to the userinfo
+                    # endpoint takes place. The data returned is stored in
+                    # `SocialAccount.extra_data`. When disabled, the (decoded) ID
+                    # token payload is used instead.
+                    "fetch_userinfo": True,
+                    "oauth_pkce_enabled": True,
+                    #"server_url": "https://my.server.example.com",
+                    "server_url": "https://keycloak.berlin-united.com/realms/master/.well-known/openid-configuration",
+                    # Optional token endpoint authentication method.
+                    # May be one of "client_secret_basic", "client_secret_post"
+                    # If omitted, a method from the the server's
+                    # token auth methods list is used
+                    "token_auth_method": "client_secret_basic",
+                },
+            },
+        ]
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

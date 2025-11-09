@@ -52,6 +52,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
     "debug_toolbar",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    "allauth.socialaccount.providers.openid_connect",
     "common",
     "image",
     "annotation",
@@ -76,8 +80,10 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.TokenAuthMiddleware",
 ]
@@ -138,7 +144,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    "openid_connect": {
 
+        "APPS": [
+            {
+                "provider_id": "keycloak",
+                "name": "My Login Server", # https://vat.berlin-united.com/
+                "client_id": "VisualAnalytics",
+                "secret": "d4MLwz7VEQGXIigLbGEfZYHzBlsWj7U4",
+                "settings": {
+                    # When enabled, an additional call to the userinfo
+                    # endpoint takes place. The data returned is stored in
+                    # `SocialAccount.extra_data`. When disabled, the (decoded) ID
+                    # token payload is used instead.
+                    "fetch_userinfo": True,
+                    "oauth_pkce_enabled": True,
+                    #"server_url": "https://my.server.example.com",
+                    "server_url": "https://keycloak.berlin-united.com/auth/realms/berlin-united/.well-known/openid-configuration",
+                    # Optional token endpoint authentication method.
+                    # May be one of "client_secret_basic", "client_secret_post"
+                    # If omitted, a method from the the server's
+                    # token auth methods list is used
+                    "token_auth_method": "client_secret_basic",
+                },
+            },
+        ]
+    }
+}
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -147,6 +180,10 @@ TIME_ZONE = "UTC"
 USE_I18N = False
 USE_TZ = True
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # new
+LOGIN_REDIRECT_URL = "/events"
+SITE_ID = 1 # new
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
