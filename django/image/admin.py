@@ -16,6 +16,7 @@ class ImageAdmin(ModelAdmin):
         ("frame__log__id", SingleNumericFilter),
     ]
     autocomplete_fields = ["frame"]
+    show_full_result_count = False
 
     def get_log_id(self, obj):
         return obj.frame.log.id
