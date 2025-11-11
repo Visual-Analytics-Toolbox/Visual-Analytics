@@ -186,7 +186,7 @@ CSRF_TRUSTED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000"
 # we only want tokenauth in the swagger view
 SPECTACULAR_SETTINGS = {
     "AUTHENTICATION_WHITELIST": ["rest_framework.authentication.TokenAuthentication"],
-    "TAGS": [{"name": "Events"}, {"name": "api"}, {"name": "accounts"}],
+    "SCHEMA_PATH_PREFIX": "/api",
     "SERVERS": [{"url": "https://vat.berlin-united.com"}],
 }
 
