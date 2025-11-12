@@ -72,9 +72,26 @@ class VideoRecording(models.Model):
     comment = models.TextField(blank=True, null=True)
 
 
+class Robot(models.Model):
+
+    class RobotModel(models.TextChoices):
+        Nao = "Nao", _("Nao")
+        BoosterK1 = "Booster K1", _("Booster K1")
+
+    model = models.CharField(max_length=30, choices=RobotModel, blank=False, null=False) # Nao, Booster
+    head_number = models.IntegerField(blank=True, null=True)
+    body_serial = models.CharField(max_length=20, blank=True, null=True)
+    head_serial = models.CharField(max_length=20, blank=True, null=True)
+    version = models.CharField(max_length=10, blank=True, null=True)
+    purchased = models.DateField(blank=True, null=True)
+    warranty_end = models.DateField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+
+
 class Log(models.Model):
     game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
     experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
+    robot = models.ForeignKey(Robot, null=True, blank=True, on_delete=models.SET_NULL)
     robot_version = models.CharField(max_length=5, blank=True, null=True)
     player_number = models.IntegerField(blank=True, null=True)
     head_number = models.IntegerField(blank=True, null=True)
@@ -172,17 +189,3 @@ class Tag(models.Model):
         return self.name
 
 
-class Robot(models.Model):
-
-    class RobotModel(models.TextChoices):
-        Nao = "Nao", _("Nao")
-        BoosterK1 = "Booster K1", _("Booster K1")
-
-    model = models.CharField(max_length=30, choices=RobotModel, blank=False, null=False) # Nao, Booster
-    head_number = models.IntegerField(blank=True, null=True)
-    body_serial = models.CharField(max_length=20, blank=True, null=True)
-    head_serial = models.CharField(max_length=20, blank=True, null=True)
-    version = models.CharField(max_length=10, blank=True, null=True)
-    purchased = models.DateField(blank=True, null=True)
-    warranty_end = models.DateField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
