@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
-from .filter import VideoFilter
+from .filter import VideoFilter, RobotFilter
 import logging
 import requests
 
@@ -38,6 +38,26 @@ def health_check(request):
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
+    # FIXME add filter option for list so that we can select a robot my head_number
+
+
+class RobotViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.RobotSerializer
+    queryset = models.Robot.objects.all()
+
+    def get_queryset(self):
+        qs = models.Robot.objects.all()
+
+        filter = RobotFilter(qs, self.request.query_params)
+
+        qs = (
+            filter.filter_head_number()
+            .filter_body_serial()
+            .qs
+        )
+
+        return qs
+
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer

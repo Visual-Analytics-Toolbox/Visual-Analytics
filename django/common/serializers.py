@@ -57,6 +57,12 @@ class TeamSerializer(serializers.ModelSerializer):
         model = models.Team
         fields = "__all__"
 
+
+class RobotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Robot
+        fields = "__all__"
+
 class VideoRecordingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.VideoRecording
