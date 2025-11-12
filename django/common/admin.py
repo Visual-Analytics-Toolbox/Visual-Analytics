@@ -11,6 +11,9 @@ from django.contrib.auth.models import Group
 site.unregister(Group)
 
 
+class EventAdmin(ModelAdmin):
+    list_display = ("id", "name")
+
 class GameAdmin(ModelAdmin):
     list_display = ("event_id", "get_id", "team1__name", "team2__name", "half", "is_testgame")
     list_select_related = ["team1", "team2"]
@@ -44,7 +47,6 @@ class LogAdmin(ModelAdmin):
     search_fields = [
         "game_id__team1__icontains",
         "game_id__team2__icontains",
-        "head_number",
         "player_number",
     ]
     list_display = [
@@ -55,7 +57,7 @@ class LogAdmin(ModelAdmin):
         "get_team2",
         "get_half",
         "player_number",
-        "head_number",
+        "robot",
         "get_start_time",
         "is_test",
     ]
@@ -63,6 +65,7 @@ class LogAdmin(ModelAdmin):
 
 
     list_filter_submit = True  # Submit button at the bottom of the filter
+    # TODO: add additional filter for filtering by event
     list_filter = [GameExperimentFilter]
 
     def get_id(self, obj):
@@ -87,6 +90,7 @@ class LogAdmin(ModelAdmin):
     get_start_time.short_description = "Time"
     get_team1.short_description = "Team 1"
     get_team2.short_description = "Team 2"
+    is_test.boolean = True
 
 
 class LogStatusAdmin(ModelAdmin):
@@ -128,12 +132,12 @@ class RobotAdmin(ModelAdmin):
 
 # this is required for every model
 @admin.register(Tag)
-@admin.register(Event)
 @admin.register(Experiment)
 class CustomAdminClass(ModelAdmin):
     pass
 
 
+admin.site.register(Event, EventAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)

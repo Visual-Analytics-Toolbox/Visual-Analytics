@@ -87,6 +87,8 @@ class Robot(models.Model):
     warranty_end = models.DateField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.model}{self.version}_{self.head_number}"
 
 class Log(models.Model):
     game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
