@@ -5,26 +5,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('annotation', '0007_annotationtag'),
-        ('common', '0018_tag'),
+        ("annotation", "0007_annotationtag"),
+        ("common", "0018_tag"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='annotation',
-            name='tags',
-            field=models.ManyToManyField(related_name='annotations_set', through='annotation.AnnotationTag', to='common.tag'),
+            model_name="annotation",
+            name="tags",
+            field=models.ManyToManyField(
+                related_name="annotations_set",
+                through="annotation.AnnotationTag",
+                to="common.tag",
+            ),
         ),
         migrations.AlterField(
-            model_name='annotationtag',
-            name='annotation',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tag_links', to='annotation.annotation'),
+            model_name="annotationtag",
+            name="annotation",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tag_links",
+                to="annotation.annotation",
+            ),
         ),
         migrations.AlterField(
-            model_name='annotationtag',
-            name='tag',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='annotation_links', to='common.tag'),
+            model_name="annotationtag",
+            name="tag",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="annotation_links",
+                to="common.tag",
+            ),
         ),
     ]

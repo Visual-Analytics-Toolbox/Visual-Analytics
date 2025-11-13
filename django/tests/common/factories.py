@@ -14,7 +14,9 @@ class EventFactory(DjangoModelFactory):
 
     name = factory.Faker("company")
     start_day = factory.Faker("date_object")
-    end_day = factory.LazyAttribute(lambda o: o.start_day + timedelta(days=random.randint(1, 5)))
+    end_day = factory.LazyAttribute(
+        lambda o: o.start_day + timedelta(days=random.randint(1, 5))
+    )
     timezone = factory.Faker("timezone")
     country = factory.Faker("country")
     location = "41° 53'00”,41° 53'00”,"
@@ -25,10 +27,12 @@ class TeamFactory(DjangoModelFactory):
     class Meta:
         model = Team
         # this should ensure that factory treats team_id as unique value
-        django_get_or_create = ('team_id',)
+        django_get_or_create = ("team_id",)
 
     team_id = factory.Sequence(lambda n: n + 1)
     name = factory.LazyAttribute(lambda obj: f"Team Name {obj.team_id}")
+
+
 class GameFactory(DjangoModelFactory):
     class Meta:
         model = Game
@@ -42,7 +46,9 @@ class GameFactory(DjangoModelFactory):
     assistent_ref = factory.Faker("name")
     field = fuzzy.FuzzyChoice(["Field A", "Field B", "Field C"])
     start_time = factory.Faker("date_time", tzinfo=timezone.get_current_timezone())
-    score = factory.LazyAttribute(lambda _: f"{random.randint(0, 10)}:{random.randint(0, 10)}")
+    score = factory.LazyAttribute(
+        lambda _: f"{random.randint(0, 10)}:{random.randint(0, 10)}"
+    )
     comment = factory.Faker("text")
 
 
@@ -83,9 +89,15 @@ class LogFactory(DjangoModelFactory):
     robot_version = fuzzy.FuzzyChoice(["V5", "V6"])
     player_number = fuzzy.FuzzyInteger(1, 11)
     head_number = fuzzy.FuzzyInteger(1, 100)
-    body_serial = factory.LazyAttribute(lambda _: f"B{''.join(random.choices('0123456789', k=8))}")
-    head_serial = factory.LazyAttribute(lambda _: f"H{''.join(random.choices('0123456789', k=8))}")
-    representation_list = factory.LazyAttribute(lambda _: ["Image", "BallModel", "TeamState"])
+    body_serial = factory.LazyAttribute(
+        lambda _: f"B{''.join(random.choices('0123456789', k=8))}"
+    )
+    head_serial = factory.LazyAttribute(
+        lambda _: f"H{''.join(random.choices('0123456789', k=8))}"
+    )
+    representation_list = factory.LazyAttribute(
+        lambda _: ["Image", "BallModel", "TeamState"]
+    )
     log_path = factory.Faker("file_path", extension="log")
     combined_log_path = factory.Faker("file_path", extension="log")
     sensor_log_path = factory.Faker("file_path", extension="log")

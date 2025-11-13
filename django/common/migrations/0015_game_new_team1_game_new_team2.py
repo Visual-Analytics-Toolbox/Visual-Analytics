@@ -5,20 +5,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0014_add_teams'),
+        ("common", "0014_add_teams"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='game',
-            name='new_team1',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='team1', to='common.team'),
+            model_name="game",
+            name="new_team1",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="team1",
+                to="common.team",
+            ),
         ),
         migrations.AddField(
-            model_name='game',
-            name='new_team2',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='team2', to='common.team'),
+            model_name="game",
+            name="new_team2",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="team2",
+                to="common.team",
+            ),
         ),
     ]

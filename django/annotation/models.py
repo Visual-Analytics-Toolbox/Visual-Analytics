@@ -1,6 +1,6 @@
 from django.db import models
 from image.models import NaoImage
-from common.models import VideoRecording,Tag
+from common.models import VideoRecording, Tag
 from django.utils.translation import gettext_lazy as _
 
 
@@ -60,13 +60,10 @@ class Annotation(models.Model):
     validated = models.BooleanField(default=False)
     data = models.JSONField(blank=True, null=True)
     tags = models.ManyToManyField(
-        Tag,
-        through='AnnotationTag',
-        related_name='annotations_set'
+        Tag, through="AnnotationTag", related_name="annotations_set"
     )
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-
 
 
 class VideoFrame(models.Model):
@@ -87,6 +84,7 @@ class VideoAnnotation(models.Model):
 
     there are no unique constraints here but on insert we should try to check if something with a high IOU already exist
     """
+
     frame = models.ForeignKey(
         VideoFrame, on_delete=models.CASCADE, related_name="videoannotation"
     )
@@ -98,22 +96,28 @@ class VideoAnnotation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-#we can filter for Annotations with a specific tag like this Annotation.objects.filter(tags__name=tag_name_to_find)
-#we probably don't need a backwards relation here since we already use a many to many field
+
+# we can filter for Annotations with a specific tag like this Annotation.objects.filter(tags__name=tag_name_to_find)
+# we probably don't need a backwards relation here since we already use a many to many field
 class AnnotationTag(models.Model):
-    annotation = models.ForeignKey(Annotation,on_delete=models.CASCADE,related_name='tag_links')
-    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='annotation_links')
+    annotation = models.ForeignKey(
+        Annotation, on_delete=models.CASCADE, related_name="tag_links"
+    )
+    tag = models.ForeignKey(
+        Tag, on_delete=models.CASCADE, related_name="annotation_links"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Annotation Tag'
-        verbose_name_plural = 'Annotation Tags'
-        unique_together = ('annotation', 'tag')
-        ordering = ['created_at']
+        verbose_name = "Annotation Tag"
+        verbose_name_plural = "Annotation Tags"
+        unique_together = ("annotation", "tag")
+        ordering = ["created_at"]
 
     def __str__(self):
         return f"{self.annotation} - {self.tag}"
+
 
 # TODO build models for labeling situations
 

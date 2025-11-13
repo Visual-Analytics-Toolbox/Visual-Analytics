@@ -5,27 +5,48 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('annotation', '0006_videoframe_videoannotation'),
-        ('common', '0018_tag'),
+        ("annotation", "0006_videoframe_videoannotation"),
+        ("common", "0018_tag"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AnnotationTag',
+            name="AnnotationTag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('annotation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tags', to='annotation.annotation')),
-                ('tag', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='annotations', to='common.tag')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "annotation",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tags",
+                        to="annotation.annotation",
+                    ),
+                ),
+                (
+                    "tag",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="annotations",
+                        to="common.tag",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Annotation Tag',
-                'verbose_name_plural': 'Annotation Tags',
-                'ordering': ['created_at'],
-                'unique_together': {('annotation', 'tag')},
+                "verbose_name": "Annotation Tag",
+                "verbose_name_plural": "Annotation Tags",
+                "ordering": ["created_at"],
+                "unique_together": {("annotation", "tag")},
             },
         ),
     ]

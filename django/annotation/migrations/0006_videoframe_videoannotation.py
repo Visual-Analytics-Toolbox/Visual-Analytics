@@ -5,33 +5,62 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('annotation', '0005_annotation_is_empty_annotation_validated_and_more'),
-        ('common', '0017_rename_new_team1_game_team1_and_more'),
+        ("annotation", "0005_annotation_is_empty_annotation_validated_and_more"),
+        ("common", "0017_rename_new_team1_game_team1_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='VideoFrame',
+            name="VideoFrame",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('frame_number', models.IntegerField(blank=True, null=True)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='frame', to='common.videorecording')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("frame_number", models.IntegerField(blank=True, null=True)),
+                (
+                    "video",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="frame",
+                        to="common.videorecording",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='VideoAnnotation',
+            name="VideoAnnotation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('class_name', models.CharField(blank=True, max_length=30, null=True)),
-                ('confidence', models.FloatField(blank=True, null=True)),
-                ('data', models.JSONField(blank=True, null=True)),
-                ('concealed', models.BooleanField(default=False)),
-                ('validated', models.BooleanField(default=False)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videoannotation', to='annotation.videoframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("class_name", models.CharField(blank=True, max_length=30, null=True)),
+                ("confidence", models.FloatField(blank=True, null=True)),
+                ("data", models.JSONField(blank=True, null=True)),
+                ("concealed", models.BooleanField(default=False)),
+                ("validated", models.BooleanField(default=False)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="videoannotation",
+                        to="annotation.videoframe",
+                    ),
+                ),
             ],
         ),
     ]

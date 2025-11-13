@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0012_team'),
+        ("common", "0012_team"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='team',
-            name='name',
+            model_name="team",
+            name="name",
             field=models.CharField(max_length=30, unique=True),
         ),
         migrations.AlterField(
-            model_name='team',
-            name='team_id',
+            model_name="team",
+            name="team_id",
             field=models.IntegerField(unique=True),
         ),
     ]

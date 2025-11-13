@@ -1,6 +1,7 @@
 from common.models import Log
 from typing import Self
 
+
 class VideoFilter:
     def __init__(self, queryset, query_params) -> None:
         self.qs = queryset
@@ -16,7 +17,7 @@ class VideoFilter:
         if "log" in self._params:
             log_id = int(self._params["log"])
             # TODO: get game_id here
-            game_id=Log.objects.get(id=log_id).game
+            game_id = Log.objects.get(id=log_id).game
             self.qs = self.qs.filter(game=game_id)
         return self
 

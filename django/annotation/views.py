@@ -7,6 +7,7 @@ from .models import Annotation
 from .serializers import AnnotationSerializer
 from .annotation_filter import AnnotationFilter
 
+
 def generic_filter(queryset, query_params):
     filters = Q()
     for field in Annotation._meta.fields:
@@ -67,8 +68,9 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
     TODO: add pagination for this
     TODO: check if we can actually use this easily to create datasets since it return multiple annotations per image seperately
-    this might be annoying for some annotation formats 
+    this might be annoying for some annotation formats
     """
+
     queryset = Annotation.objects.all()
     serializer_class = AnnotationSerializer
 
@@ -76,13 +78,7 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         qs = Annotation.objects.all()
         # filter all possible arguments here via the builder pattern
         filter = AnnotationFilter(qs, self.request.query_params)
-        qs = (
-            filter.filter_image()
-            .filter_log()
-            .filter_camera()
-            .filter_validated()
-            .qs
-        )
+        qs = filter.filter_image().filter_log().filter_camera().filter_validated().qs
 
         # annotate with frame number and image url
         qs = qs.annotate(frame_number=F("image__frame__frame_number"))
@@ -90,7 +86,6 @@ class AnnotationViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    
     def create(self, request, *args, **kwargs):
         # TODO write a create function that checks if json is exactly the same and if so ignores the insert
         # Get the data from the request
@@ -131,4 +126,6 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )

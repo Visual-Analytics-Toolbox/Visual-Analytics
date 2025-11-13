@@ -6,6 +6,7 @@ from rest_framework import viewsets
 from .serializers import UserInfoSerializer
 from django.contrib.auth import get_user_model
 
+
 def LoginView(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -22,6 +23,7 @@ def LoginView(request):
 
     context = {}
     return render(request, "frontend/login.html", context)
+
 
 def SignupView(request):
     form = SignupForm()
@@ -48,11 +50,12 @@ def LogoutView(request):
     logout(request)
     return redirect("mylogin")
 
+
 class CurrentUserViewSet(viewsets.ReadOnlyModelViewSet):
     User = get_user_model()
     queryset = User.objects.all()
-    serializer_class=UserInfoSerializer
-    
+    serializer_class = UserInfoSerializer
+
     def get_object(self):
         return self.request.user
 

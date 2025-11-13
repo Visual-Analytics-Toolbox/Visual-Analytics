@@ -4,6 +4,7 @@ from ..image.factories import NaoImageFactory
 from annotation.models import Annotation
 import random
 
+
 class AnnotationFactory(DjangoModelFactory):
     class Meta:
         model = Annotation
@@ -22,4 +23,3 @@ class AnnotationFactory(DjangoModelFactory):
             "height": random.uniform(0, 1),
         }
     )
-    

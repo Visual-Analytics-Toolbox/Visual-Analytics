@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0022_log_comment'),
+        ("common", "0022_log_comment"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='robot',
-            name='model',
-            field=models.CharField(choices=[('Nao', 'Nao'), ('Booster K1', 'Booster K1')], max_length=30),
+            model_name="robot",
+            name="model",
+            field=models.CharField(
+                choices=[("Nao", "Nao"), ("Booster K1", "Booster K1")], max_length=30
+            ),
         ),
     ]

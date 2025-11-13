@@ -5,26 +5,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0018_tag'),
-        ('image', '0004_naoimagetag'),
+        ("common", "0018_tag"),
+        ("image", "0004_naoimagetag"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='naoimage',
-            name='tags',
-            field=models.ManyToManyField(related_name='images_set', through='image.NaoImageTag', to='common.tag'),
+            model_name="naoimage",
+            name="tags",
+            field=models.ManyToManyField(
+                related_name="images_set", through="image.NaoImageTag", to="common.tag"
+            ),
         ),
         migrations.AlterField(
-            model_name='naoimagetag',
-            name='image',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tag_link', to='image.naoimage'),
+            model_name="naoimagetag",
+            name="image",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tag_link",
+                to="image.naoimage",
+            ),
         ),
         migrations.AlterField(
-            model_name='naoimagetag',
-            name='tag',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images_link', to='common.tag'),
+            model_name="naoimagetag",
+            name="tag",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="images_link",
+                to="common.tag",
+            ),
         ),
     ]

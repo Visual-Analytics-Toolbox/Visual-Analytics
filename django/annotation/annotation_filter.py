@@ -35,13 +35,13 @@ class AnnotationFilter:
 
     def filter_type(self) -> Self:
         pass
-    
+
     def filter_class(self) -> Self:
         pass
-    
+
     def filter_empty(self) -> Self:
         pass
-    
+
     def filter_concealed(self) -> Self:
         if "concealed" in self._params:
             concealed = self._params["concealed"]
@@ -50,4 +50,3 @@ class AnnotationFilter:
                 concealed = concealed.lower() == "true"
                 self.qs = self.qs.filter(concealed=concealed)
         return self
-    

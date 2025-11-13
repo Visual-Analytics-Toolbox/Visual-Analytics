@@ -5,21 +5,47 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0025_remove_log_body_serial_remove_log_head_number_and_more'),
+        ("common", "0025_remove_log_body_serial_remove_log_head_number_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HealthIssues',
+            name="HealthIssues",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('Noticed', 'Noticed'), ('Verified', 'Verified'), ('In Clinic', 'In Clinic'), ('Repaired', 'Repaired')], max_length=30)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('robot', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='common.robot')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Noticed", "Noticed"),
+                            ("Verified", "Verified"),
+                            ("In Clinic", "In Clinic"),
+                            ("Repaired", "Repaired"),
+                        ],
+                        max_length=30,
+                    ),
+                ),
+                ("description", models.TextField(blank=True, null=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                (
+                    "robot",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="common.robot",
+                    ),
+                ),
             ],
         ),
     ]

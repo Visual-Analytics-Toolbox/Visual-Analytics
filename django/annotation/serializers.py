@@ -8,14 +8,14 @@ class AnnotationSerializer(serializers.ModelSerializer):
     color = serializers.SerializerMethodField()
     frame_number = serializers.CharField(read_only=True)
     image_url = serializers.CharField(read_only=True)
-    tags = TagSerializer(many=True, read_only=True) 
+    tags = TagSerializer(many=True, read_only=True)
 
     tag_ids = serializers.PrimaryKeyRelatedField(
-        many=True, 
-        write_only=True, 
+        many=True,
+        write_only=True,
         queryset=Tag.objects.all(),
-        source='tags', 
-        required=False
+        source="tags",
+        required=False,
     )
 
     class Meta:

@@ -4,20 +4,23 @@ from common.serializers import TagSerializer
 from common.models import Tag
 from annotation.serializers import AnnotationSerializer
 
+
 class ImageSerializer(serializers.ModelSerializer):
     frame_number = serializers.ReadOnlyField()
     tags = TagSerializer(many=True, read_only=True)
 
     tag_ids = serializers.PrimaryKeyRelatedField(
-        many=True, 
-        write_only=True, 
+        many=True,
+        write_only=True,
         queryset=Tag.objects.all(),
-        source='tags', 
-        required=False
+        source="tags",
+        required=False,
     )
+
     class Meta:
         model = NaoImage
         fields = "__all__"
 
+
 class ImageWithAnnotationsSerializer(ImageSerializer):
-    annotations = AnnotationSerializer(source='annotation', many=True, read_only=True)
+    annotations = AnnotationSerializer(source="annotation", many=True, read_only=True)

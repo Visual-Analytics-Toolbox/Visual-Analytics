@@ -3,6 +3,7 @@ from cognition.models import CognitionFrame
 from django.utils.translation import gettext_lazy as _
 from common.models import Tag
 
+
 class NaoImage(models.Model):
     class Camera(models.TextChoices):
         TOP = "TOP", _("Top")
@@ -21,11 +22,8 @@ class NaoImage(models.Model):
     blurredness_value = models.IntegerField(blank=True, null=True)
     brightness_value = models.IntegerField(blank=True, null=True)
     resolution = models.CharField(max_length=11, blank=True, null=True)  # 1640x1480x2
-    tags = models.ManyToManyField(
-        Tag,
-        through='NaoImageTag',
-        related_name='images_set'
-    )
+    tags = models.ManyToManyField(Tag, through="NaoImageTag", related_name="images_set")
+
     class Meta:
         unique_together = ("frame", "camera", "type")
 
@@ -36,19 +34,22 @@ class NaoImage(models.Model):
     def frame_number(self):
         return self.frame.frame_number
 
-#we can filter for images with a specific tag like this NaoImage.objects.filter(tags__name=tag_name_to_find)
-#we probably don't need a backwards relation here since we already use a many to many field
+
+# we can filter for images with a specific tag like this NaoImage.objects.filter(tags__name=tag_name_to_find)
+# we probably don't need a backwards relation here since we already use a many to many field
 class NaoImageTag(models.Model):
-    image = models.ForeignKey(NaoImage,on_delete=models.CASCADE,related_name='tag_link')
-    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,related_name='images_link')
+    image = models.ForeignKey(
+        NaoImage, on_delete=models.CASCADE, related_name="tag_link"
+    )
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="images_link")
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Image Tag'
-        verbose_name_plural = 'Image Tags'
-        unique_together = ('image', 'tag')
-        ordering = ['created_at']
+        verbose_name = "Image Tag"
+        verbose_name_plural = "Image Tags"
+        unique_together = ("image", "tag")
+        ordering = ["created_at"]
 
     def __str__(self):
         return f"{self.image} - {self.tag}"

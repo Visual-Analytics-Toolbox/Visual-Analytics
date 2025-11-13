@@ -4,24 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0017_rename_new_team1_game_team1_and_more'),
+        ("common", "0017_rename_new_team1_game_team1_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('description', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("description", models.TextField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'Tag',
-                'verbose_name_plural': 'Tags',
-                'ordering': ['name'],
+                "verbose_name": "Tag",
+                "verbose_name_plural": "Tags",
+                "ordering": ["name"],
             },
         ),
     ]

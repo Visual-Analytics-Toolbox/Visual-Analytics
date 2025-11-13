@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Annotation,AnnotationTag
+from .models import Annotation, AnnotationTag
 from unfold.admin import ModelAdmin
 from django.conf import settings
 from unfold.contrib.filters.admin import (
@@ -114,7 +114,11 @@ class AnnotationAdmin(ModelAdmin):
         return f"{scheme}://{domain}/log/{obj.image.frame.log.id}/frame/{obj.image.frame.frame_number}?filter=None"
 
     get_link.short_description = "Link"
+
+
 @admin.register(AnnotationTag)
 class UnfoldAdminClass(ModelAdmin):
     raw_id_fields = ("annotation",)
+
+
 admin.site.register(Annotation, AnnotationAdmin)

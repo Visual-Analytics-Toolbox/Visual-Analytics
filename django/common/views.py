@@ -3,7 +3,12 @@ from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from . import serializers
 from . import models
-from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseServerError
+from django.http import (
+    JsonResponse,
+    HttpResponse,
+    FileResponse,
+    HttpResponseServerError,
+)
 from django.views.decorators.http import require_GET
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
@@ -35,6 +40,7 @@ def scalar_doc(request):
 def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
+
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
@@ -50,11 +56,7 @@ class RobotViewSet(viewsets.ModelViewSet):
 
         filter = RobotFilter(qs, self.request.query_params)
 
-        qs = (
-            filter.filter_head_number()
-            .filter_body_serial()
-            .qs
-        )
+        qs = filter.filter_head_number().filter_body_serial().qs
 
         return qs
 
@@ -155,7 +157,7 @@ class GameViewSet(viewsets.ModelViewSet):
             event_id=request.data.get("event"),
             start_time=request.data.get("start_time"),
             half=request.data.get("half"),
-            defaults=validated_data
+            defaults=validated_data,
         )
 
         serializer = self.get_serializer(instance)
@@ -304,13 +306,7 @@ class VideoViewSet(viewsets.ModelViewSet):
 
         filter = VideoFilter(qs, self.request.query_params)
 
-        qs = (
-            filter.filter_game()
-            .filter_log()
-            .filter_experiment()
-            .filter_type()
-            .qs
-        )
+        qs = filter.filter_game().filter_log().filter_experiment().filter_type().qs
 
         return qs
 
@@ -333,6 +329,7 @@ class VideoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status_code)
 
+
 class VideoSliceView(APIView):
     def get(self, request):
         # Get filter parameters from query string
@@ -343,37 +340,43 @@ class VideoSliceView(APIView):
         qs = models.VideoRecording.objects.filter(game=game_id)
         if not qs.exists():
             return HttpResponseServerError("No Video file found")
-        
+
         # FIXME: how to select gopro or picam if both exists - maybe prefer picam if exist
 
         # Make the blocking HTTP call to the FFmpeg service
         base_url = "http://ffmpeg-svc.ffmpeg.svc.cluster.local:80/video"
-        params = {
-            "path": qs.first().video_path,
-            "start": start,
-            "end": end
-        }
-        ffmpeg_response = requests.get(base_url, params=params, timeout=300) # 5 min timeout
+        params = {"path": qs.first().video_path, "start": start, "end": end}
+        ffmpeg_response = requests.get(
+            base_url, params=params, timeout=300
+        )  # 5 min timeout
         if ffmpeg_response.status_code not in [200, 202]:
-            logger.error(f"FFmpeg API failed with status {ffmpeg_response.status_code}: {ffmpeg_response.text}")
-            return HttpResponseServerError("Video generation service failed to start or complete.")
+            logger.error(
+                f"FFmpeg API failed with status {ffmpeg_response.status_code}: {ffmpeg_response.text}"
+            )
+            return HttpResponseServerError(
+                "Video generation service failed to start or complete."
+            )
 
         try:
             # Open the file in binary mode
             json_response = ffmpeg_response.json()
-            video_file = open(json_response["output"], 'rb')
+            video_file = open(json_response["output"], "rb")
 
             # Create the FileResponse
-            response = FileResponse(video_file, content_type='video/mp4')
-            
-            # Set the Content-Disposition header to trigger a download
-            response['Content-Disposition'] = f'attachment; filename="{json_response["output"]}"'
+            response = FileResponse(video_file, content_type="video/mp4")
 
-            logger.info(f"Successfully created FileResponse for {json_response["output"]}")
+            # Set the Content-Disposition header to trigger a download
+            response["Content-Disposition"] = (
+                f'attachment; filename="{json_response["output"]}"'
+            )
+
+            logger.info(
+                f"Successfully created FileResponse for {json_response['output']}"
+            )
             return response
 
         except Exception as e:
-            logger.error(f"Error serving file {json_response["output"]}: {e}")
+            logger.error(f"Error serving file {json_response['output']}: {e}")
             return HttpResponseServerError("Error reading the generated video file.")
 
 
@@ -381,26 +384,27 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = models.Tag.objects.all()
     serializer_class = serializers.TagSerializer
 
-    
+
 class FileUploadBaseView(APIView):
     """
     A base class for file uploads to avoid code duplication.
     Subclasses must define 'destination_folder'.
     """
+
     parser_classes = [MultiPartParser]
-    destination_folder = None # MUST be overridden by subclasses
-    authentication_classes=[TokenAuthentication]
+    destination_folder = None  # MUST be overridden by subclasses
+    authentication_classes = [TokenAuthentication]
 
     def post(self, request, *args, **kwargs):
         # Check for 'file' key in the request
         # The client must send the file using the 'file' key in a multipart/form-data request.
-        if 'file' not in request.FILES:
+        if "file" not in request.FILES:
             return Response(
                 {"error": "No file provided. Please use the 'file' key."},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
-        uploaded_file = request.FILES['file']
+        uploaded_file = request.FILES["file"]
 
         # Sanitize the filename
         filename = os.path.basename(uploaded_file.name)
@@ -408,46 +412,51 @@ class FileUploadBaseView(APIView):
         # Create the destination directory if it doesn't exist
         destination_dir = Path(self.destination_folder)
         destination_dir.mkdir(parents=True, exist_ok=True)
-        
+
         file_path = destination_dir / filename
 
         # Handle potential file overwrites
         if file_path.exists():
             return Response(
                 {"error": f"File with name '{filename}' already exists."},
-                status=status.HTTP_409_CONFLICT
+                status=status.HTTP_409_CONFLICT,
             )
 
         # 5. Write the file to the destination in chunks (memory-efficient)
         try:
-            with open(file_path, 'wb+') as destination:
+            with open(file_path, "wb+") as destination:
                 for chunk in uploaded_file.chunks():
                     destination.write(chunk)
         except IOError as e:
             return Response(
                 {"error": f"Failed to save file: {e}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         return Response(
             {
                 "message": "File uploaded successfully.",
                 "filename": filename,
-                "path": str(file_path)
+                "path": str(file_path),
             },
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_201_CREATED,
         )
+
 
 class ModelUploadView(FileUploadBaseView):
     """
     Handles file uploads to the 'models/' directory.
     """
-    destination_folder = '/mnt/models'
+
+    destination_folder = "/mnt/models"
+
 
 class DatasetUploadView(FileUploadBaseView):
     """
     Handles file uploads to the 'datasets/' directory.
     """
-    destination_folder = '/mnt/datasets'
+
+    destination_folder = "/mnt/datasets"
+
 
 class HealthIssuesViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.HealthIssuesSerializer

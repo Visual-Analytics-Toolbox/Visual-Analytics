@@ -5,7 +5,6 @@ import factory
 from factory.django import DjangoModelFactory
 
 
-
 class OrganizationFactory(DjangoModelFactory):
     class Meta:
         model = Organization

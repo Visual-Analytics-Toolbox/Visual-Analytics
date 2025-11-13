@@ -4,26 +4,25 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0024_log_robot'),
+        ("common", "0024_log_robot"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='log',
-            name='body_serial',
+            model_name="log",
+            name="body_serial",
         ),
         migrations.RemoveField(
-            model_name='log',
-            name='head_number',
+            model_name="log",
+            name="head_number",
         ),
         migrations.RemoveField(
-            model_name='log',
-            name='head_serial',
+            model_name="log",
+            name="head_serial",
         ),
         migrations.RemoveField(
-            model_name='log',
-            name='robot_version',
+            model_name="log",
+            name="robot_version",
         ),
     ]

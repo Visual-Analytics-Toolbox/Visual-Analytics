@@ -17,6 +17,7 @@ from .image_filter import ImageFilter
 import numpy as np
 import time
 
+
 class ImageCountView(APIView):
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request):
@@ -49,7 +50,6 @@ class ImageCountView(APIView):
 
 
 class SynchronizedImage(APIView):
-
     def get(self, request):
         # Get filter parameters from query string
         query_params = request.query_params.copy()
@@ -84,16 +84,23 @@ class SynchronizedImage(APIView):
         # ids work probably as well - but almost impossible to debug if not, also breaks if data is not entered sequentially,
         print("first value", model_to_dict(behavior_frame_options.first()))
 
-        first_standby_frame_id = behavior_frame_options.values_list("frame", flat=True).first()
+        first_standby_frame_id = behavior_frame_options.values_list(
+            "frame", flat=True
+        ).first()
         print("first_standby_frame_id", first_standby_frame_id)
         first_standby_frame = CognitionFrame.objects.get(id=first_standby_frame_id)
         print("standby frame", model_to_dict(first_standby_frame))
 
-        cognition_frames = CognitionFrame.objects.filter(log=log_id).order_by("frame_number")
+        cognition_frames = CognitionFrame.objects.filter(log=log_id).order_by(
+            "frame_number"
+        )
         cognition_frames = list(cognition_frames)
         print()
         print(cognition_frames[0].frame_time)
-        frame_time_diffs = [frame.frame_time - (first_standby_frame.frame_time + time) for frame in cognition_frames]
+        frame_time_diffs = [
+            frame.frame_time - (first_standby_frame.frame_time + time)
+            for frame in cognition_frames
+        ]
         frame_time_diffs = np.array(frame_time_diffs)
 
         target_frame_index = np.argmin(np.abs(frame_time_diffs))
@@ -101,7 +108,9 @@ class SynchronizedImage(APIView):
 
         # TODO lets return the image path here
         target_image = models.NaoImage.objects.filter(
-            frame__log=log_id, frame__frame_number=cognition_frames[target_frame_index].frame_number, camera=camera
+            frame__log=log_id,
+            frame__frame_number=cognition_frames[target_frame_index].frame_number,
+            camera=camera,
         ).first()
         return Response({"url": target_image.image_url}, status=status.HTTP_200_OK)
 
@@ -142,7 +151,9 @@ class ImageUpdateView(APIView):
                     case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
 
             if case_when_parts:
-                case_stmt = f"""{field} = (CASE {" ".join(case_when_parts)} ELSE {field} END)"""
+                case_stmt = (
+                    f"""{field} = (CASE {" ".join(case_when_parts)} ELSE {field} END)"""
+                )
                 case_statements.append(case_stmt)
 
         # Collect all values for the parameterized query
@@ -173,9 +184,9 @@ class ImagePageSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
-        qs =  models.NaoImage.objects.all()
+        qs = models.NaoImage.objects.all()
         qs = qs.prefetch_related("annotation")
-        
+
         filter = ImageFilter(qs, self.request.query_params)
 
         qs = (
@@ -236,7 +247,9 @@ class ImageViewSet(viewsets.ModelViewSet):
 
         # if the exclude_annotated parameter is set all images with an existing annotation are not included in the response
         if "exclude_annotated" in query_params:
-            qs = qs.annotate(metadata_count=Count("Annotation")).filter(metadata_count=0)
+            qs = qs.annotate(metadata_count=Count("Annotation")).filter(
+                metadata_count=0
+            )
 
         # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
         return qs.order_by("frame")
