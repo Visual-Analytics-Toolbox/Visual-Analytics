@@ -32,21 +32,3 @@ class VideoFilter:
             video_type = self._params["type"]
             self.qs = self.qs.filter(type=video_type)
         return self
-
-
-class RobotFilter:
-    def __init__(self, queryset, query_params) -> None:
-        self.qs = queryset
-        self._params = query_params
-
-    def filter_head_number(self) -> Self:
-        if "head_number" in self._params:
-            head_number = int(self._params["head_number"])
-            self.qs = self.qs.filter(head_number=head_number)
-        return self
-
-    def filter_body_serial(self) -> Self:
-        if "body_serial" in self._params:
-            body_serial = self._params["body_serial"]
-            self.qs = self.qs.filter(body_serial=body_serial)
-        return self

@@ -23,7 +23,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
-from .filter import VideoFilter, RobotFilter
+from .filter import VideoFilter
 import logging
 import requests
 
@@ -48,18 +48,12 @@ class TeamViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["team_id", "name"]
 
+
 class RobotViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RobotSerializer
     queryset = models.Robot.objects.all()
-
-    def get_queryset(self):
-        qs = models.Robot.objects.all()
-
-        filter = RobotFilter(qs, self.request.query_params)
-
-        qs = filter.filter_head_number().filter_body_serial().qs
-
-        return qs
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["model", "head_number", "body_serial", "head_serial"]
 
 
 class EventViewSet(viewsets.ModelViewSet):
