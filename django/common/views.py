@@ -2,6 +2,7 @@ import os
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from . import serializers
+from django_filters.rest_framework import DjangoFilterBackend
 from . import models
 from django.http import (
     JsonResponse,
@@ -64,6 +65,8 @@ class RobotViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["name", "country"]
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
