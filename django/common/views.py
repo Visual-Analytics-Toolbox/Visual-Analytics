@@ -45,8 +45,8 @@ def health_check(request):
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
-    # FIXME add filter option for list so that we can select a robot my head_number
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["team_id", "name"]
 
 class RobotViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RobotSerializer
