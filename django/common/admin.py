@@ -1,5 +1,16 @@
 from django.contrib import admin
-from .models import Event, Game, Log, LogStatus, Experiment, VideoRecording, Team,Tag, Robot, HealthIssues
+from .models import (
+    Event,
+    Game,
+    Log,
+    LogStatus,
+    Experiment,
+    VideoRecording,
+    Team,
+    Tag,
+    Robot,
+    HealthIssues,
+)
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import (
     DropdownFilter,
@@ -14,14 +25,23 @@ site.unregister(Group)
 class EventAdmin(ModelAdmin):
     list_display = ("id", "name")
 
+
 class GameAdmin(ModelAdmin):
-    list_display = ("event_id", "get_id", "team1__name", "team2__name", "half", "is_testgame")
+    list_display = (
+        "event_id",
+        "get_id",
+        "team1__name",
+        "team2__name",
+        "half",
+        "is_testgame",
+    )
     list_select_related = ["team1", "team2"]
 
     def get_id(self, obj):
         return obj.id
 
     get_id.short_description = "Game ID"
+
 
 class GameExperimentFilter(DropdownFilter):
     title = "Content Type"
@@ -62,7 +82,6 @@ class LogAdmin(ModelAdmin):
         "is_test",
     ]
     list_select_related = ["game", "game__event", "game__team1", "game__team2"]
-
 
     list_filter_submit = True  # Submit button at the bottom of the filter
     # TODO: add additional filter for filtering by event
@@ -107,11 +126,13 @@ class LogStatusAdmin(ModelAdmin):
     get_log_id.short_description = "Log ID"
     get_log_path.short_description = "Log Path"
 
+
 class VideoRecordingAdmin(ModelAdmin):
     list_display = ["get_game_id", "video_path", "url", "type"]
 
     def get_game_id(self, obj):
         return obj.game.id
+
 
 class TeamAdmin(ModelAdmin):
     list_display = ["id", "get_team_id", "get_team_name"]
@@ -127,7 +148,15 @@ class TeamAdmin(ModelAdmin):
 
 
 class RobotAdmin(ModelAdmin):
-    list_display = ["head_number", "model", "version", "body_serial", "head_serial", "purchased", "warranty_end"]
+    list_display = [
+        "head_number",
+        "model",
+        "version",
+        "body_serial",
+        "head_serial",
+        "purchased",
+        "warranty_end",
+    ]
 
 
 # this is required for every model

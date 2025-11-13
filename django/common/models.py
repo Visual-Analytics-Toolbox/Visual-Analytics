@@ -29,8 +29,12 @@ class Team(models.Model):
 
 class Game(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="games")
-    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team1", null=True)
-    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team2", null=True)
+    team1 = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name="team1", null=True
+    )
+    team2 = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name="team2", null=True
+    )
     half = models.CharField(max_length=100, blank=True, null=True)
     is_testgame = models.BooleanField(blank=True, null=True)
     head_ref = models.CharField(max_length=100, blank=True, null=True)
@@ -49,7 +53,9 @@ class Game(models.Model):
 
 
 class Experiment(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="experiments")
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="experiments"
+    )
     # either the folder name if its an experiment of multiple robots or the logfile name
     name = models.CharField(max_length=100, blank=True, null=True)
     field = models.CharField(max_length=100, blank=True, null=True)
@@ -64,8 +70,12 @@ class VideoRecording(models.Model):
         GoPro = "GoPro", _("GoPro")
         PiCam = "PiCam", _("PiCam")
 
-    game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE, related_name="recordings")
-    experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
+    game = models.ForeignKey(
+        Game, null=True, blank=True, on_delete=models.CASCADE, related_name="recordings"
+    )
+    experiment = models.ForeignKey(
+        Experiment, null=True, blank=True, on_delete=models.CASCADE
+    )
     video_path = models.CharField(max_length=200, blank=True, null=True)
     # urls should optionally include the youtube links
     url = models.CharField(max_length=120, blank=True, null=True)
@@ -74,12 +84,13 @@ class VideoRecording(models.Model):
 
 
 class Robot(models.Model):
-
     class RobotModel(models.TextChoices):
         Nao = "Nao", _("Nao")
         BoosterK1 = "Booster K1", _("Booster K1")
 
-    model = models.CharField(max_length=30, choices=RobotModel, blank=False, null=False) # Nao, Booster
+    model = models.CharField(
+        max_length=30, choices=RobotModel, blank=False, null=False
+    )  # Nao, Booster
     head_number = models.IntegerField(blank=True, null=True)
     body_serial = models.CharField(max_length=20, blank=True, null=True)
     head_serial = models.CharField(max_length=20, blank=True, null=True)
@@ -93,16 +104,16 @@ class Robot(models.Model):
 
 
 class HealthIssues(models.Model):
-
     class ResolutionStatus(models.TextChoices):
         Noticed = "Noticed", _("Noticed")
         Verified = "Verified", _("Verified")
         InClinic = "In Clinic", _("In Clinic")
         Repaired = "Repaired", _("Repaired")
 
-
     robot = models.ForeignKey(Robot, null=True, blank=True, on_delete=models.CASCADE)
-    status = models.CharField(max_length=30, choices=ResolutionStatus, blank=False, null=False)
+    status = models.CharField(
+        max_length=30, choices=ResolutionStatus, blank=False, null=False
+    )
     description = models.TextField(blank=True, null=True)
     created = models.DateTimeField(default=timezone.now)
     modified = models.DateTimeField(auto_now=True)
@@ -110,7 +121,9 @@ class HealthIssues(models.Model):
 
 class Log(models.Model):
     game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
-    experiment = models.ForeignKey(Experiment, null=True, blank=True, on_delete=models.CASCADE)
+    experiment = models.ForeignKey(
+        Experiment, null=True, blank=True, on_delete=models.CASCADE
+    )
     robot = models.ForeignKey(Robot, null=True, blank=True, on_delete=models.SET_NULL)
     player_number = models.IntegerField(blank=True, null=True)
     representation_list = models.JSONField(blank=True, null=True)
@@ -144,7 +157,9 @@ class Log(models.Model):
 
 
 class LogStatus(models.Model):
-    log = models.OneToOneField(Log, on_delete=models.CASCADE, related_name="log_status", primary_key=True)
+    log = models.OneToOneField(
+        Log, on_delete=models.CASCADE, related_name="log_status", primary_key=True
+    )
     # holds the number of frames that should be in the db for each representation
     AudioData = models.IntegerField(blank=True, null=True)
     BallCandidates = models.IntegerField(blank=True, null=True)
@@ -197,11 +212,9 @@ class Tag(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        ordering = ['name']
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
+        ordering = ["name"]
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
 
     def __str__(self):
         return self.name
-
-

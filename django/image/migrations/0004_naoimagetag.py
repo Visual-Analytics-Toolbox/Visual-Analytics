@@ -5,27 +5,48 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0018_tag'),
-        ('image', '0003_alter_naoimage_frame'),
+        ("common", "0018_tag"),
+        ("image", "0003_alter_naoimage_frame"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='NaoImageTag',
+            name="NaoImageTag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tags', to='image.naoimage')),
-                ('tag', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='common.tag')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "image",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tags",
+                        to="image.naoimage",
+                    ),
+                ),
+                (
+                    "tag",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="images",
+                        to="common.tag",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Image Tag',
-                'verbose_name_plural': 'Image Tags',
-                'ordering': ['created_at'],
-                'unique_together': {('image', 'tag')},
+                "verbose_name": "Image Tag",
+                "verbose_name_plural": "Image Tags",
+                "ordering": ["created_at"],
+                "unique_together": {("image", "tag")},
             },
         ),
     ]

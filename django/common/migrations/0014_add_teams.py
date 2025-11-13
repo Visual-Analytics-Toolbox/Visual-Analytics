@@ -25,7 +25,6 @@ def load_initial_data(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("common", "0013_alter_team_name_alter_team_team_id"),
     ]

@@ -26,9 +26,13 @@ class LogSerializer(serializers.ModelSerializer):
             game_id = data.get("game")
             experiment_id = data.get("experiment")
             if not game_id and not experiment_id:
-                raise serializers.ValidationError("Either game or experiment is required.")
+                raise serializers.ValidationError(
+                    "Either game or experiment is required."
+                )
             if game_id and experiment_id:
-                raise serializers.ValidationError("Only one of game or experiment is allowed.")
+                raise serializers.ValidationError(
+                    "Only one of game or experiment is allowed."
+                )
 
         return data
 
@@ -52,6 +56,7 @@ class LogStatusSerializer(serializers.ModelSerializer):
         model = models.LogStatus
         fields = "__all__"
 
+
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Team
@@ -62,6 +67,7 @@ class RobotSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Robot
         fields = "__all__"
+
 
 class HealthIssuesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,9 +86,13 @@ class VideoRecordingSerializer(serializers.ModelSerializer):
             game_id = data.get("game")
             experiment_id = data.get("experiment")
             if not game_id and not experiment_id:
-                raise serializers.ValidationError("Either game or experiment is required.")
+                raise serializers.ValidationError(
+                    "Either game or experiment is required."
+                )
             if game_id and experiment_id:
-                raise serializers.ValidationError("Only one of game or experiment is allowed.")
+                raise serializers.ValidationError(
+                    "Only one of game or experiment is allowed."
+                )
 
         return data
 
@@ -101,9 +111,10 @@ class GameSerializer(serializers.ModelSerializer):
         model = models.Game
         fields = "__all__"
 
+
 class TagSerializer(serializers.ModelSerializer):
     """Used for reading/displaying tags."""
+
     class Meta:
         model = models.Tag
-        fields = ['id', 'name']
-        
+        fields = ["id", "name"]

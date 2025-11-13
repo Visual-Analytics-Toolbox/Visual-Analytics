@@ -4,100 +4,99 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('motion', '0004_alter_motionframe_closest_cognition_frame'),
+        ("motion", "0004_alter_motionframe_closest_cognition_frame"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='accelerometerdata',
-            name='size',
+            model_name="accelerometerdata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='accelerometerdata',
-            name='start_pos',
+            model_name="accelerometerdata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='buttondata',
-            name='size',
+            model_name="buttondata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='buttondata',
-            name='start_pos',
+            model_name="buttondata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='fsrdata',
-            name='size',
+            model_name="fsrdata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='fsrdata',
-            name='start_pos',
+            model_name="fsrdata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='gyrometerdata',
-            name='size',
+            model_name="gyrometerdata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='gyrometerdata',
-            name='start_pos',
+            model_name="gyrometerdata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='imudata',
-            name='size',
+            model_name="imudata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='imudata',
-            name='start_pos',
+            model_name="imudata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='inertialsensordata',
-            name='size',
+            model_name="inertialsensordata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='inertialsensordata',
-            name='start_pos',
+            model_name="inertialsensordata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='motionstatus',
-            name='size',
+            model_name="motionstatus",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='motionstatus',
-            name='start_pos',
+            model_name="motionstatus",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='motorjointdata',
-            name='size',
+            model_name="motorjointdata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='motorjointdata',
-            name='start_pos',
+            model_name="motorjointdata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='sensorjointdata',
-            name='size',
+            model_name="sensorjointdata",
+            name="size",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='sensorjointdata',
-            name='start_pos',
+            model_name="sensorjointdata",
+            name="start_pos",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]

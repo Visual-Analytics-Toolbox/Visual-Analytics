@@ -57,16 +57,22 @@ class DynamicModelMixin:
             try:
                 for item in page:
                     try:
-                        log_path = str(Path("/mnt/e/logs") / item.frame.log.sensor_log_path)
+                        log_path = str(
+                            Path("/mnt/e/logs") / item.frame.log.sensor_log_path
+                        )
 
                         if log_path not in file_cache:
                             file = open(log_path, "rb")
-                            file_mmap = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
+                            file_mmap = mmap.mmap(
+                                file.fileno(), 0, access=mmap.ACCESS_READ
+                            )
                             file_cache[log_path] = file_mmap
 
                         print("item.start_pos", item.start_pos)
                         print("item.size", item.size)
-                        item.binary_data = file_cache[log_path][item.start_pos : item.start_pos + item.size]
+                        item.binary_data = file_cache[log_path][
+                            item.start_pos : item.start_pos + item.size
+                        ]
                         print("item.binary_data", item.binary_data)
                     except Exception as e:
                         print(f"Error processing item {item.id}: {str(e)}")
@@ -104,7 +110,9 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         model = self.get_model()
 
         # Prepare the data for bulk insert
-        rows_tuples = [(row["frame"], row["start_pos"], row["size"]) for row in request.data]
+        rows_tuples = [
+            (row["frame"], row["start_pos"], row["size"]) for row in request.data
+        ]
 
         with connection.cursor() as cursor:
             query = f"""
@@ -200,7 +208,9 @@ class MotionFrameUpdate(APIView):
                     case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
 
             if case_when_parts:
-                case_stmt = f"""{field} = (CASE {" ".join(case_when_parts)} ELSE {field} END)"""
+                case_stmt = (
+                    f"""{field} = (CASE {" ".join(case_when_parts)} ELSE {field} END)"""
+                )
                 case_statements.append(case_stmt)
 
         # Collect all values for the parameterized query
@@ -247,7 +257,9 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
             print("error: input not a list")
             return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
-        rows_tuples = [(row["log"], row["frame_number"], row["frame_time"]) for row in request.data]
+        rows_tuples = [
+            (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
+        ]
 
         with connection.cursor() as cursor:
             query = """

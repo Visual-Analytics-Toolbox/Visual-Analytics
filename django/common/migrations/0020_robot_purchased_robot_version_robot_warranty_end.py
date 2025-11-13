@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0019_robot'),
+        ("common", "0019_robot"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='robot',
-            name='purchased',
+            model_name="robot",
+            name="purchased",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='robot',
-            name='version',
+            model_name="robot",
+            name="version",
             field=models.CharField(blank=True, max_length=10, null=True),
         ),
         migrations.AddField(
-            model_name='robot',
-            name='warranty_end',
+            model_name="robot",
+            name="warranty_end",
             field=models.DateField(blank=True, null=True),
         ),
     ]

@@ -6,8 +6,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY="django-insecure-n!-hggli0wd1(2=4!gsrbpt3=px4xxbed$ocvvw2v2+3cq+xz*"
-DEBUG=True
+SECRET_KEY = "django-insecure-n!-hggli0wd1(2=4!gsrbpt3=px4xxbed$ocvvw2v2+3cq+xz*"
+DEBUG = True
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -165,7 +165,9 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # https://github.com/adamchainz/django-cors-headers
-CORS_ALLOW_ALL_ORIGINS = True  # we shouldn't to this because it makes the cors allowed origins obsolete
+CORS_ALLOW_ALL_ORIGINS = (
+    True  # we shouldn't to this because it makes the cors allowed origins obsolete
+)
 CORS_ALLOWS_CREDENTIALS = False
 CORS_ALLOWED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000"]
 

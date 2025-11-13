@@ -5,6 +5,7 @@ from .factories import AnnotationFactory
 
 pytestmark = pytest.mark.django_db
 
+
 class TestAnnotationModel:
     def test_create_annotation_minimal(self):
         AnnotationFactory.create()
@@ -40,4 +41,3 @@ class TestAnnotationModel:
         image = annotation.image
         image.delete()
         assert Annotation.objects.count() == 0
-

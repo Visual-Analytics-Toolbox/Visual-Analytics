@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0021_robot_comment'),
+        ("common", "0021_robot_comment"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='log',
-            name='comment',
+            model_name="log",
+            name="comment",
             field=models.TextField(blank=True, null=True),
         ),
     ]

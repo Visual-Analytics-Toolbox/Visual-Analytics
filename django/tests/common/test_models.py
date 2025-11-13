@@ -7,7 +7,7 @@ from .factories import (
     VideoRecordingFactory,
     LogFactory,
     LogStatusFactory,
-    TeamFactory
+    TeamFactory,
 )
 
 pytestmark = pytest.mark.unit
@@ -26,8 +26,8 @@ class TestCommonModels:
     def test_game(self):
         GameFactory.create(
             half="half1",
-            team1 = TeamFactory(name="Team A"),
-            team2 = TeamFactory(name="Team B"),
+            team1=TeamFactory(name="Team A"),
+            team2=TeamFactory(name="Team B"),
             start_time="2024-01-01 12:00:00+00:00",
         )
         assert Game.objects.count() == 1
@@ -139,6 +139,8 @@ class TestCommonModels:
         assert db_log_status.num_motion_frames == 8000
 
         # Verify some fields are nullable
-        log_status_minimal = LogStatusFactory.create(log=LogFactory.create(), AudioData=None, BallModel=None)
+        log_status_minimal = LogStatusFactory.create(
+            log=LogFactory.create(), AudioData=None, BallModel=None
+        )
         assert log_status_minimal.AudioData is None
         assert log_status_minimal.BallModel is None

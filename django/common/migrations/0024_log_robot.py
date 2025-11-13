@@ -5,15 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0023_alter_robot_model'),
+        ("common", "0023_alter_robot_model"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='log',
-            name='robot',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='common.robot'),
+            model_name="log",
+            name="robot",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="common.robot",
+            ),
         ),
     ]
