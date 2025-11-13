@@ -5,7 +5,16 @@ from django.utils import timezone
 from datetime import timedelta
 import random
 
-from common.models import Event, Game, Experiment, VideoRecording, Log, LogStatus, Team
+from common.models import (
+    Event,
+    Game,
+    Experiment,
+    VideoRecording,
+    Log,
+    LogStatus,
+    Team,
+    Robot,
+)
 
 
 class EventFactory(DjangoModelFactory):
@@ -80,14 +89,12 @@ class VideoRecordingFactory(DjangoModelFactory):
     comment = factory.Faker("text")
 
 
-class LogFactory(DjangoModelFactory):
+class RobotFactory(DjangoModelFactory):
     class Meta:
-        model = Log
+        model = Robot
 
-    game = factory.SubFactory(GameFactory)
-    experiment = None
-    robot_version = fuzzy.FuzzyChoice(["V5", "V6"])
-    player_number = fuzzy.FuzzyInteger(1, 11)
+    model = fuzzy.FuzzyChoice(["Nao", "Booster K1"])
+    version = fuzzy.FuzzyChoice(["V5", "V6"])
     head_number = fuzzy.FuzzyInteger(1, 100)
     body_serial = factory.LazyAttribute(
         lambda _: f"B{''.join(random.choices('0123456789', k=8))}"
@@ -95,6 +102,18 @@ class LogFactory(DjangoModelFactory):
     head_serial = factory.LazyAttribute(
         lambda _: f"H{''.join(random.choices('0123456789', k=8))}"
     )
+
+
+class LogFactory(DjangoModelFactory):
+    class Meta:
+        model = Log
+
+    game = factory.SubFactory(GameFactory)
+    robot = factory.SubFactory(RobotFactory)
+    experiment = None
+
+    player_number = fuzzy.FuzzyInteger(1, 11)
+
     representation_list = factory.LazyAttribute(
         lambda _: ["Image", "BallModel", "TeamState"]
     )
