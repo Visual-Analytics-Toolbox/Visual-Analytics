@@ -71,21 +71,13 @@ class TestCommonModels:
     @pytest.mark.django_db
     def test_log_creation(self):
         log = LogFactory.create(
-            robot_version="V6",
             player_number=3,
-            head_number=42,
-            body_serial="B12345678",
-            head_serial="H87654321",
             representation_list=["Image", "BallModel"],
         )
         assert Log.objects.count() == 1
         db_log = Log.objects.first()
         assert str(db_log) == log.log_path
-        assert db_log.robot_version == "V6"
         assert db_log.player_number == 3
-        assert db_log.head_number == 42
-        assert db_log.body_serial == "B12345678"
-        assert db_log.head_serial == "H87654321"
         assert db_log.representation_list == ["Image", "BallModel"]
         assert db_log.game is not None
         assert db_log.experiment is None
