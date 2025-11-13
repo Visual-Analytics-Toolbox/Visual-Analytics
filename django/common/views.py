@@ -131,16 +131,15 @@ class EventViewSet(viewsets.ModelViewSet):
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["event"]
 
     def get_queryset(self):
-        event_id = self.request.query_params.get("event")
 
         queryset = models.Game.objects.select_related("event").annotate(
             event_name=F("event__name")
         )
 
-        if event_id is not None:
-            queryset = queryset.filter(event=event_id)
 
         queryset = queryset.prefetch_related("recordings")
 
