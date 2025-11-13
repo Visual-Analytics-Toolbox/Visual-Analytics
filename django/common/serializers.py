@@ -63,6 +63,12 @@ class RobotSerializer(serializers.ModelSerializer):
         model = models.Robot
         fields = "__all__"
 
+class HealthIssuesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.HealthIssues
+        fields = "__all__"
+
+
 class VideoRecordingSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.VideoRecording

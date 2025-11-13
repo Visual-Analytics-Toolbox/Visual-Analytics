@@ -448,3 +448,7 @@ class DatasetUploadView(FileUploadBaseView):
     Handles file uploads to the 'datasets/' directory.
     """
     destination_folder = '/mnt/datasets'
+
+class HealthIssuesViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.HealthIssuesSerializer
+    queryset = models.HealthIssues.objects.all()

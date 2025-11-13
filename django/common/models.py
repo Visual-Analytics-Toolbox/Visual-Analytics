@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -89,6 +90,23 @@ class Robot(models.Model):
 
     def __str__(self):
         return f"{self.model}{self.version}_{self.head_number}"
+
+
+class HealthIssues(models.Model):
+
+    class ResolutionStatus(models.TextChoices):
+        Noticed = "Noticed", _("Noticed")
+        Verified = "Verified", _("Verified")
+        InClinic = "In Clinic", _("In Clinic")
+        Repaired = "Repaired", _("Repaired")
+
+
+    robot = models.ForeignKey(Robot, null=True, blank=True, on_delete=models.CASCADE)
+    status = models.CharField(max_length=30, choices=ResolutionStatus, blank=False, null=False)
+    description = models.TextField(blank=True, null=True)
+    created = models.DateTimeField(default=timezone.now)
+    modified = models.DateTimeField(auto_now=True)
+
 
 class Log(models.Model):
     game = models.ForeignKey(Game, null=True, blank=True, on_delete=models.CASCADE)
