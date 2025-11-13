@@ -140,7 +140,6 @@ class GameViewSet(viewsets.ModelViewSet):
             event_name=F("event__name")
         )
 
-
         queryset = queryset.prefetch_related("recordings")
 
         return queryset
@@ -164,16 +163,14 @@ class GameViewSet(viewsets.ModelViewSet):
 class ExperimentViewSet(viewsets.ModelViewSet):
     queryset = models.Experiment.objects.all()
     serializer_class = serializers.ExperimentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["event"]
 
     def get_queryset(self):
-        event_id = self.request.query_params.get("event")
 
         queryset = models.Experiment.objects.select_related("event").annotate(
             event_name=F("event__name")
         )
-
-        if event_id is not None:
-            queryset = queryset.filter(event=event_id)
 
         return queryset
 
