@@ -134,15 +134,7 @@ class GameViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["event"]
 
-    def get_queryset(self):
-
-        queryset = models.Game.objects.select_related("event").annotate(
-            event_name=F("event__name")
-        )
-
-        queryset = queryset.prefetch_related("recordings")
-
-        return queryset
+    
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -212,26 +204,13 @@ class ExperimentViewSet(viewsets.ModelViewSet):
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["game", "player_number", "robot__head_number"]
 
     def get_queryset(self):
-        queryset = models.Log.objects.all()
-        query_params = self.request.query_params
+        queryset = models.Log.objects.select_related('robot').all().select_related('game')
 
-        filters = Q()
-        for field in models.Log._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                if isinstance(field, django_models.BooleanField):
-                    # Convert string to boolean for boolean fields
-                    if param_value.lower() in ("true", "1", "yes"):
-                        param_value = True
-                    elif param_value.lower() in ("false", "0", "no"):
-                        param_value = False
-                    else:
-                        continue  # Skip invalid boolean values
-                filters &= Q(**{field.name: param_value})
-
-        return queryset.filter(filters)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
