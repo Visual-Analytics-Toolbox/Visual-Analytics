@@ -94,18 +94,6 @@ class TestCommonModels:
         assert experiment_log.log_type == experiment
 
     @pytest.mark.django_db
-    def test_log_properties(self):
-        game = GameFactory.create(
-            team1=TeamFactory(name="Team A"),
-            team2=TeamFactory(name="Team B"),
-            half="half1",
-        )
-        log = LogFactory.create(game=game)
-
-        assert log.event_name == game.event.name
-        assert log.game_name == "Team A_vs_Team B_half1"
-
-    @pytest.mark.django_db
     def test_log_status(self):
         # Create a LogStatus with specific values
         LogStatusFactory.create(

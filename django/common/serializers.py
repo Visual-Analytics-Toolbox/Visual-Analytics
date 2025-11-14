@@ -53,7 +53,7 @@ class GameSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
-    robot = RobotSerializer()
+    robot = RobotSerializer(required=False)
 
     class Meta:
         model = models.Log
