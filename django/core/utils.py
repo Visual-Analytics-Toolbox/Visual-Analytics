@@ -2,7 +2,7 @@
 https://gaetangrond.me/posts/django/remove-django-rest-framework-form-in-browsable-api/
 """
 
-from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
+from rest_framework.renderers import BrowsableAPIRenderer
 
 
 class BrowsableAPIRendererWithoutForms(BrowsableAPIRenderer):
