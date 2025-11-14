@@ -43,8 +43,8 @@ class TestSerializers:
         serializer = GameSerializer(game)
         data = serializer.data
 
-        assert data["team1"] == game.team1.name
-        assert data["team2"] == game.team2.name
+        assert data["team1"] == game.team1.id
+        assert data["team2"] == game.team2.id
         assert data["half"] == game.half
         assert data["event"] == game.event.id
 
@@ -52,8 +52,8 @@ class TestSerializers:
         event = EventFactory.create()
         new_data = {
             "event": event.id,
-            "team1": "Team X",
-            "team2": "Team Y",
+            "team1": 4,
+            "team2": 5,
             "half": "half1",
         }
         serializer = GameSerializer(data=new_data)
@@ -75,17 +75,18 @@ class TestSerializers:
         experiment = ExperimentFactory.create()
 
         # Test valid data with game
-        valid_game_data = {"game": game.id, "robot_version": "V6", "player_number": 1}
+        valid_log_data = {"game": game.id, "player_number": 1}
+
         serializer = LogSerializer(
-            data=valid_game_data,
+            data=valid_log_data,
             context={"request": type("Request", (), {"method": "POST"})},
         )
+
         assert serializer.is_valid()
 
         # Test valid data with experiment
         valid_exp_data = {
             "experiment": experiment.id,
-            "robot_version": "V6",
             "player_number": 1,
         }
         serializer = LogSerializer(
@@ -98,7 +99,6 @@ class TestSerializers:
         invalid_data = {
             "game": game.id,
             "experiment": experiment.id,
-            "robot_version": "V6",
         }
         serializer = LogSerializer(
             data=invalid_data,
@@ -106,15 +106,6 @@ class TestSerializers:
         )
         assert not serializer.is_valid()
         assert "Only one of game or experiment is allowed" in str(serializer.errors)
-
-    @pytest.mark.django_db
-    def test_log_serializer_properties(self):
-        log = LogFactory.create()
-        serializer = LogSerializer(log)
-        data = serializer.data
-
-        assert data["event_name"] == log.event_name
-        assert data["game_name"] == log.game_name
 
     @pytest.mark.django_db
     def test_log_status_serializer(self):

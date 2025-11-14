@@ -2,6 +2,7 @@ import os
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
 from . import serializers
+from django_filters.rest_framework import DjangoFilterBackend
 from . import models
 from django.http import (
     JsonResponse,
@@ -16,13 +17,11 @@ from django.db import transaction
 from django.db.models import Q, F
 from django.db import connection
 from psycopg2.extras import execute_values
-from django.db import models as django_models
 from django.template import loader
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
-from .filter import VideoFilter, RobotFilter
 import logging
 import requests
 
@@ -44,26 +43,22 @@ def health_check(request):
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
-    # FIXME add filter option for list so that we can select a robot my head_number
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["team_id", "name"]
 
 
 class RobotViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RobotSerializer
     queryset = models.Robot.objects.all()
-
-    def get_queryset(self):
-        qs = models.Robot.objects.all()
-
-        filter = RobotFilter(qs, self.request.query_params)
-
-        qs = filter.filter_head_number().filter_body_serial().qs
-
-        return qs
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["model", "head_number", "body_serial", "head_serial"]
 
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["name", "country"]
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -134,18 +129,11 @@ class EventViewSet(viewsets.ModelViewSet):
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["event"]
 
     def get_queryset(self):
-        event_id = self.request.query_params.get("event")
-
-        queryset = models.Game.objects.select_related("event").annotate(
-            event_name=F("event__name")
-        )
-
-        if event_id is not None:
-            queryset = queryset.filter(event=event_id)
-
-        queryset = queryset.prefetch_related("recordings")
+        queryset = models.Game.objects.prefetch_related("recordings").all()
 
         return queryset
 
@@ -168,16 +156,13 @@ class GameViewSet(viewsets.ModelViewSet):
 class ExperimentViewSet(viewsets.ModelViewSet):
     queryset = models.Experiment.objects.all()
     serializer_class = serializers.ExperimentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["event"]
 
     def get_queryset(self):
-        event_id = self.request.query_params.get("event")
-
         queryset = models.Experiment.objects.select_related("event").annotate(
             event_name=F("event__name")
         )
-
-        if event_id is not None:
-            queryset = queryset.filter(event=event_id)
 
         return queryset
 
@@ -219,26 +204,15 @@ class ExperimentViewSet(viewsets.ModelViewSet):
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     serializer_class = serializers.LogSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["game", "player_number", "robot__head_number"]
 
     def get_queryset(self):
-        queryset = models.Log.objects.all()
-        query_params = self.request.query_params
+        queryset = (
+            models.Log.objects.select_related("robot").all().select_related("game")
+        )
 
-        filters = Q()
-        for field in models.Log._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                if isinstance(field, django_models.BooleanField):
-                    # Convert string to boolean for boolean fields
-                    if param_value.lower() in ("true", "1", "yes"):
-                        param_value = True
-                    elif param_value.lower() in ("false", "0", "no"):
-                        param_value = False
-                    else:
-                        continue  # Skip invalid boolean values
-                filters &= Q(**{field.name: param_value})
-
-        return queryset.filter(filters)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -300,15 +274,9 @@ class LogStatusViewSet(viewsets.ModelViewSet):
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = models.VideoRecording.objects.all()
     serializer_class = serializers.VideoRecordingSerializer
-
-    def get_queryset(self):
-        qs = models.VideoRecording.objects.all()
-
-        filter = VideoFilter(qs, self.request.query_params)
-
-        qs = filter.filter_game().filter_log().filter_experiment().filter_type().qs
-
-        return qs
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["game", "experiment", "type"]
+    # TODO maybe make it possible again to filter for log_id - if game has a recording the log has a recording as well
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
