@@ -134,6 +134,10 @@ class GameViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["event"]
 
+    def get_queryset(self):
+        queryset = models.Game.objects.prefetch_related('recordings').all()
+
+        return queryset
     
 
     def create(self, request, *args, **kwargs):
