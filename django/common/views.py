@@ -276,15 +276,9 @@ class LogStatusViewSet(viewsets.ModelViewSet):
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = models.VideoRecording.objects.all()
     serializer_class = serializers.VideoRecordingSerializer
-
-    def get_queryset(self):
-        qs = models.VideoRecording.objects.all()
-
-        filter = VideoFilter(qs, self.request.query_params)
-
-        qs = filter.filter_game().filter_log().filter_experiment().filter_type().qs
-
-        return qs
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["game", "experiment", "type"]
+    # TODO maybe make it possible again to filter for log_id - if game has a recording the log has a recording as well
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
