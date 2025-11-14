@@ -135,10 +135,9 @@ class GameViewSet(viewsets.ModelViewSet):
     filterset_fields = ["event"]
 
     def get_queryset(self):
-        queryset = models.Game.objects.prefetch_related('recordings').all()
+        queryset = models.Game.objects.prefetch_related("recordings").all()
 
         return queryset
-    
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -163,7 +162,6 @@ class ExperimentViewSet(viewsets.ModelViewSet):
     filterset_fields = ["event"]
 
     def get_queryset(self):
-
         queryset = models.Experiment.objects.select_related("event").annotate(
             event_name=F("event__name")
         )
@@ -212,7 +210,9 @@ class LogViewSet(viewsets.ModelViewSet):
     filterset_fields = ["game", "player_number", "robot__head_number"]
 
     def get_queryset(self):
-        queryset = models.Log.objects.select_related('robot').all().select_related('game')
+        queryset = (
+            models.Log.objects.select_related("robot").all().select_related("game")
+        )
 
         return queryset
 
