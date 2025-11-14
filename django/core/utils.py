@@ -2,11 +2,12 @@
 https://gaetangrond.me/posts/django/remove-django-rest-framework-form-in-browsable-api/
 """
 
-from rest_framework.renderers import BrowsableAPIRenderer
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 class BrowsableAPIRendererWithoutForms(BrowsableAPIRenderer):
     """Renders the browsable api, but excludes the forms."""
-
+    def get_filter_form(self, data, view, request):
+        return ""
     def get_context(self, *args, **kwargs):
         ctx = super().get_context(*args, **kwargs)
         ctx["display_edit_forms"] = False
