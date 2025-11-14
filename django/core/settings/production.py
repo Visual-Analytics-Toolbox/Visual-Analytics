@@ -39,7 +39,7 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_RENDERER_CLASSES": (
         "drf_orjson_renderer.renderers.ORJSONRenderer",
-        #"rest_framework.renderers.BrowsableAPIRenderer",
+        # "rest_framework.renderers.BrowsableAPIRenderer",
         "core.utils.BrowsableAPIRendererWithoutForms",
     ),
 }
