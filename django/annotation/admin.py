@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Annotation, AnnotationTag
+from .models import Annotation
 from unfold.admin import ModelAdmin
 from django.conf import settings
 from unfold.contrib.filters.admin import (
@@ -116,7 +116,6 @@ class AnnotationAdmin(ModelAdmin):
     get_link.short_description = "Link"
 
 
-@admin.register(AnnotationTag)
 class UnfoldAdminClass(ModelAdmin):
     raw_id_fields = ("annotation",)
 

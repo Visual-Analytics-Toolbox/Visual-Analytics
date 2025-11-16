@@ -348,11 +348,6 @@ class VideoSliceView(APIView):
             return HttpResponseServerError("Error reading the generated video file.")
 
 
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = models.Tag.objects.all()
-    serializer_class = serializers.TagSerializer
-
-
 class FileUploadBaseView(APIView):
     """
     A base class for file uploads to avoid code duplication.
