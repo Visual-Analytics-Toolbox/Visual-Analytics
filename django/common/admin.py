@@ -7,7 +7,6 @@ from .models import (
     Experiment,
     VideoRecording,
     Team,
-    Tag,
     Robot,
     HealthIssues,
 )
@@ -160,7 +159,6 @@ class RobotAdmin(ModelAdmin):
 
 
 # this is required for every model
-@admin.register(Tag)
 @admin.register(Experiment)
 @admin.register(HealthIssues)
 class CustomAdminClass(ModelAdmin):

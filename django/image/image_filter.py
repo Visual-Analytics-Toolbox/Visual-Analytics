@@ -27,9 +27,6 @@ class ImageFilter:
             self.qs = self.qs.filter(frame__frame_number=frame_number)
         return self
 
-    def filter_image_tag(self) -> Self:
-        pass
-
     """
     filter on annotation related values
     """
@@ -63,7 +60,4 @@ class ImageFilter:
         pass
 
     def filter_annotation_class(self) -> Self:
-        pass
-
-    def filter_annotation_tags(self) -> Self:
         pass
