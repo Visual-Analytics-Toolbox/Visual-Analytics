@@ -172,6 +172,10 @@ SOCIALACCOUNT_PROVIDERS = {
         ]
     }
 }
+
+HEADLESS_ONLY = True
+ACCOUNT_EMAIL_VERIFICATION ="none"
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -182,7 +186,7 @@ USE_TZ = True
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # new
-LOGIN_REDIRECT_URL = "/events"
+LOGIN_REDIRECT_URL = "/"
 SITE_ID = 1 # new
 
 # Static files (CSS, JavaScript, Images)
@@ -203,16 +207,14 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # https://github.com/adamchainz/django-cors-headers
-CORS_ALLOW_ALL_ORIGINS = (
-    True  # we shouldn't to this because it makes the cors allowed origins obsolete
-)
-CORS_ALLOWS_CREDENTIALS = False
-CORS_ALLOWED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000"]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000", 'http://localhost:3000', "http://127.0.0.1:3000"]
 
 # makes csrf cookie valid on all subdomains
 # CSRF_COOKIE_DOMAIN = ".berlin-united.com"
 # specifies all domains where django accepts POST requests from with CSRF tokens
-CSRF_TRUSTED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000", 'http://localhost:3000', "http://127.0.0.1:3000"]
 
 # requiered if there is a loadbalancer in front of django that forwards requests over http
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -240,6 +242,7 @@ CORS_ALLOW_METHODS = [
 CORS_ALLOW_HEADERS = [
     "authorization",
     "content-type",
+    "Access-Control-Allow-Credentials"
 ]
 
 
