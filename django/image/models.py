@@ -22,8 +22,5 @@ class NaoImage(models.Model):
     brightness_value = models.IntegerField(blank=True, null=True)
     resolution = models.CharField(max_length=11, blank=True, null=True)  # 1640x1480x2
 
-    class Meta:
-        unique_together = ("frame", "camera", "type")
-
     def __str__(self):
         return f"{self.frame}-{self.camera}-{self.type}"

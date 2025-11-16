@@ -180,8 +180,16 @@ class ImageUpdateView(APIView):
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
-    serializer_class = serializers.ImageSerializer
+
     pagination_class = LargeResultsSetPagination
+
+    def get_serializer_class(self):
+        # Use the Read serializer for retrieving data
+        if self.action in ("list", "retrieve"):
+            return serializers.ImageReadSerializer
+
+        # Use the Write serializer for creating/updating data
+        return serializers.ImageWriteSerializer
 
     def get_queryset(self):
         qs = models.NaoImage.objects.all()
@@ -195,6 +203,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
+
         is_many = isinstance(request.data, list)
 
         if is_many:
@@ -213,7 +222,7 @@ class ImageViewSet(viewsets.ModelViewSet):
             return super().update(request, *args, **kwargs)
 
     def single_create(self, data):
-        serializer = self.get_serializer(data, many=False)
+        serializer = self.get_serializer(data=data, many=False)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
@@ -225,8 +234,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         )
 
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
-
-        serializer = self.get_serializer(instance)
+        serializer = serializers.ImageReadSerializer(instance)
         return Response(serializer.data, status=status_code)
 
     def bulk_create(self, data):
