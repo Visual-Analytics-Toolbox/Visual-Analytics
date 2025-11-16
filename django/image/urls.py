@@ -11,6 +11,6 @@ urlpatterns = [
 ]
 
 router = routers.DefaultRouter()
-router.register("image", views.ImageViewSet)
+router.register("images", views.ImageViewSet)
 
 urlpatterns += router.urls
