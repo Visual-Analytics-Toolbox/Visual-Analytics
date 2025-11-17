@@ -52,7 +52,16 @@ class GameSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LogSerializer(serializers.ModelSerializer):
+class LogWriteSerializer(serializers.ModelSerializer):
+    # Only needs the field names exactly as they are in the request payload.
+    # The 'frame' field maps directly to the underlying frame_id foreign key.
+
+    class Meta:
+        model = models.Log
+        fields = "__all__"
+
+
+class LogReadSerializer(serializers.ModelSerializer):
     robot = RobotSerializer(required=False)
 
     class Meta:

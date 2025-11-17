@@ -203,9 +203,16 @@ class ExperimentViewSet(viewsets.ModelViewSet):
 
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
-    serializer_class = serializers.LogSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["game", "player_number", "robot__head_number"]
+
+    def get_serializer_class(self):
+        # Use the Read serializer for retrieving data
+        if self.action in ("list", "retrieve"):
+            return serializers.LogReadSerializer
+
+        # Use the Write serializer for creating/updating data
+        return serializers.LogWriteSerializer
 
     def get_queryset(self):
         queryset = (
@@ -224,14 +231,13 @@ class LogViewSet(viewsets.ModelViewSet):
             game=validated_data.get("game"),
             experiment=validated_data.get("experiment"),
             player_number=validated_data.get("player_number"),
-            head_number=validated_data.get("head_number"),
             log_path=validated_data.get("log_path"),
             defaults=validated_data,
         )
 
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
-
-        serializer = self.get_serializer(instance)
+        # we need to use the read serializer explicitely here because the action is create/patch
+        serializer = serializers.LogReadSerializer(instance)
         return Response(serializer.data, status=status_code)
 
 
