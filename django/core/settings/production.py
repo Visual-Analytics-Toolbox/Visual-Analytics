@@ -123,6 +123,14 @@ DATABASES = {
         "PASSWORD": os.getenv("VAT_POSTGRES_PASS"),
         "HOST": os.getenv("VAT_POSTGRES_HOST"),
         "PORT": os.getenv("VAT_POSTGRES_PORT"),
+    },
+    'db2': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv("VAT_POSTGRES_DB"),
+        'USER': os.getenv("VAT_POSTGRES_USER"),
+        'PASSWORD': os.getenv("VAT_POSTGRES_PASS"),
+        'HOST': os.getenv("VAT_POSTGRES_HOST2"),
+        'PORT': os.getenv("VAT_POSTGRES_PORT"),
     }
 }
 
