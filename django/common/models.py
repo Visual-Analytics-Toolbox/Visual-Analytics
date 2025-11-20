@@ -195,3 +195,19 @@ class LogStatus(models.Model):
 
     class Meta:
         verbose_name_plural = "Log status"
+
+class FrameMapping(models.Model):
+    motion_frame = models.ForeignKey(
+        "motion.Motionframe",
+        on_delete=models.CASCADE,
+        related_name="cognition_mapping",
+        null=False,
+        blank=False)
+    
+    cognition_frame = models.ForeignKey(
+        "cognition.CognitionFrame",
+        on_delete=models.CASCADE,
+        related_name="motion_mapping",
+        null=False,
+        blank=False
+    ) 
