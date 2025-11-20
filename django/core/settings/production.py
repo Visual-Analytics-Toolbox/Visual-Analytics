@@ -116,7 +116,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 # loads env variables for database connection
 DATABASES = {
-    "default": {
+    "old_db": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": os.getenv("VAT_POSTGRES_DB"),
         "USER": os.getenv("VAT_POSTGRES_USER"),
@@ -124,7 +124,7 @@ DATABASES = {
         "HOST": os.getenv("VAT_POSTGRES_HOST"),
         "PORT": os.getenv("VAT_POSTGRES_PORT"),
     },
-    'db2': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv("VAT_POSTGRES_DB"),
         'USER': os.getenv("VAT_POSTGRES_USER"),
