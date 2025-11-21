@@ -132,7 +132,6 @@ class Log(models.Model):
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     git_commit = models.CharField(max_length=60, blank=True, null=True)
-    is_favourite = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.log_path}"
