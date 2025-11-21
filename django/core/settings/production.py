@@ -132,9 +132,6 @@ DATABASES = {
         "PASSWORD": os.getenv("VAT_POSTGRES_PASS"),
         "HOST": os.getenv("VAT_POSTGRES_HOST2"),
         "PORT": os.getenv("VAT_POSTGRES_PORT"),
-        "OPTIONS": {
-            "pool": True,
-        },
     },
 }
 
