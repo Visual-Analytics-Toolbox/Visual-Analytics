@@ -52,9 +52,6 @@ SIMPLE_JWT = {
 
 # Application definition
 INSTALLED_APPS = [
-    "unfold",
-    "unfold.contrib.filters",
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -130,7 +127,7 @@ DATABASES = {
         "HOST": os.getenv("VAT_POSTGRES_HOST2"),
         "PORT": os.getenv("VAT_POSTGRES_PORT"),
         "CONN_MAX_AGE": 60,
-        
+
     },
 }
 

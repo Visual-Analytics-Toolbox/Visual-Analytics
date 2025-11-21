@@ -6,7 +6,6 @@ from django.conf import settings
 urlpatterns = [
     path("", include("user.urls")),
     path("", include("frontend.urls")),
-    path("admin/", admin.site.urls),
     path("api/", include("common.urls")),
     path("api/", include("cognition.urls")),
     path("api/", include("motion.urls")),
@@ -18,5 +17,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     from debug_toolbar.toolbar import debug_toolbar_urls
-
     urlpatterns = urlpatterns + debug_toolbar_urls()
+    urlpatterns.append(path("admin/", admin.site.urls))
