@@ -220,6 +220,20 @@ wheels = [
 ]
 
 [[package]]
+name = "drf-extensions"
+version = "0.8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "djangorestframework" },
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/77/5a/57e3cc6f2bb4e1e84ad85eed0a12ddf22d5217b6b87c39e611d10e677a63/drf_extensions-0.8.0.tar.gz", hash = "sha256:c3f27bca74a2def53e8454a5c7b327595195df51e121743120b2f51ef5a52aaa", size = 173718, upload-time = "2025-04-10T07:50:05.139Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/aa/c1/b9721c9239b465c0ceac32b33e732c08f6ea0afd8156700e417416a47733/drf_extensions-0.8.0-py2.py3-none-any.whl", hash = "sha256:ab7bd854c9061c27ab55233b66d758001e5c2d81aaa9d117cbbe1c9ea49c77ab", size = 21589, upload-time = "2025-04-10T07:50:02.573Z" },
+]
+
+[[package]]
 name = "drf-orjson-renderer"
 version = "1.7.3"
 source = { registry = "https://pypi.org/simple" }
@@ -819,6 +833,7 @@ dependencies = [
     { name = "djangorestframework" },
     { name = "djangorestframework-api-key" },
     { name = "djangorestframework-simplejwt" },
+    { name = "drf-extensions" },
     { name = "drf-orjson-renderer" },
     { name = "drf-spectacular" },
     { name = "gunicorn" },
@@ -857,6 +872,7 @@ requires-dist = [
     { name = "djangorestframework", specifier = ">=3.16.1" },
     { name = "djangorestframework-api-key", specifier = "==3.*" },
     { name = "djangorestframework-simplejwt", specifier = ">=5.5.1" },
+    { name = "drf-extensions", specifier = ">=0.8.0" },
     { name = "drf-orjson-renderer", specifier = ">=1.7.3" },
     { name = "drf-spectacular", specifier = ">=0.29.0" },
     { name = "gunicorn", specifier = "==23.0.0" },

@@ -1,6 +1,7 @@
 import os
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
+from rest_framework_extensions.mixins import CacheResponseMixin
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from . import models
@@ -201,7 +202,7 @@ class ExperimentViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class LogViewSet(viewsets.ModelViewSet):
+class LogViewSet(CacheResponseMixin, viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["game", "player_number", "robot__head_number"]
