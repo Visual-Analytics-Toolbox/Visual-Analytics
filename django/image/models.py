@@ -20,6 +20,7 @@ class NaoImage(models.Model):
     image_url = models.CharField(max_length=200, blank=True, null=True)
     blurredness_value = models.IntegerField(blank=True, null=True)
     brightness_value = models.IntegerField(blank=True, null=True)
+    labelstudio_url = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return f"{self.frame}-{self.camera}-{self.type}"

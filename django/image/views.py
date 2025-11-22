@@ -180,7 +180,6 @@ class ImageUpdateView(APIView):
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
-
     pagination_class = LargeResultsSetPagination
 
     def get_serializer_class(self):
