@@ -20,7 +20,6 @@ class NaoImage(models.Model):
     image_url = models.CharField(max_length=200, blank=True, null=True)
     blurredness_value = models.IntegerField(blank=True, null=True)
     brightness_value = models.IntegerField(blank=True, null=True)
-    resolution = models.CharField(max_length=11, blank=True, null=True)  # 1640x1480x2
 
     def __str__(self):
         return f"{self.frame}-{self.camera}-{self.type}"
