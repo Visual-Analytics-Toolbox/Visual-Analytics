@@ -54,6 +54,20 @@ class RobotViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["model", "head_number", "body_serial", "head_serial"]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        instance, created = models.Robot.objects.get_or_create(
+            head_number=request.data.get("head_number"),
+            model=request.data.get("model"),
+            defaults=validated_data,
+        )
+
+        serializer = self.get_serializer(instance)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(serializer.data, status=status_code)
 
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
