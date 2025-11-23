@@ -127,7 +127,6 @@ DATABASES = {
         "HOST": os.getenv("VAT_POSTGRES_HOST2"),
         "PORT": os.getenv("VAT_POSTGRES_PORT"),
         "CONN_MAX_AGE": 60,
-
     },
 }
 
