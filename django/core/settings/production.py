@@ -242,12 +242,15 @@ CORS_ALLOW_METHODS = [
     "OPTIONS",
     "POST",
     "PUT",
+    "DELETE"
 ]
 
 # If you need to allow specific headers
 CORS_ALLOW_HEADERS = [
     "authorization",
     "content-type",
+    "Access-Control-Allow-Credentials",
+    "X-CSRFTOKEN"
 ]
 
 
