@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('image', '0007_alter_naoimage_unique_together'),
+        ("image", "0007_alter_naoimage_unique_together"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='naoimage',
-            name='resolution',
+            model_name="naoimage",
+            name="resolution",
         ),
         migrations.AddField(
-            model_name='naoimage',
-            name='labelstudio_url',
+            model_name="naoimage",
+            name="labelstudio_url",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

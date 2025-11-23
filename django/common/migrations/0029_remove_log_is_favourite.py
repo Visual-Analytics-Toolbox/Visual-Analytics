@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0028_delete_tag'),
+        ("common", "0028_delete_tag"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='log',
-            name='is_favourite',
+            model_name="log",
+            name="is_favourite",
         ),
     ]
