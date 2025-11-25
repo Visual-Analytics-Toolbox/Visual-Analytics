@@ -23,6 +23,7 @@ from .models import (
     TeamMessageDecision,
     Teamstate,
     WhistlePercept,
+    RobotPose,
 )
 
 
@@ -215,4 +216,11 @@ class WhistlePerceptSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WhistlePercept
+        fields = "__all__"
+
+class RobotPoseSerializer(serializers.ModelSerializer):
+    frame_number = serializers.ReadOnlyField()
+
+    class Meta:
+        model = RobotPose
         fields = "__all__"

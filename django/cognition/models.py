@@ -530,3 +530,27 @@ class WhistlePercept(models.Model):
                 fields=["frame"], name="unique_frame_id_whistlepercept"
             )
         ]
+
+
+class RobotPose(models.Model):
+    frame = models.ForeignKey(
+        CognitionFrame, on_delete=models.CASCADE, related_name="robotpose"
+    )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
+    representation_data = models.JSONField(blank=True, null=True)
+
+    @property
+    def frame_number(self):
+        return self.frame.frame_number
+
+    def __str__(self):
+        return f"{self.frame}--{self.__class__.__name__}"
+
+    class Meta:
+        verbose_name_plural = "Robot Pose"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["frame"], name="unique_frame_id_robotpose"
+            )
+        ]
