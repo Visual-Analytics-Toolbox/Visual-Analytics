@@ -48,6 +48,12 @@ class ImageCountView(APIView):
 
         return Response({"count": count}, status=status.HTTP_200_OK)
 
+class ImageValidateView(APIView):
+    def post(self, request):
+        print(request.data)
+        print()
+        print(request.query_params)
+
 
 class SynchronizedImage(APIView):
     def get(self, request):
