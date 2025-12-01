@@ -50,9 +50,11 @@ class ImageCountView(APIView):
 
 class ImageValidateView(APIView):
     def post(self, request):
-        print(request.data)
-        print()
-        print(request.query_params)
+
+        for k,v in request.data.items():
+            print(k, v)
+            print()
+        return JsonResponse({"status": "validated"})
 
 
 class SynchronizedImage(APIView):
