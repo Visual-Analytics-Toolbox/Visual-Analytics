@@ -1,5 +1,6 @@
 from django.dispatch import receiver
 from allauth.socialaccount.signals import pre_social_login
+from django.contrib.auth.models import User, Group, Permission
 
 @receiver(pre_social_login)
 def sync_keycloak_roles(request, sociallogin, **kwargs):
@@ -14,7 +15,7 @@ def sync_keycloak_roles(request, sociallogin, **kwargs):
 
     user = sociallogin.user
     
-    is_admin_in_keycloak = 'admin' in roles
+    is_admin_in_keycloak = 'berlin_united_admin' in roles
 
     has_changed = False
 
@@ -26,4 +27,3 @@ def sync_keycloak_roles(request, sociallogin, **kwargs):
 
     if has_changed and user.pk:
         user.save()
-        

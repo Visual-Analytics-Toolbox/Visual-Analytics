@@ -34,7 +34,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "user.permission.IsBerlinUnitedOrReadOnly",
+        'rest_framework.permissions.DjangoModelPermissions',
     ],
     # generates API documentation based on the OpenAPI 3.0 standard.
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -151,6 +151,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+SOCIALACCOUNT_ADAPTER = 'user.adapters.CustomSocialAccountAdapter'
 
 
 SOCIALACCOUNT_PROVIDERS = {
