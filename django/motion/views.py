@@ -8,7 +8,6 @@ from rest_framework.pagination import PageNumberPagination
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
-from psycopg2.extras import execute_values
 from pathlib import Path
 import mmap
 
@@ -117,12 +116,12 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = f"""
             INSERT INTO motion_{model.__name__.lower()} (frame_id, start_pos, size)
-            VALUES %s
+            VALUES (%s, %s, %s)
             ON CONFLICT (frame_id) DO UPDATE SET start_pos = EXCLUDED.start_pos, size = EXCLUDED.size;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
-
+            cursor.executemany(query, rows_tuples)
+        connection.commit()
         return Response({}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"], url_path="count")

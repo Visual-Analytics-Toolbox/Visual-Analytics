@@ -16,8 +16,6 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q, F
-from django.db import connection
-from psycopg2.extras import execute_values
 from django.template import loader
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
@@ -183,38 +181,20 @@ class ExperimentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        row_tuple = [
-            (
-                request.data.get("event"),
-                request.data.get("name"),
-                request.data.get("field"),
-                request.data.get("comment"),
-            )
-        ]
-        with connection.cursor() as cursor:
-            query = """
-            INSERT INTO common_experiment (event_id, name, field, comment)
-            VALUES %s
-            ON CONFLICT (event_id, name) DO NOTHING
-            RETURNING id;
-            """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        instance, created = models.Experiment.objects.get_or_create(
+            event_id=request.data.get("event"),
+            name=request.data.get("name"),
+            defaults=validated_data,
+        )
 
-            execute_values(cursor, query, row_tuple, page_size=1)
-            result = cursor.fetchone()
-            if result:
-                serializer = self.get_serializer(
-                    models.Experiment.objects.get(id=result[0])
-                )
-                # If insert was successful, get the object
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                # If ON CONFLICT DO NOTHING prevented insert, get the existing object
-                instance = models.Experiment.objects.get(
-                    event_id=request.data.get("event"), name=request.data.get("name")
-                )
-                serializer = self.get_serializer(instance)
+        serializer = self.get_serializer(instance)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(serializer.data, status=status_code)
 
-                return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 
 class LogViewSet(CacheResponseMixin, viewsets.ModelViewSet):

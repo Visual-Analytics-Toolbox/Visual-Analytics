@@ -6,7 +6,6 @@ from rest_framework import viewsets
 from django.db import transaction
 from django.db.models import Q
 from django.db import connection
-from psycopg2.extras import execute_values
 
 import json
 import time
@@ -246,8 +245,6 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             print("error: input not a list")
             return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
-        starttime = time.time()
-
         rows_tuples = [
             (row["frame"], row["options_id"], row["active_state"])
             for row in request.data
@@ -255,12 +252,12 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = """
             INSERT INTO behavior_behaviorframeoption (frame_id, options_id_id, active_state_id)
-            VALUES %s
+            VALUES (%s,%s,%s)
             ON CONFLICT (frame_id, options_id_id, active_state_id) DO NOTHING;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
-        print(time.time() - starttime)
+            cursor.executemany(query, rows_tuples)
+        connection.commit()
         return Response({}, status=status.HTTP_200_OK)
 
 
