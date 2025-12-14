@@ -97,16 +97,16 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "5.2.8"
+version = "6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/a2/933dbbb3dd9990494960f6e64aca2af4c0745b63b7113f59a822df92329e/django-5.2.8.tar.gz", hash = "sha256:23254866a5bb9a2cfa6004e8b809ec6246eba4b58a7589bc2772f1bcc8456c7f", size = 10849032, upload-time = "2025-11-05T14:07:32.778Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/75/19762bfc4ea556c303d9af8e36f0cd910ab17dff6c8774644314427a2120/django-6.0.tar.gz", hash = "sha256:7b0c1f50c0759bbe6331c6a39c89ae022a84672674aeda908784617ef47d8e26", size = 10932418, upload-time = "2025-12-03T16:26:21.878Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/3d/a035a4ee9b1d4d4beee2ae6e8e12fe6dee5514b21f62504e22efcbd9fb46/django-5.2.8-py3-none-any.whl", hash = "sha256:37e687f7bd73ddf043e2b6b97cfe02fcbb11f2dbb3adccc6a2b18c6daa054d7f", size = 8289692, upload-time = "2025-11-05T14:07:28.761Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/ae/f19e24789a5ad852670d6885f5480f5e5895576945fcc01817dfd9bc002a/django-6.0-py3-none-any.whl", hash = "sha256:1cc2c7344303bbfb7ba5070487c17f7fc0b7174bbb0a38cebf03c675f5f19b6d", size = 8339181, upload-time = "2025-12-03T16:26:16.231Z" },
 ]
 
 [[package]]
@@ -171,14 +171,14 @@ wheels = [
 
 [[package]]
 name = "django-unfold"
-version = "0.69.0"
+version = "0.73.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b4/97/df11563e2e606058d6cf701df99edd1b730cc6a6830a527b062c8a6504f9/django_unfold-0.69.0.tar.gz", hash = "sha256:2123ebf3850da5dddd0ebf86a016a8235e87880e080773eb05bdcf87cd3cbd40", size = 1098626, upload-time = "2025-10-27T08:56:42.642Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/03/80/fb57c7016a784f86ab5e73a7e843941daad9feea1d44b31a8f40f24d190e/django_unfold-0.73.1.tar.gz", hash = "sha256:2c1bbf24d2fc162fe5d0e19b27c1f8287fdd5343b1ffe2b78ee26586ed1a4837", size = 1103069, upload-time = "2025-12-09T09:11:29.087Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/68/e2a819b70bb9ea479be7b3b615ea3461b0c0a2e4d156fce08fa84220e434/django_unfold-0.69.0-py3-none-any.whl", hash = "sha256:c076c962606965e8b1f815e4c8f0e439a685fb29dde62f18a097a3f796e70b60", size = 1210707, upload-time = "2025-10-27T08:56:40.995Z" },
+    { url = "https://files.pythonhosted.org/packages/79/89/4d5716871f9c7aea6c2a567ac297380efa870c4641641a87b45a7b8587c0/django_unfold-0.73.1-py3-none-any.whl", hash = "sha256:7241275b75f0784a28410afa6bb4660f427eb7b62d48726195b35374887f017d", size = 1216980, upload-time = "2025-12-09T09:11:27.761Z" },
 ]
 
 [[package]]
@@ -222,15 +222,11 @@ wheels = [
 [[package]]
 name = "drf-extensions"
 version = "0.8.0"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/chibisov/drf-extensions#41bd651bf5eb0af8cd6a4f8d80c553518719ec39" }
 dependencies = [
     { name = "django" },
     { name = "djangorestframework" },
     { name = "packaging" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/77/5a/57e3cc6f2bb4e1e84ad85eed0a12ddf22d5217b6b87c39e611d10e677a63/drf_extensions-0.8.0.tar.gz", hash = "sha256:c3f27bca74a2def53e8454a5c7b327595195df51e121743120b2f51ef5a52aaa", size = 173718, upload-time = "2025-04-10T07:50:05.139Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/aa/c1/b9721c9239b465c0ceac32b33e732c08f6ea0afd8156700e417416a47733/drf_extensions-0.8.0-py2.py3-none-any.whl", hash = "sha256:ab7bd854c9061c27ab55233b66d758001e5c2d81aaa9d117cbbe1c9ea49c77ab", size = 21589, upload-time = "2025-04-10T07:50:02.573Z" },
 ]
 
 [[package]]
@@ -863,16 +859,16 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "asgiref", specifier = ">=3.10.0" },
-    { name = "django", specifier = "==5.2.8" },
+    { name = "django", specifier = "==6.0" },
     { name = "django-cors-headers", specifier = ">=4.9.0" },
     { name = "django-environ", specifier = ">=0.12.0" },
     { name = "django-filter", specifier = ">=25.2" },
     { name = "django-redis", specifier = ">=6.0.0" },
-    { name = "django-unfold", specifier = "==0.69.0" },
+    { name = "django-unfold", specifier = "==0.73.1" },
     { name = "djangorestframework", specifier = ">=3.16.1" },
     { name = "djangorestframework-api-key", specifier = "==3.*" },
     { name = "djangorestframework-simplejwt", specifier = ">=5.5.1" },
-    { name = "drf-extensions", specifier = ">=0.8.0" },
+    { name = "drf-extensions", git = "https://github.com/chibisov/drf-extensions" },
     { name = "drf-orjson-renderer", specifier = ">=1.7.3" },
     { name = "drf-spectacular", specifier = ">=0.29.0" },
     { name = "gunicorn", specifier = "==23.0.0" },
