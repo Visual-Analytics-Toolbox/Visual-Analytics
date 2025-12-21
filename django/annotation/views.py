@@ -77,8 +77,8 @@ class AnnotationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = Annotation.objects.all()
         # filter all possible arguments here via the builder pattern
-        filter = AnnotationFilter(qs, self.request.query_params)
-        qs = filter.filter_image().filter_log().filter_camera().filter_validated().qs
+        my_filter = AnnotationFilter(qs, self.request.query_params)
+        qs = my_filter.filter_image().filter_log().filter_camera().filter_validated().qs
 
         # annotate with frame number and image url
         qs = qs.annotate(frame_number=F("image__frame__frame_number"))

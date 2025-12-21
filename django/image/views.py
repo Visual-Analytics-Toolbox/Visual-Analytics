@@ -194,9 +194,9 @@ class ImageViewSet(viewsets.ModelViewSet):
         qs = models.NaoImage.objects.all()
         qs = qs.select_related("frame").all()
 
-        filter = ImageFilter(qs, self.request.query_params)
+        my_filter = ImageFilter(qs, self.request.query_params)
 
-        qs = filter.filter_log().filter_camera().filter_framenumber().qs
+        qs = my_filter.filter_log().filter_camera().filter_framenumber().qs
 
         return qs.order_by("frame")
 
