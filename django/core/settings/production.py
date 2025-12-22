@@ -152,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SOCIALACCOUNT_ADAPTER = 'user.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'user.adapters.KeyCloakRoleGroupAdapter'
 
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -165,7 +165,7 @@ SOCIALACCOUNT_PROVIDERS = {
                 "provider_id": "keycloak",
                 "name": "My Login Server", # https://vat.berlin-united.com/
                 "client_id": "VisualAnalytics",
-                "secret": "d4MLwz7VEQGXIigLbGEfZYHzBlsWj7U4",
+                "secret": os.getenv("VAT_KEYCLOAK_SECRET"),
                 "settings": {
                     # When enabled, an additional call to the userinfo
                     # endpoint takes place. The data returned is stored in
