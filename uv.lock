@@ -171,14 +171,14 @@ wheels = [
 
 [[package]]
 name = "django-unfold"
-version = "0.73.1"
+version = "0.74.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/03/80/fb57c7016a784f86ab5e73a7e843941daad9feea1d44b31a8f40f24d190e/django_unfold-0.73.1.tar.gz", hash = "sha256:2c1bbf24d2fc162fe5d0e19b27c1f8287fdd5343b1ffe2b78ee26586ed1a4837", size = 1103069, upload-time = "2025-12-09T09:11:29.087Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/78/88/d98c21ed315e5cb025f45aaea1e95d35c0fd11fb9123cb4c1278c33e70ad/django_unfold-0.74.1.tar.gz", hash = "sha256:573f793f975b9dbe324859121a179ae3f4d600d580e28e038736d7a2696e86dc", size = 1103394, upload-time = "2025-12-15T17:06:36Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/79/89/4d5716871f9c7aea6c2a567ac297380efa870c4641641a87b45a7b8587c0/django_unfold-0.73.1-py3-none-any.whl", hash = "sha256:7241275b75f0784a28410afa6bb4660f427eb7b62d48726195b35374887f017d", size = 1216980, upload-time = "2025-12-09T09:11:27.761Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/21/1c5482019bf2b454ac3e67cf0de456eb3dccc2f478a865a2f8a4fba28ef7/django_unfold-0.74.1-py3-none-any.whl", hash = "sha256:0b0a4b13c568309f3bb0a14d5bd7353b47b676d97695954d9631245df84e18f3", size = 1217338, upload-time = "2025-12-15T17:06:34.418Z" },
 ]
 
 [[package]]
@@ -872,7 +872,7 @@ requires-dist = [
     { name = "django-environ", specifier = ">=0.12.0" },
     { name = "django-filter", specifier = ">=25.2" },
     { name = "django-redis", specifier = ">=6.0.0" },
-    { name = "django-unfold", specifier = "==0.73.1" },
+    { name = "django-unfold", specifier = "==0.74.1" },
     { name = "djangorestframework", specifier = ">=3.16.1" },
     { name = "djangorestframework-api-key", specifier = "==3.*" },
     { name = "djangorestframework-simplejwt", specifier = ">=5.5.1" },
