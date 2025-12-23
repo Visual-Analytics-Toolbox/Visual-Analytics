@@ -5,24 +5,42 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('cognition', '0008_audiodata_size_audiodata_start_pos_and_more'),
+        ("cognition", "0008_audiodata_size_audiodata_start_pos_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='RobotPose',
+            name="RobotPose",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_pos', models.IntegerField(blank=True, null=True)),
-                ('size', models.IntegerField(blank=True, null=True)),
-                ('representation_data', models.JSONField(blank=True, null=True)),
-                ('frame', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='robotpose', to='cognition.cognitionframe')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_pos", models.IntegerField(blank=True, null=True)),
+                ("size", models.IntegerField(blank=True, null=True)),
+                ("representation_data", models.JSONField(blank=True, null=True)),
+                (
+                    "frame",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="robotpose",
+                        to="cognition.cognitionframe",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Robot Pose',
-                'constraints': [models.UniqueConstraint(fields=('frame',), name='unique_frame_id_robotpose')],
+                "verbose_name_plural": "Robot Pose",
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("frame",), name="unique_frame_id_robotpose"
+                    )
+                ],
             },
         ),
     ]

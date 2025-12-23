@@ -550,7 +550,5 @@ class RobotPose(models.Model):
     class Meta:
         verbose_name_plural = "Robot Pose"
         constraints = [
-            models.UniqueConstraint(
-                fields=["frame"], name="unique_frame_id_robotpose"
-            )
+            models.UniqueConstraint(fields=["frame"], name="unique_frame_id_robotpose")
         ]

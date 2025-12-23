@@ -218,6 +218,7 @@ class WhistlePerceptSerializer(serializers.ModelSerializer):
         model = WhistlePercept
         fields = "__all__"
 
+
 class RobotPoseSerializer(serializers.ModelSerializer):
     frame_number = serializers.ReadOnlyField()
 

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0029_remove_log_is_favourite'),
+        ("common", "0029_remove_log_is_favourite"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='logstatus',
-            name='RobotPose',
+            model_name="logstatus",
+            name="RobotPose",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]
