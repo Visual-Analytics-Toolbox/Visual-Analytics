@@ -34,7 +34,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        'rest_framework.permissions.DjangoModelPermissions',
+        "rest_framework.permissions.DjangoModelPermissions",
     ],
     # generates API documentation based on the OpenAPI 3.0 standard.
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -61,9 +61,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_filters",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
     "allauth.socialaccount.providers.openid_connect",
     "common",
     "image",
@@ -90,7 +90,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.TokenAuthMiddleware",
 ]
@@ -152,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SOCIALACCOUNT_ADAPTER = 'user.adapters.KeyCloakRoleGroupAdapter'
+SOCIALACCOUNT_ADAPTER = "user.adapters.KeyCloakRoleGroupAdapter"
 
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -163,7 +163,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "APPS": [
             {
                 "provider_id": "keycloak",
-                "name": "My Login Server", # https://vat.berlin-united.com/
+                "name": "My Login Server",  # https://vat.berlin-united.com/
                 "client_id": "VisualAnalytics",
                 "secret": os.getenv("VAT_KEYCLOAK_SECRET"),
                 "settings": {
@@ -173,7 +173,7 @@ SOCIALACCOUNT_PROVIDERS = {
                     # token payload is used instead.
                     "fetch_userinfo": True,
                     "oauth_pkce_enabled": True,
-                    #"server_url": "https://my.server.example.com",
+                    # "server_url": "https://my.server.example.com",
                     "server_url": "https://keycloak.berlin-united.com/realms/master/.well-known/openid-configuration",
                     # Optional token endpoint authentication method.
                     # May be one of "client_secret_basic", "client_secret_post"
@@ -182,7 +182,7 @@ SOCIALACCOUNT_PROVIDERS = {
                     "token_auth_method": "client_secret_basic",
                 },
             },
-        ]
+        ],
     }
 }
 
@@ -240,19 +240,14 @@ AUTH_USER_MODEL = "user.VATUser"
 # maximum fields allowed in one post request
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 30240
 
-CORS_ALLOW_METHODS = [
-    "OPTIONS",
-    "POST",
-    "PUT",
-    "DELETE"
-]
+CORS_ALLOW_METHODS = ["OPTIONS", "POST", "PUT", "DELETE"]
 
 # If you need to allow specific headers
 CORS_ALLOW_HEADERS = [
     "authorization",
     "content-type",
     "Access-Control-Allow-Credentials",
-    "X-CSRFTOKEN"
+    "X-CSRFTOKEN",
 ]
 
 

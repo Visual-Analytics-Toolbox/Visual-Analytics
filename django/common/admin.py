@@ -15,6 +15,7 @@ from unfold.contrib.filters.admin import (
     DropdownFilter,
 )
 
+
 class EventAdmin(ModelAdmin):
     list_display = ("id", "name")
 

@@ -25,7 +25,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        'rest_framework.permissions.DjangoModelPermissions',
+        "rest_framework.permissions.DjangoModelPermissions",
     ],
     # generates API documentation based on the OpenAPI 3.0 standard.
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -52,9 +52,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
     "debug_toolbar",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
     "allauth.socialaccount.providers.openid_connect",
     "common",
     "image",
@@ -83,7 +83,6 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.TokenAuthMiddleware",
 ]
@@ -144,15 +143,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SOCIALACCOUNT_ADAPTER = 'user.adapters.KeyCloakRoleGroupAdapter'
+SOCIALACCOUNT_ADAPTER = "user.adapters.KeyCloakRoleGroupAdapter"
 
 SOCIALACCOUNT_PROVIDERS = {
     "openid_connect": {
-
         "APPS": [
             {
                 "provider_id": "keycloak",
-                "name": "My Login Server", # https://vat.berlin-united.com/
+                "name": "My Login Server",  # https://vat.berlin-united.com/
                 "client_id": "VisualAnalytics",
                 "secret": os.getenv("VAT_KEYCLOAK_SECRET"),
                 "settings": {
@@ -162,7 +160,7 @@ SOCIALACCOUNT_PROVIDERS = {
                     # token payload is used instead.
                     "fetch_userinfo": True,
                     "oauth_pkce_enabled": True,
-                    #"server_url": "https://my.server.example.com",
+                    # "server_url": "https://my.server.example.com",
                     "server_url": "https://keycloak.berlin-united.com/auth/realms/berlin-united/.well-known/openid-configuration",
                     # Optional token endpoint authentication method.
                     # May be one of "client_secret_basic", "client_secret_post"
@@ -176,7 +174,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HEADLESS_ONLY = True
-ACCOUNT_EMAIL_VERIFICATION ="none"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -187,9 +185,9 @@ USE_I18N = False
 USE_TZ = True
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # new
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # new
 LOGIN_REDIRECT_URL = "/"
-SITE_ID = 1 # new
+SITE_ID = 1  # new
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -211,12 +209,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # https://github.com/adamchainz/django-cors-headers
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000", 'http://localhost:3000', "http://127.0.0.1:3000"]
+CORS_ALLOWED_ORIGINS = [
+    "https://vat.berlin-united.com",
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 # makes csrf cookie valid on all subdomains
 # CSRF_COOKIE_DOMAIN = ".berlin-united.com"
 # specifies all domains where django accepts POST requests from with CSRF tokens
-CSRF_TRUSTED_ORIGINS = ["https://vat.berlin-united.com", "http://localhost:8000", 'http://localhost:3000', "http://127.0.0.1:3000"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://vat.berlin-united.com",
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 # requiered if there is a loadbalancer in front of django that forwards requests over http
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -234,19 +242,14 @@ AUTH_USER_MODEL = "user.VATUser"
 # maximum fields allowed in one post request
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 30240
 
-CORS_ALLOW_METHODS = [
-    "OPTIONS",
-    "POST",
-    "PUT",
-    "DELETE"
-]
+CORS_ALLOW_METHODS = ["OPTIONS", "POST", "PUT", "DELETE"]
 
 # If you need to allow specific headers
 CORS_ALLOW_HEADERS = [
     "authorization",
     "content-type",
     "Access-Control-Allow-Credentials",
-    "X-CSRFTOKEN"
+    "X-CSRFTOKEN",
 ]
 
 
