@@ -1,9 +1,9 @@
-FROM ghcr.io/astral-sh/uv:python3.12-trixie-slim AS builder
+FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim AS builder
 COPY ./ .
 WORKDIR /django
 RUN uv sync --no-dev --frozen && uv run manage.py collectstatic
 
-FROM ghcr.io/astral-sh/uv:python3.12-trixie-slim
+FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim
 
 LABEL maintainer="Stella Alice Schlotter"
 

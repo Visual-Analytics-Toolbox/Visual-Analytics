@@ -15,7 +15,7 @@ dependencies = [
     "djangorestframework>=3.16.1",
     "djangorestframework-api-key==3.*",
     "djangorestframework-simplejwt>=5.5.1",
-    "drf-extensions @ git+https://github.com/chibisov/drf-extensions",
+    "drf-extensions @ https://github.com/chibisov/drf-extensions/archive/master.zip",
     "drf-orjson-renderer>=1.7.3",
     "drf-spectacular>=0.29.0",
     "gunicorn==23.0.0",
