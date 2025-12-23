@@ -4,8 +4,9 @@ from drf_spectacular.views import SpectacularAPIView
 from django.conf import settings
 
 urlpatterns = [
-    path("", include("user.urls")),
-    path("", include("frontend.urls")),
+    path("users/", include("user.urls")),
+    path("accounts/", include("allauth.urls")),
+    path("_allauth/", include("allauth.headless.urls")),
     path("admin/", admin.site.urls),
     path("api/", include("common.urls")),
     path("api/", include("cognition.urls")),

@@ -15,11 +15,6 @@ from unfold.contrib.filters.admin import (
     DropdownFilter,
 )
 
-from django.contrib.admin.sites import site
-from django.contrib.auth.models import Group
-
-site.unregister(Group)
-
 
 class EventAdmin(ModelAdmin):
     list_display = ("id", "name")
