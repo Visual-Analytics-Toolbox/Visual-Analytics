@@ -37,7 +37,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "django-debug-toolbar>=6.1.0",
-    "ruff==0.14.4",
+    "ruff==0.14.10",
     "factory-boy==3.3.3",
     "pytest-django==4.11.1",
 ]
