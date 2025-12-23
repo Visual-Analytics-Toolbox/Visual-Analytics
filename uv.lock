@@ -222,11 +222,19 @@ wheels = [
 [[package]]
 name = "drf-extensions"
 version = "0.8.0"
-source = { git = "https://github.com/chibisov/drf-extensions#41bd651bf5eb0af8cd6a4f8d80c553518719ec39" }
+source = { url = "https://github.com/chibisov/drf-extensions/archive/master.zip" }
 dependencies = [
     { name = "django" },
     { name = "djangorestframework" },
     { name = "packaging" },
+]
+sdist = { hash = "sha256:a763f7e88cf3b48ffcdfaceb1ddc15d29b7f1efc71d62dc7b6a8a0cbe8c5936f" }
+
+[package.metadata]
+requires-dist = [
+    { name = "django", specifier = ">=3.2,<6.1" },
+    { name = "djangorestframework", specifier = ">=3.10.3" },
+    { name = "packaging", specifier = ">=24.1" },
 ]
 
 [[package]]
@@ -868,7 +876,7 @@ requires-dist = [
     { name = "djangorestframework", specifier = ">=3.16.1" },
     { name = "djangorestframework-api-key", specifier = "==3.*" },
     { name = "djangorestframework-simplejwt", specifier = ">=5.5.1" },
-    { name = "drf-extensions", git = "https://github.com/chibisov/drf-extensions" },
+    { name = "drf-extensions", url = "https://github.com/chibisov/drf-extensions/archive/master.zip" },
     { name = "drf-orjson-renderer", specifier = ">=1.7.3" },
     { name = "drf-spectacular", specifier = ">=0.29.0" },
     { name = "gunicorn", specifier = "==23.0.0" },
