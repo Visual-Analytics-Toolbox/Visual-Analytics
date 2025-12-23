@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from allauth.socialaccount.signals import pre_social_login
+from allauth.socialaccount.signals import pre_social_login, social_account_added
 from .roles import sync_roles
 
 
@@ -31,7 +31,25 @@ def sync_keycloak_roles(request, sociallogin, **kwargs):
             user.is_superuser = False
             has_changed = True
 
-    user = sync_roles(user, roles)
+    if user.pk:
+        # User already exists in DB (Returning User)
+        # We can sync roles immediately
+        sync_roles(user, roles)
+    else:
+        # New User (No ID yet)
+        # We must wait until after allauth saves them to the DB
+        pass
 
     if has_changed and user.pk:
         user.save()
+
+@receiver(social_account_added)
+def sync_new_user_roles(request, sociallogin, **kwargs):
+    """
+    Fires only when a new social account is connected/created.
+    The user now has a PK.
+    """
+    extra_data = sociallogin.account.extra_data.get("userinfo", {})
+    roles = extra_data.get("realm_access", {}).get("roles", [])
+    
+    sync_roles(sociallogin.user, roles)
