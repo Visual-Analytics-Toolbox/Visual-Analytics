@@ -159,7 +159,6 @@ SOCIALACCOUNT_PROVIDERS = {
     "openid_connect": {
         # Optional PKCE defaults to False, but may be required by your provider
         # Can be set globally, or per app (settings).
-        "OAUTH_PKCE_ENABLED": True,
         "APPS": [
             {
                 "provider_id": "keycloak",
@@ -174,7 +173,7 @@ SOCIALACCOUNT_PROVIDERS = {
                     "fetch_userinfo": True,
                     "oauth_pkce_enabled": True,
                     # "server_url": "https://my.server.example.com",
-                    "server_url": "https://keycloak.berlin-united.com/realms/master/.well-known/openid-configuration",
+                    "server_url": "https://keycloak.berlin-united.com/auth/realms/berlin-united/.well-known/openid-configuration",
                     # Optional token endpoint authentication method.
                     # May be one of "client_secret_basic", "client_secret_post"
                     # If omitted, a method from the the server's
