@@ -16,3 +16,20 @@ class TokenAuthMiddleware:
             except Token.DoesNotExist:
                 request.user = AnonymousUser()
         return self.get_response(request)
+
+
+class AllauthStatusMiddleware:
+    # https://docs.allauth.org/en/latest/headless/openapi-specification/#section/Authentication-Flows
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+
+        # Check if this is the specific allauth session endpoint
+        if request.path.endswith('/_allauth/browser/v1/auth/session'):
+            # If allauth returned 401, change it to 200
+            if response.status_code == 401:
+                response.status_code = 200
+        
+        return response

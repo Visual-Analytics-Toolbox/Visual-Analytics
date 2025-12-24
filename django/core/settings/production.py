@@ -93,6 +93,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.TokenAuthMiddleware",
+    'core.middleware.AllauthStatusMiddleware',
 ]
 # defines where the url patterns are defined
 #'core.urls' means urls.py in the core app
@@ -187,7 +188,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 HEADLESS_ONLY = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
-
+ACCOUNT_DEFAULT_HTTP_PROTOCOL ="https"
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
