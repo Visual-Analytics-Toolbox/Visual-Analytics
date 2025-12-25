@@ -152,7 +152,7 @@ SOCIALACCOUNT_PROVIDERS = {
             {
                 "provider_id": "keycloak",
                 "name": "My Login Server",  # https://vat.berlin-united.com/
-                "client_id": "VisualAnalytics",
+                "client_id": "vat-test",
                 "secret": os.getenv("VAT_KEYCLOAK_SECRET"),
                 "settings": {
                     # When enabled, an additional call to the userinfo
