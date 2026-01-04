@@ -1,6 +1,8 @@
 from django.dispatch import receiver
-from allauth.socialaccount.signals import pre_social_login, social_account_added
+from allauth.socialaccount.signals import pre_social_login
 from .roles import sync_roles
+from django.db.models.signals import post_delete
+from allauth.socialaccount.models import SocialAccount
 
 
 @receiver(pre_social_login)
@@ -16,7 +18,7 @@ def sync_keycloak_roles(request, sociallogin, **kwargs):
 
     user = sociallogin.user
 
-    is_admin_in_keycloak = "berlin_united_admin" in roles
+    is_admin_in_keycloak = "admin" in extra_data["group"]
 
     has_changed = False
 
@@ -43,13 +45,19 @@ def sync_keycloak_roles(request, sociallogin, **kwargs):
     if has_changed and user.pk:
         user.save()
 
-@receiver(social_account_added)
-def sync_new_user_roles(request, sociallogin, **kwargs):
-    """
-    Fires only when a new social account is connected/created.
-    The user now has a PK.
-    """
-    extra_data = sociallogin.account.extra_data.get("userinfo", {})
-    roles = extra_data.get("realm_access", {}).get("roles", [])
-    
-    sync_roles(sociallogin.user, roles)
+
+@receiver(post_delete, sender=SocialAccount)
+def delete_user_on_social_account_delete(sender, instance, **kwargs):
+    user = instance.user
+
+    if user is None:
+        return
+
+    # in case we add any other sso login methods later we don't want to delete the user after one social account got deleted
+    if SocialAccount.objects.filter(user=user).exists():
+        return
+
+    if user.has_usable_password():
+        return
+
+    user.delete()
