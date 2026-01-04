@@ -27,9 +27,9 @@ class AllauthStatusMiddleware:
         response = self.get_response(request)
 
         # Check if this is the specific allauth session endpoint
-        if request.path.endswith('/_allauth/browser/v1/auth/session'):
+        if request.path.endswith("/_allauth/browser/v1/auth/session"):
             # If allauth returned 401, change it to 200
             if response.status_code == 401:
                 response.status_code = 200
-        
+
         return response
