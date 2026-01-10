@@ -265,6 +265,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
 
 
 class BehaviorFrameOptionAPIView(APIView):
+    queryset = models.BehaviorFrameOption.objects.all()
     def get(self, request, *args, **kwargs):
         # Get the log_id from the query parameters
         log = request.query_params.get("log")
