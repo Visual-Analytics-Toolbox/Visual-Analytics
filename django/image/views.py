@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework import viewsets
 from django.db.models import Q
 from django.db import connection
+from django_filters.rest_framework import DjangoFilterBackend
 from psycopg2.extras import execute_values
 from . import serializers
 from . import models
@@ -13,7 +14,7 @@ from core.pagination import LargeResultsSetPagination
 from behavior.models import BehaviorFrameOption
 from cognition.models import CognitionFrame
 from django.forms.models import model_to_dict
-from .image_filter import ImageFilter
+from .image_filter import NaoImageFilter
 import numpy as np
 import time
 
@@ -181,6 +182,8 @@ class ImageUpdateView(APIView):
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
     pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = NaoImageFilter
 
     def get_serializer_class(self):
         # Use the Read serializer for retrieving data
@@ -193,10 +196,6 @@ class ImageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = models.NaoImage.objects.all()
         qs = qs.select_related("frame").all()
-
-        my_filter = ImageFilter(qs, self.request.query_params)
-
-        qs = my_filter.filter_log().filter_camera().filter_framenumber().qs
 
         return qs.order_by("frame")
 
