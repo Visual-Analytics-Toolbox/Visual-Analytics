@@ -21,7 +21,7 @@ class EventAdmin(ModelAdmin):
 
 
 class ExperimentAdmin(ModelAdmin):
-    list_display = ("id", "name")
+    list_display = ("id", "name", "type")
 
 class GameAdmin(ModelAdmin):
     list_display = (
