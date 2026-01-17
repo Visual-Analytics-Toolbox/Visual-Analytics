@@ -183,38 +183,19 @@ class ExperimentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        row_tuple = [
-            (
-                request.data.get("event"),
-                request.data.get("name"),
-                request.data.get("field"),
-                request.data.get("comment"),
-            )
-        ]
-        with connection.cursor() as cursor:
-            query = """
-            INSERT INTO common_experiment (event_id, name, field, comment)
-            VALUES %s
-            ON CONFLICT (event_id, name) DO NOTHING
-            RETURNING id;
-            """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        instance, created = models.Experiment.objects.get_or_create(
+            event=request.data.get("event"),
+            name=request.data.get("name"),
+            type=request.data.get("type"),
+            defaults=validated_data,
+        )
 
-            execute_values(cursor, query, row_tuple, page_size=1)
-            result = cursor.fetchone()
-            if result:
-                serializer = self.get_serializer(
-                    models.Experiment.objects.get(id=result[0])
-                )
-                # If insert was successful, get the object
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                # If ON CONFLICT DO NOTHING prevented insert, get the existing object
-                instance = models.Experiment.objects.get(
-                    event_id=request.data.get("event"), name=request.data.get("name")
-                )
-                serializer = self.get_serializer(instance)
-
-                return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(instance)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(serializer.data, status=status_code)
 
 
 class LogViewSet(CacheResponseMixin, viewsets.ModelViewSet):
