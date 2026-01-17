@@ -53,11 +53,16 @@ class Game(models.Model):
 
 
 class Experiment(models.Model):
+    class ExperimentType(models.TextChoices):
+        Simple = "Simple", _("Simple")
+        Gamelog = "Gamelog", _("Gamelog")
+
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="experiments"
     )
     # either the folder name if its an experiment of multiple robots or the logfile name
     name = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=20, choices=ExperimentType, blank=False, null=False, default="Gamelog")
     field = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 

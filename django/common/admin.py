@@ -20,6 +20,9 @@ class EventAdmin(ModelAdmin):
     list_display = ("id", "name")
 
 
+class ExperimentAdmin(ModelAdmin):
+    list_display = ("id", "name")
+
 class GameAdmin(ModelAdmin):
     list_display = (
         "event_id",
@@ -154,7 +157,6 @@ class RobotAdmin(ModelAdmin):
 
 
 # this is required for every model
-@admin.register(Experiment)
 @admin.register(HealthIssues)
 class CustomAdminClass(ModelAdmin):
     pass
@@ -162,6 +164,7 @@ class CustomAdminClass(ModelAdmin):
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(Game, GameAdmin)
+admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)
 admin.site.register(Team, TeamAdmin)
