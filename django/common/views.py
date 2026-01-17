@@ -173,7 +173,7 @@ class ExperimentViewSet(viewsets.ModelViewSet):
     queryset = models.Experiment.objects.all()
     serializer_class = serializers.ExperimentSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["event"]
+    filterset_fields = ["event", "name", "type"]
 
     def get_queryset(self):
         queryset = models.Experiment.objects.select_related("event").annotate(
