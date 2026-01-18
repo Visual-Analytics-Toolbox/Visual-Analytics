@@ -61,51 +61,41 @@ class GameExperimentFilter(DropdownFilter):
 
 
 class LogAdmin(ModelAdmin):
-    search_fields = [
-        "game_id__team1__icontains",
-        "game_id__team2__icontains",
-        "player_number",
-    ]
+
     list_display = [
-        "game__event__id",
-        "game__id",
+        "get_source_id",
         "get_id",
-        "get_team1",
-        "get_team2",
-        "get_half",
-        "player_number",
-        "robot",
-        "get_start_time",
+        "get_source_name",
         "is_test",
     ]
-    list_select_related = ["game", "game__event", "game__team1", "game__team2"]
+    list_select_related = ["game", "game__event", "experiment", "game__team1", "game__team2"]
 
-    list_filter_submit = True  # Submit button at the bottom of the filter
-    # TODO: add additional filter for filtering by event
-    list_filter = [GameExperimentFilter]
+    def get_source_id(self, obj):
+        if obj.game:
+            return f"Game: {obj.game.id}"
+        if obj.experiment:
+            return f"Exp: {obj.experiment.id}"
+        return "-"
+    get_source_id.short_description = 'Source ID'
+
+    def get_source_name(self, obj):
+        if obj.game:
+            return f"{obj.game.team1} vs {obj.game.team2} - {obj.game.half}"
+        if obj.experiment:
+            return obj.experiment.name  # Assuming Experiment has a name field
+        return "-"
+    get_source_name.short_description = 'Details'
 
     def get_id(self, obj):
         return obj.id
 
-    def get_team1(self, obj):
-        return obj.game.team1
-
-    def get_team2(self, obj):
-        return obj.game.team2
-
-    def get_half(self, obj):
-        return obj.game.half
-
-    def get_start_time(self, obj):
-        return obj.game.start_time
-
     def is_test(self, obj):
-        return obj.game.is_testgame
+        if obj.game:
+            return obj.game.is_testgame
+        if obj.experiment:
+            return True
 
     get_id.short_description = "Log ID"
-    get_start_time.short_description = "Time"
-    get_team1.short_description = "Team 1"
-    get_team2.short_description = "Team 2"
     is_test.boolean = True
 
 
