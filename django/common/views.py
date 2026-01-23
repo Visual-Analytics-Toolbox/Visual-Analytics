@@ -198,7 +198,7 @@ class ExperimentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
-class LogViewSet(CacheResponseMixin, viewsets.ModelViewSet):
+class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["game", "player_number", "robot__head_number"]
