@@ -213,7 +213,7 @@ class LogViewSet(CacheResponseMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = (
-            models.Log.objects.select_related("robot").all().select_related("game")
+            models.Log.objects.select_related("robot").all()
         )
 
         return queryset
