@@ -1,6 +1,6 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/vaapi)
-![GitHub License](https://img.shields.io/github/license/BerlinUnited/Visual-Analytics)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/BerlinUnited/Visual-Analytics/build_backend.yml)
+![GitHub License](https://img.shields.io/github/license/Visual-Analytics-Toolbox/Visual-Analytics)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Visual-Analytics-Toolbox/Visual-Analytics/build_backend.yml)
 
 # Berlin United Visual Analytics Tool
 
