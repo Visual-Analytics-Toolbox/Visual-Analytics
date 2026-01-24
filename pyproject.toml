@@ -18,7 +18,7 @@ dependencies = [
     "drf-extensions @ https://github.com/chibisov/drf-extensions/archive/master.zip",
     "drf-orjson-renderer>=1.7.3",
     "drf-spectacular>=0.29.0",
-    "gunicorn==23.0.0",
+    "gunicorn==24.1.1",
     "inflection>=0.5.1",
     "numpy==2.2.6",
     "psycopg2-binary>=2.9.11",
