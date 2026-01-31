@@ -16,6 +16,8 @@ class BehaviorOptionAdmin(ModelAdmin):
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
+    list_select_related = ["log"]
+    show_full_result_count = False
 
     def get_log_id(self, obj):
         return obj.log.id
@@ -34,9 +36,11 @@ class BehaviorOptionStateAdmin(ModelAdmin):
     )
     search_fields = ["option_id__option_name"]
     list_filter_submit = True
+    list_select_related = ["log", "option_id"]
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
+    show_full_result_count = False
 
     def get_log_id(self, obj):
         return obj.log.id
@@ -66,7 +70,9 @@ class BehaviorFrameOptionAdmin(ModelAdmin):
     search_fields = ["options_id__option_name"]
     list_filter_submit = True
     list_filter = [("frame__frame_number", SingleNumericFilter)]
+    list_select_related = ["frame", "options_id", "active_state"]
     autocomplete_fields = ["frame"]
+    show_full_result_count = False
 
     def get_option_id(self, obj):
         return obj.options_id.id
@@ -84,10 +90,12 @@ class BehaviorFrameOptionAdmin(ModelAdmin):
 
 class XabslSymbolCompleteAdmin(ModelAdmin):
     list_display = ["get_log_id"]
+    list_select_related = ["log"]
     list_filter_submit = True
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
+    show_full_result_count = False
 
     def get_log_id(self, obj):
         return obj.log.id
@@ -106,7 +114,9 @@ class XabslSymbolSparseAdmin(ModelAdmin):
     list_display = ["get_frame_number"]
     list_filter_submit = True
     list_filter = [("frame__frame_number", SingleNumericFilter)]
+    list_select_related = ["frame"]
     autocomplete_fields = ["frame"]
+    show_full_result_count = False
 
     def get_frame_number(self, obj):
         return obj.frame.frame_number
