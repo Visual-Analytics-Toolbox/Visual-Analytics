@@ -27,6 +27,8 @@ class MotionFrameAdmin(ModelAdmin):
     ]
     # makes sure not all cognition frames have to be loaded
     raw_id_fields = ("closest_cognition_frame",)
+    show_full_result_count = False
+    list_select_related = ["log"]
 
     def get_queryset(self, request):
         return super().get_queryset(request).order_by("-id")
@@ -49,6 +51,8 @@ class MotionModelAdmin(ModelAdmin):
         ("frame__frame_number", SingleNumericFilter),
     ]
     autocomplete_fields = ["frame"]
+    show_full_result_count = False
+    list_select_related = ["frame", "frame__log"]
 
     def get_log_id(self, obj):
         return obj.frame.log.id
