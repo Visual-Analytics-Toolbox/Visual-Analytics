@@ -8,3 +8,10 @@ venv/
 django/staticfiles/
 # ignore secrets
 .envrc
+
+#data
+downloaded_logs/
+robot_states/
+team_analysis_plots/
+team_analysis_tables/
+output/
