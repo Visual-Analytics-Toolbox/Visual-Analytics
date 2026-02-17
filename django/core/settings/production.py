@@ -292,6 +292,7 @@ CACHES = {
     }
 }
 
+"""
 sentry_sdk.init(
     dsn=os.getenv("SENTRY_DSN"),
     # Add data like request headers and IP for users,
@@ -309,3 +310,4 @@ sentry_sdk.init(
     # run the profiler on when there is an active transaction
     profile_lifecycle="trace",
 )
+"""

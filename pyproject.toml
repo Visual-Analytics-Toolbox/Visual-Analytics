@@ -32,7 +32,10 @@ dependencies = [
     "tzdata==2024.2",
     "uritemplate>=4.2.0",
     "whitenoise==6.11.0",
-    "django-allauth[socialaccount]==65.13.0"
+    "django-allauth[socialaccount]==65.13.0",
+    "opentelemetry-instrumentation-django>=0.60b1",
+    "opentelemetry-exporter-otlp>=1.39.1",
+    "opentelemetry-instrumentation-logging>=0.60b1",
 ]
 
 [dependency-groups]
