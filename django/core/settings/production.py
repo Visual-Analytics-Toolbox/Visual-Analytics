@@ -1,8 +1,12 @@
 from pathlib import Path
 from datetime import timedelta
-import sentry_sdk
+#import sentry_sdk
 import os
 
+os.environ["OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED"] = "true"
+os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://alloy.alloy.svc.cluster.local:4317"
+os.environ["OTEL_SERVICE_NAME"] = "django-api"
+os.environ["OTEL_RESOURCE_ATTRIBUTES"] = "deployment.environment=production,k8s.pod.name=$(K8S_POD_NAME)"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -252,7 +256,6 @@ CORS_ALLOW_HEADERS = [
     "Access-Control-Allow-Credentials",
     "X-CSRFTOKEN",
 ]
-
 
 LOGGING = {
     "version": 1,
