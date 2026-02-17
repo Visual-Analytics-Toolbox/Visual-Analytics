@@ -1,5 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+import logging
 from unfold.contrib.filters.admin import SingleNumericFilter
 from .models import (
     CognitionFrame,
@@ -26,6 +27,8 @@ from .models import (
     Teamstate,
     WhistlePercept,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class CognitionFrameAdmin(ModelAdmin):
@@ -86,6 +89,7 @@ class CognitionModelAdmin(ModelAdmin):
     list_select_related = ["frame", "frame__log"]
 
     def get_log_id(self, obj):
+        logger.info(f"Querying data for log id")
         return obj.frame.log.id
 
     def get_frame_number(self, obj):
