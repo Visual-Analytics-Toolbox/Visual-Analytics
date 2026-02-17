@@ -23,6 +23,7 @@ class EventAdmin(ModelAdmin):
 class ExperimentAdmin(ModelAdmin):
     list_display = ("id", "name", "type")
 
+
 class GameAdmin(ModelAdmin):
     list_display = (
         "event_id",
@@ -61,14 +62,19 @@ class GameExperimentFilter(DropdownFilter):
 
 
 class LogAdmin(ModelAdmin):
-
     list_display = [
         "get_source_id",
         "get_id",
         "get_source_name",
         "is_test",
     ]
-    list_select_related = ["game", "game__event", "experiment", "game__team1", "game__team2"]
+    list_select_related = [
+        "game",
+        "game__event",
+        "experiment",
+        "game__team1",
+        "game__team2",
+    ]
 
     def get_source_id(self, obj):
         if obj.game:
@@ -76,7 +82,8 @@ class LogAdmin(ModelAdmin):
         if obj.experiment:
             return f"Exp: {obj.experiment.id}"
         return "-"
-    get_source_id.short_description = 'Source ID'
+
+    get_source_id.short_description = "Source ID"
 
     def get_source_name(self, obj):
         if obj.game:
@@ -84,7 +91,8 @@ class LogAdmin(ModelAdmin):
         if obj.experiment:
             return obj.experiment.name  # Assuming Experiment has a name field
         return "-"
-    get_source_name.short_description = 'Details'
+
+    get_source_name.short_description = "Details"
 
     def get_id(self, obj):
         return obj.id

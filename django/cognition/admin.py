@@ -38,6 +38,8 @@ class CognitionFrameAdmin(ModelAdmin):
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
+    show_full_result_count = False
+    list_select_related = ["log"]
     # makes sure not all motion frames have to be loaded
     raw_id_fields = ("closest_motion_frame",)
 
@@ -57,6 +59,7 @@ class CognitionFrameAdmin(ModelAdmin):
 class FrameFilterAdmin(ModelAdmin):
     list_display = ("get_log_id", "get_user", "name")
     list_filter_submit = True
+    list_select_related = ["log"]
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
@@ -79,6 +82,8 @@ class CognitionModelAdmin(ModelAdmin):
         ("frame__frame_number", SingleNumericFilter),
     ]
     autocomplete_fields = ["frame"]
+    show_full_result_count = False
+    list_select_related = ["frame", "frame__log"]
 
     def get_log_id(self, obj):
         return obj.frame.log.id
@@ -89,6 +94,7 @@ class CognitionModelAdmin(ModelAdmin):
     def get_id(self, obj):
         return obj.id
 
+    get_id.short_description = "ID"
     get_log_id.short_description = "Log ID"
     get_frame_number.short_description = "frame number"
 
