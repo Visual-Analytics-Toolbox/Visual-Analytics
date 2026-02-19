@@ -37,6 +37,7 @@ dependencies = [
     "opentelemetry-exporter-otlp>=1.39.1",
     "opentelemetry-instrumentation-logging>=0.60b1",
     "opentelemetry-distro>=0.60b1",
+    "pyroscope-io>=1.0.1",
 ]
 
 [dependency-groups]

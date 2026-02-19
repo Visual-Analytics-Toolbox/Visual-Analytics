@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 #import sentry_sdk
 import os
-
+import pyroscope
 os.environ["OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED"] = "true"
 os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://alloy.alloy.svc.cluster.local:4317"
 os.environ["OTEL_SERVICE_NAME"] = "django-api"
@@ -318,3 +318,8 @@ sentry_sdk.init(
     profile_lifecycle="trace",
 )
 """
+
+pyroscope.configure(
+	application_name = "vat-backend",
+	server_address   = "http://alloy.alloy.svc.cluster.local:4040",
+)
