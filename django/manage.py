@@ -9,6 +9,7 @@ def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.development")
 
+    
     # --- ADD THIS BLOCK START ---
     try:
         from opentelemetry import trace
@@ -27,6 +28,7 @@ def main():
         resource = Resource(attributes={SERVICE_NAME: "django-api"})
         provider = TracerProvider(resource=resource)
         provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
+
         trace.set_tracer_provider(provider)
 
         # Instrument BEFORE Django starts
