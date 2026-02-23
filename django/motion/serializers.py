@@ -6,6 +6,7 @@ from .models import (
     AccelerometerData,
     InertialSensorData,
     MotionStatus,
+    SensorJointData,
     MotorJointData,
     GyrometerData,
 )
@@ -52,6 +53,10 @@ class MotorJointDataSerializer(serializers.ModelSerializer):
         model = MotorJointData
         fields = "__all__"
 
+class SensorJointDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SensorJointData
+        fields = "__all__"
 
 class GyrometerDataSerializer(serializers.ModelSerializer):
     class Meta:
