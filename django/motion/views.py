@@ -13,6 +13,7 @@ from psycopg2.extras import execute_values
 from pathlib import Path
 from naoth.log import Parser
 import mmap
+from contextlib import ExitStack
 
 
 class DynamicModelMixin:
@@ -46,7 +47,7 @@ class DynamicModelMixin:
             if param_value:
                 filters &= Q(**{field.name: param_value})
 
-        return qs.filter(filters).order_by("id")
+        return qs.filter(filters).select_related('frame__log').order_by("id")
 
     def list(self, request, *args, **kwargs):
         """Handle the binary data injection during the listing process."""
@@ -66,6 +67,23 @@ class DynamicModelMixin:
 
     def _inject_binary_data(self, items):
         """Helper to attach binary data to the instances in memory."""
+        model_name = self.get_model().__name__
+        with ExitStack() as stack:
+            cache = {}
+            for item in items:
+                # Use select_related to make this a local attribute access
+                path = Path("/mnt/logs") / item.frame.log.sensor_log_path
+                
+                if path not in cache:
+                    f = stack.enter_context(open(path, "rb"))
+                    cache[path] = stack.enter_context(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ))
+                
+                mm = cache[path]
+                # Slicing mmap is nearly instant; MessageToDict is the heavy part.
+                raw_blob = mm[item.start_pos : item.start_pos + item.size]
+                msg = self.my_parser.parse(model_name, raw_blob)
+                item.representation_data = MessageToDict(msg)
+        """
         file_cache = {}
         try:
             for item in items:
@@ -91,7 +109,7 @@ class DynamicModelMixin:
         finally:
             for mmap_obj in file_cache.values():
                 mmap_obj.close()
-
+        """
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
 

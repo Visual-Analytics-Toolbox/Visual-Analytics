@@ -43,6 +43,10 @@ class IMUData(models.Model):
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_imudata")
         ]
 
+        indexes = [
+            models.Index(fields=['frame']), 
+        ]
+
 
 class FSRData(models.Model):
     frame = models.ForeignKey(

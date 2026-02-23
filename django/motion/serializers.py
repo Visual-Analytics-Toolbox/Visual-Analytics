@@ -19,9 +19,20 @@ class MotionFrameSerializer(serializers.ModelSerializer):
 
 
 class IMUDataSerializer(serializers.ModelSerializer):
+    representation_data = serializers.JSONField(read_only=True)
     class Meta:
         model = IMUData
-        fields = "__all__"
+        fields = ["id", "frame", "representation_data"]
+
+    def to_representation(self, instance):
+        """
+        Speed up serialization by skipping individual field 
+        attribute lookups if performance is critical.
+        """
+        ret = super().to_representation(instance)
+        # Ensure representation_data is included if it was injected
+        ret['representation_data'] = getattr(instance, 'representation_data', None)
+        return ret
 
 
 class FSRDataSerializer(serializers.ModelSerializer):
