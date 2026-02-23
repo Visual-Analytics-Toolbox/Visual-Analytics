@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import CognitionFrame, FrameFilter
 from . import serializers
-
+from core.pagination import LargeResultsSetPagination
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
@@ -39,6 +39,8 @@ class DynamicModelMixin:
 
 
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
+    pagination_class = LargeResultsSetPagination
+
     # No need to define queryset or serializer_class here; they will be set dynamically
     def get_serializer_class(self):
         # Dynamically set the serializer class based on the model
@@ -183,6 +185,7 @@ class CognitionFrameUpdate(APIView):
 class CognitionFrameViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CognitionFrameSerializer
     queryset = CognitionFrame.objects.all()
+    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = CognitionFrame.objects.all()

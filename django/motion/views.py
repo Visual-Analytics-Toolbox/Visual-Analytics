@@ -4,19 +4,14 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import MotionFrame
 from . import serializers
-from rest_framework.pagination import PageNumberPagination
+
+from core.pagination import LargeResultsSetPagination
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
 from psycopg2.extras import execute_values
 from pathlib import Path
 import mmap
-
-
-class CustomPagination(PageNumberPagination):
-    page_size = 50
-    page_size_query_param = "page_size"
-    max_page_size = 100
 
 
 class DynamicModelMixin:
@@ -89,7 +84,7 @@ class DynamicModelMixin:
 
 
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
-    pagination_class = CustomPagination
+    pagination_class = LargeResultsSetPagination
 
     # No need to define queryset or serializer_class here; they will be set dynamically
     def get_serializer_class(self):
@@ -237,6 +232,7 @@ class MotionFrameUpdate(APIView):
 class MotionFrameViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MotionFrameSerializer
     queryset = MotionFrame.objects.all()
+    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = MotionFrame.objects.all()
@@ -247,7 +243,7 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
             param_value = query_params.get(field.name)
             if param_value:
                 filters &= Q(**{field.name: param_value})
-        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+
         return queryset.filter(filters)
 
     def create(self, request, *args, **kwargs):
