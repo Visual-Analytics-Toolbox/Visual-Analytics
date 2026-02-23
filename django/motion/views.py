@@ -4,95 +4,96 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import MotionFrame
 from . import serializers
-
+from google.protobuf.json_format import MessageToDict
 from core.pagination import LargeResultsSetPagination
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
 from psycopg2.extras import execute_values
 from pathlib import Path
+from naoth.log import Parser
 import mmap
 
 
 class DynamicModelMixin:
+    my_parser = Parser()
+    
     def get_model(self):
-        # Get the model name from the URL kwargs
         model_name = self.kwargs.get("model_name")
-        # Get the model class from the app's models
         return apps.get_model("motion", model_name)
 
-    def get_queryset(self):
-        # Override get_queryset to use the dynamic model
+    def get_serializer_class(self):
         model = self.get_model()
+        serializer_class_name = f"{model.__name__}Serializer"
+        return getattr(serializers, serializer_class_name)
 
+    def get_queryset(self):
+        """Strictly returns the base queryset for the model."""
+        model = self.get_model()
         query_params = self.request.query_params.copy()
+        
+        qs = model.objects.all()
+        
+        # Filter by log if provided
+        if "log" in query_params:
+            log_id = query_params.pop("log")[0]
+            qs = qs.filter(frame__log=log_id)
 
-        # if log was set filter for it
-        if "log" in query_params.keys():
-            log_id = int(query_params.pop("log")[0])
-            queryset = model.objects.filter(frame__log=log_id)
-
+        # Apply other dynamic filters
         filters = Q()
         for field in model._meta.fields:
             param_value = query_params.get(field.name)
             if param_value:
                 filters &= Q(**{field.name: param_value})
 
-        return queryset.filter(filters).order_by("id")
+        return qs.filter(filters).order_by("id")
 
     def list(self, request, *args, **kwargs):
-        # Get the base queryset
-        queryset = self.filter_queryset(self.get_queryset())
-
-        # Let pagination do its work first
+        """Handle the binary data injection during the listing process."""
+        queryset = self.get_queryset()
+        
+        # Paginate
         page = self.paginate_queryset(queryset)
         if page is not None:
-            # Now process only the paginated results
-            file_cache = {}
-            try:
-                for item in page:
-                    try:
-                        log_path = str(
-                            Path("/mnt/e/logs") / item.frame.log.sensor_log_path
-                        )
+            self._inject_binary_data(page)
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-                        if log_path not in file_cache:
-                            file = open(log_path, "rb")
-                            file_mmap = mmap.mmap(
-                                file.fileno(), 0, access=mmap.ACCESS_READ
-                            )
-                            file_cache[log_path] = file_mmap
-
-                        print("item.start_pos", item.start_pos)
-                        print("item.size", item.size)
-                        item.binary_data = file_cache[log_path][
-                            item.start_pos : item.start_pos + item.size
-                        ]
-                        print("item.binary_data", item.binary_data)
-                    except Exception as e:
-                        print(f"Error processing item {item.id}: {str(e)}")
-                        item.binary_data = None
-
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            finally:
-                for mmap_obj in file_cache.values():
-                    mmap_obj.close()
-
+        # Non-paginated fallback
+        self._inject_binary_data(queryset)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    def _inject_binary_data(self, items):
+        """Helper to attach binary data to the instances in memory."""
+        file_cache = {}
+        try:
+            for item in items:
+                try:
+                    # Optimize: use select_related('frame__log') in get_queryset to avoid N+1 queries here
+                    log_path = str(Path("/mnt/logs") / item.frame.log.sensor_log_path)
+
+                    if log_path not in file_cache:
+                        f = open(log_path, "rb")
+                        # mmap the file
+                        file_cache[log_path] = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+
+                    start = item.start_pos
+                    end = item.start_pos + item.size
+                    message = self.my_parser.parse(self.kwargs.get("model_name"), file_cache[log_path][start:end])
+
+                    item.representation_data = MessageToDict(message)
+
+                    #item.binary_data = file_cache[log_path][start:end]
+                    
+                except Exception as e:
+                    print(f"Error processing item {item.id}: {str(e)}")
+        finally:
+            for mmap_obj in file_cache.values():
+                mmap_obj.close()
 
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
-
-    # No need to define queryset or serializer_class here; they will be set dynamically
-    def get_serializer_class(self):
-        # Dynamically set the serializer class based on the model
-        model = self.get_model()
-        # Assuming you have a naming convention for serializers, e.g., <ModelName>Serializer
-        serializer_class_name = f"{model.__name__}Serializer"
-        return getattr(serializers, serializer_class_name)
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
