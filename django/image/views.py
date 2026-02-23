@@ -15,6 +15,7 @@ from behavior.models import BehaviorFrameOption
 from cognition.models import CognitionFrame
 from django.forms.models import model_to_dict
 from .image_filter import NaoImageFilter
+from django.http import JsonResponse
 import numpy as np
 import time
 
