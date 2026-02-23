@@ -9,7 +9,7 @@ def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.development")
 
-    
+    """
     # --- ADD THIS BLOCK START ---
     try:
         from opentelemetry import trace
@@ -38,7 +38,7 @@ def main():
     except Exception as e:
         print(f"OTel: Instrumentation failed: {e}")
     # --- ADD THIS BLOCK END ---
-
+    """
 
     try:
         from django.core.management import execute_from_command_line
