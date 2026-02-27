@@ -146,7 +146,7 @@ class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["event"]
+    filterset_fields = ["event","is_testgame"]
 
     def get_queryset(self):
         queryset = models.Game.objects.prefetch_related("recordings").all()
