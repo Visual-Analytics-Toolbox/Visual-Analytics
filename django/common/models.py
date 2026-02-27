@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Event(models.Model):
     name = models.CharField(max_length=100)
+    is_testevent = models.BooleanField(blank=True, null=True, default=False)
     start_day = models.DateField(blank=True, null=True)
     end_day = models.DateField(blank=True, null=True)
     timezone = models.CharField(max_length=100, blank=True, null=True)
@@ -62,7 +63,13 @@ class Experiment(models.Model):
     )
     # either the folder name if its an experiment of multiple robots or the logfile name
     name = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=20, choices=ExperimentType, blank=False, null=False, default="Gamelog")
+    type = models.CharField(
+        max_length=20,
+        choices=ExperimentType,
+        blank=False,
+        null=False,
+        default="Gamelog",
+    )
     experiment_folder = models.CharField(max_length=200, blank=True, null=True)
     field = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)

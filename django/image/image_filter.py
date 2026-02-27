@@ -1,6 +1,7 @@
 from django_filters import rest_framework as filters
 from .models import NaoImage
 
+
 class NaoImageFilter(filters.FilterSet):
     # This allows filtering by ?frame=3155214
     frame = filters.NumberFilter(field_name="frame__id")
@@ -10,4 +11,4 @@ class NaoImageFilter(filters.FilterSet):
 
     class Meta:
         model = NaoImage
-        fields = ['frame', 'frame_number', 'log', 'camera', 'type']
+        fields = ["frame", "frame_number", "log", "camera", "type"]

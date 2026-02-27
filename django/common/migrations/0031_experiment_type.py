@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0030_logstatus_robotpose'),
+        ("common", "0030_logstatus_robotpose"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='experiment',
-            name='type',
-            field=models.CharField(choices=[('Simple', 'Simple'), ('Gamelog', 'Gamelog')], default='Gamelog', max_length=20),
+            model_name="experiment",
+            name="type",
+            field=models.CharField(
+                choices=[("Simple", "Simple"), ("Gamelog", "Gamelog")],
+                default="Gamelog",
+                max_length=20,
+            ),
         ),
     ]

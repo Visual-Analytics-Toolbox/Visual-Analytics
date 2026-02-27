@@ -50,10 +50,11 @@ class ImageCountView(APIView):
 
         return Response({"count": count}, status=status.HTTP_200_OK)
 
+
 class ImageValidateView(APIView):
     def post(self, request):
 
-        for k,v in request.data.items():
+        for k, v in request.data.items():
             print(k, v)
             print()
         return JsonResponse({"status": "validated"})
