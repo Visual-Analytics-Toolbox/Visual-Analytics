@@ -212,9 +212,7 @@ class LogViewSet(viewsets.ModelViewSet):
         return serializers.LogWriteSerializer
 
     def get_queryset(self):
-        queryset = (
-            models.Log.objects.select_related("robot").all()
-        )
+        queryset = models.Log.objects.select_related("robot").all()
 
         return queryset
 

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0031_experiment_type'),
+        ("common", "0031_experiment_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='experiment',
-            name='experiment_folder',
+            model_name="experiment",
+            name="experiment_folder",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

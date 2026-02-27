@@ -44,7 +44,7 @@ class IMUData(models.Model):
         ]
 
         indexes = [
-            models.Index(fields=['frame']), 
+            models.Index(fields=["frame"]),
         ]
 
 

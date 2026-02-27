@@ -4,14 +4,13 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('motion', '0005_accelerometerdata_size_accelerometerdata_start_pos_and_more'),
+        ("motion", "0005_accelerometerdata_size_accelerometerdata_start_pos_and_more"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='imudata',
-            index=models.Index(fields=['frame'], name='motion_imud_frame_i_491be9_idx'),
+            model_name="imudata",
+            index=models.Index(fields=["frame"], name="motion_imud_frame_i_491be9_idx"),
         ),
     ]

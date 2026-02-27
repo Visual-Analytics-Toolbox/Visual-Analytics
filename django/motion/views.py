@@ -18,7 +18,7 @@ from contextlib import ExitStack
 
 class DynamicModelMixin:
     my_parser = Parser()
-    
+
     def get_model(self):
         model_name = self.kwargs.get("model_name")
         return apps.get_model("motion", model_name)
@@ -32,9 +32,9 @@ class DynamicModelMixin:
         """Strictly returns the base queryset for the model."""
         model = self.get_model()
         query_params = self.request.query_params.copy()
-        
+
         qs = model.objects.all()
-        
+
         # Filter by log if provided
         if "log" in query_params:
             log_id = query_params.pop("log")[0]
@@ -47,12 +47,12 @@ class DynamicModelMixin:
             if param_value:
                 filters &= Q(**{field.name: param_value})
 
-        return qs.filter(filters).select_related('frame__log').order_by("id")
+        return qs.filter(filters).select_related("frame__log").order_by("id")
 
     def list(self, request, *args, **kwargs):
         """Handle the binary data injection during the listing process."""
         queryset = self.get_queryset()
-        
+
         # Paginate
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -73,11 +73,13 @@ class DynamicModelMixin:
             for item in items:
                 # Use select_related to make this a local attribute access
                 path = Path("/mnt/logs") / item.frame.log.sensor_log_path
-                
+
                 if path not in cache:
                     f = stack.enter_context(open(path, "rb"))
-                    cache[path] = stack.enter_context(mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ))
-                
+                    cache[path] = stack.enter_context(
+                        mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+                    )
+
                 mm = cache[path]
                 # Slicing mmap is nearly instant; MessageToDict is the heavy part.
                 raw_blob = mm[item.start_pos : item.start_pos + item.size]
@@ -110,6 +112,8 @@ class DynamicModelMixin:
             for mmap_obj in file_cache.values():
                 mmap_obj.close()
         """
+
+
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
 
