@@ -1,12 +1,13 @@
 from pathlib import Path
 from datetime import timedelta
-#import sentry_sdk
+
+# import sentry_sdk
 import os
-#import pyroscope
-#os.environ["OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED"] = "true"
-#os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://alloy.alloy.svc.cluster.local:4317"
-#os.environ["OTEL_SERVICE_NAME"] = "django-api"
-#os.environ["OTEL_RESOURCE_ATTRIBUTES"] = "deployment.environment=production,k8s.pod.name=$(K8S_POD_NAME)"
+# import pyroscope
+# os.environ["OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED"] = "true"
+# os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://alloy.alloy.svc.cluster.local:4317"
+# os.environ["OTEL_SERVICE_NAME"] = "django-api"
+# os.environ["OTEL_RESOURCE_ATTRIBUTES"] = "deployment.environment=production,k8s.pod.name=$(K8S_POD_NAME)"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -258,16 +259,16 @@ CORS_ALLOW_HEADERS = [
 ]
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG', # Or 'DEBUG' if you need more detail
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",  # Or 'DEBUG' if you need more detail
     },
 }
 """
@@ -334,7 +335,7 @@ sentry_sdk.init(
 )
 """
 
-#pyroscope.configure(
-#	application_name = "vat-backend",
-#	server_address   = "http://alloy.alloy.svc.cluster.local:4040",
-#)
+# pyroscope.configure(
+# application_name = "vat-backend",
+# server_address   = "http://alloy.alloy.svc.cluster.local:4040",
+# )

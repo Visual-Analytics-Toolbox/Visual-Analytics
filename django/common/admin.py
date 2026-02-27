@@ -17,7 +17,12 @@ from unfold.contrib.filters.admin import (
 
 
 class EventAdmin(ModelAdmin):
-    list_display = ("id", "name")
+    list_display = ("id", "name", "get_is_testevent")
+
+    def get_is_testevent(self, obj):
+        return obj.is_testevent
+
+    get_is_testevent.short_description = "Test Event"
 
 
 class ExperimentAdmin(ModelAdmin):
@@ -87,7 +92,7 @@ class LogAdmin(ModelAdmin):
 
     def get_source_name(self, obj):
         if obj.game:
-            return f"{obj.game.team1} vs {obj.game.team2} - {obj.game.half}"
+            return f"{obj.game.team1.name} vs {obj.game.team2.name} - {obj.game.half}"
         if obj.experiment:
             return obj.experiment.name  # Assuming Experiment has a name field
         return "-"

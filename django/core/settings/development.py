@@ -2,11 +2,10 @@ from pathlib import Path
 from datetime import timedelta
 import os
 
-#os.environ["OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED"] = "true"
-#os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://alloy.alloy.svc.cluster.local:4317"
-#os.environ["OTEL_SERVICE_NAME"] = "django-api"
-#os.environ["OTEL_RESOURCE_ATTRIBUTES"] = "deployment.environment=production,k8s.pod.name=$(K8S_POD_NAME)"
-
+# os.environ["OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED"] = "true"
+# os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://alloy.alloy.svc.cluster.local:4317"
+# os.environ["OTEL_SERVICE_NAME"] = "django-api"
+# os.environ["OTEL_RESOURCE_ATTRIBUTES"] = "deployment.environment=production,k8s.pod.name=$(K8S_POD_NAME)"
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -266,14 +265,14 @@ LOGGING = {
     "formatters": {
         "otel": {
             # This format string is the magic: it includes trace and span IDs
-            #"format": "%(asctime)s %(levelname)s [%(name)s] [%(otelTraceID)s-%(otelSpanID)s] - %(message)s",
+            # "format": "%(asctime)s %(levelname)s [%(name)s] [%(otelTraceID)s-%(otelSpanID)s] - %(message)s",
             "format": "%(asctime)s %(levelname)s [%(name)s] - %(message)s",
         },
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "formatter": "otel", # Point to the new formatter
+            "formatter": "otel",  # Point to the new formatter
         },
     },
     "loggers": {
@@ -281,11 +280,11 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
         },
-        "django": { # Explicitly catch django logs
+        "django": {  # Explicitly catch django logs
             "handlers": ["console"],
             "level": "INFO",
         },
-        "django.server": { # This handles the request/response logs
+        "django.server": {  # This handles the request/response logs
             "handlers": ["console"],
             "level": "INFO",
         },

@@ -9,7 +9,6 @@ urlpatterns = [
     path("image/update/", views.ImageUpdateView.as_view(), name="image-update"),
     path("image-sync/", views.SynchronizedImage.as_view(), name="image-sync"),
     path("image/validate", views.ImageValidateView.as_view(), name="image-validate"),
-    
 ]
 
 router = routers.DefaultRouter()
