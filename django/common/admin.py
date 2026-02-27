@@ -12,7 +12,7 @@ from .models import (
 )
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import (
-    DropdownFilter,
+    DropdownFilter,MultipleRelatedDropdownFilter,BooleanRadioFilter
 )
 
 
@@ -37,8 +37,15 @@ class GameAdmin(ModelAdmin):
         "team2__name",
         "half",
         "is_testgame",
+        "score"
     )
     list_select_related = ["team1", "team2"]
+
+    list_filter_submit = True
+    list_filter = [
+        ("event_id", MultipleRelatedDropdownFilter),
+        ("is_testgame", BooleanRadioFilter),
+    ]
 
     def get_id(self, obj):
         return obj.id
