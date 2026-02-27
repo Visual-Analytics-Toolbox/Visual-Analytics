@@ -53,7 +53,10 @@ class SlackGitLabTriggerView(APIView):
             return Response({"text": f"💥 Connection Error: {str(e)}"})
 
     def _is_valid_slack_request(self, request):
-        secret = b'YOUR_SLACK_SIGNING_SECRET'
+        secret_str = os.environ.get("SLACK_SIGNING_SECRET", "")
+    
+        # 2. CONVERT TO BYTES (This fixes your TypeError)
+        secret_bytes = secret_str.encode('utf-8')
         timestamp = request.META.get('HTTP_X_SLACK_REQUEST_TIMESTAMP', '')
         signature = request.META.get('HTTP_X_SLACK_SIGNATURE', '')
 
@@ -63,6 +66,6 @@ class SlackGitLabTriggerView(APIView):
 
         # IMPORTANT: Use request.body for the raw string, NOT request.data
         sig_basestring = f"v0:{timestamp}:".encode() + request.body
-        my_sig = "v0=" + hmac.new(secret, sig_basestring, hashlib.sha256).hexdigest()
+        my_sig = "v0=" + hmac.new(secret_bytes, sig_basestring, hashlib.sha256).hexdigest()
 
         return hmac.compare_digest(my_sig, signature)
