@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "cognition",
     "motion",
     "frontend",
+    "ai",
     "corsheaders",
     "rest_framework",
     "drf_spectacular",

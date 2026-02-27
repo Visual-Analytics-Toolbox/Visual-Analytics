@@ -29,7 +29,6 @@ docker run --name local-postgres17 \
 -v pgdata:/var/lib/postgresql/data \
 -d postgres:17
 ```
-```
 
 
 ```bash

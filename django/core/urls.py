@@ -21,6 +21,7 @@ urlpatterns = [
     path("api/", include("image.urls")),
     path("api/", include("behavior.urls")),
     path("api/", include("annotation.urls")),
+    path("api/", include("ai.urls")),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
 ]
 
