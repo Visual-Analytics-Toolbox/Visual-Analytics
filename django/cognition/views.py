@@ -189,7 +189,11 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = CognitionFrame.objects.all()
-        query_params = self.request.query_params
+        query_params = self.request.query_params.copy()
+
+        if "log" in query_params.keys():
+            log_id = int(query_params.pop("log")[0])
+            queryset = queryset.filter(log=log_id)
 
         filters = Q()
         for field in CognitionFrame._meta.fields:
