@@ -21,7 +21,7 @@ import time
 
 
 class ImageCountView(APIView):
-    @method_decorator(cache_page(60 * 60 * 2))
+    queryset = models.NaoImage.objects.all()
     def get(self, request):
         # Get filter parameters from query string
         query_params = request.query_params.copy()
