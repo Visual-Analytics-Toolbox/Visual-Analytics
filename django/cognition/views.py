@@ -185,7 +185,6 @@ class CognitionFrameUpdate(APIView):
 class CognitionFrameViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CognitionFrameSerializer
     queryset = CognitionFrame.objects.all()
-    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = CognitionFrame.objects.all()
