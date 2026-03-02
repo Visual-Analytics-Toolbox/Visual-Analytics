@@ -11,4 +11,4 @@ class NaoImageFilter(filters.FilterSet):
 
     class Meta:
         model = NaoImage
-        fields = ["frame", "frame_number", "log", "camera", "type"]
+        fields = ["frame", "frame_number", "log", "camera", "type", "validated"]

@@ -1,6 +1,7 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
@@ -52,11 +53,17 @@ class ImageCountView(APIView):
 
 
 class ImageValidateView(APIView):
+    queryset = models.NaoImage.objects.all()
     def post(self, request):
-
-        for k, v in request.data.items():
-            print(k, v)
-            print()
+        # useful to check what else is send via webhook (we could get the annotation data here and put it in a different format for example)
+        #for k, v in request.data.items():
+        #    print(k, v)
+        #    print()
+        image_id = request.data["task"]["data"]["markdown_description"].split('/')[-1].rstrip(')')
+        print(f"validated image {image_id}")
+        image_instance = get_object_or_404(models.NaoImage, id=image_id)
+        image_instance.validated = True
+        image_instance.save()
         return JsonResponse({"status": "validated"})
 
 
@@ -127,6 +134,7 @@ class SynchronizedImage(APIView):
 
 
 class ImageUpdateView(APIView):
+    queryset = models.NaoImage.objects.all()
     def patch(self, request):
         data = self.request.data
         try:
@@ -151,7 +159,7 @@ class ImageUpdateView(APIView):
 
         for item in data:
             update_fields.update(key for key in item.keys() if key != "id")
-
+        print(f"update_fields:", update_fields)
         starttime = time.time()
         # Build the case statements for each field
         case_statements = []
@@ -165,6 +173,7 @@ class ImageUpdateView(APIView):
                 case_stmt = (
                     f"""{field} = (CASE {" ".join(case_when_parts)} ELSE {field} END)"""
                 )
+                print(f"\t{case_stmt}")
                 case_statements.append(case_stmt)
 
         # Collect all values for the parameterized query
@@ -181,7 +190,7 @@ class ImageUpdateView(APIView):
             SET {", ".join(case_statements)}
             WHERE id IN ({",".join(ids)})
         """
-        # print(sql)
+        print(sql)
 
         with connection.cursor() as cursor:
             cursor.execute(sql, update_values)

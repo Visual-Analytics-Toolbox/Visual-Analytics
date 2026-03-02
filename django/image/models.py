@@ -25,3 +25,11 @@ class NaoImage(models.Model):
 
     def __str__(self):
         return f"{self.frame}-{self.camera}-{self.type}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['frame', 'camera', 'type'], 
+                name='unique_frame_camera_type'
+            )
+        ]
