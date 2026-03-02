@@ -95,6 +95,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
 
 class CognitionFrameCount(APIView):
+    queryset = CognitionFrame.objects.all()
     def get(self, request):
         # Get filter parameters from query string
         log_id = request.query_params.get("log")
