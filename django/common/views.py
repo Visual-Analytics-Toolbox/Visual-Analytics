@@ -1,7 +1,6 @@
 import os
 from rest_framework import viewsets, status
 from django.shortcuts import get_object_or_404
-from rest_framework_extensions.mixins import CacheResponseMixin
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from . import models
@@ -16,8 +15,6 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Q, F
-from django.db import connection
-from psycopg2.extras import execute_values
 from django.template import loader
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser

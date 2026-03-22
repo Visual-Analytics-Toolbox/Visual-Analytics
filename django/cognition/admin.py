@@ -89,7 +89,6 @@ class CognitionModelAdmin(ModelAdmin):
     list_select_related = ["frame", "frame__log"]
 
     def get_log_id(self, obj):
-        logger.info(f"Querying data for log id")
         return obj.frame.log.id
 
     def get_frame_number(self, obj):
