@@ -29,6 +29,12 @@ class Team(models.Model):
 
 
 class Game(models.Model):
+    class Division(models.TextChoices):
+        no_division = "None", _("None")
+        Small = "Small", _("Small")
+        Middle = "Middle", _("Middle")
+        Large = "Large", _("Large")
+
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="games")
     team1 = models.ForeignKey(
         Team, on_delete=models.CASCADE, related_name="team1", null=True
@@ -44,6 +50,9 @@ class Game(models.Model):
     score = models.CharField(max_length=100, blank=True, null=True)
     game_folder = models.CharField(max_length=200, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
+    # playin, semifinal, final etc.
+    game_type = models.CharField(max_length=60, blank=True, null=True)
+    division = models.CharField(max_length=60, choices=Division, default=Division.no_division, blank=False, null=False)
 
     class Meta:
         unique_together = ("event_id", "start_time", "half")
