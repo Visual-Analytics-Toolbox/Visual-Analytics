@@ -3,8 +3,8 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 from django.db.models import Q, F
-from .models import Annotation
-from .serializers import AnnotationSerializer
+from .models import Annotation, Validation
+from .serializers import AnnotationSerializer, ValidationSerializer
 from .annotation_filter import AnnotationFilter
 
 
@@ -129,3 +129,8 @@ class AnnotationViewSet(viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+
+class ValidationViewSet(viewsets.ModelViewSet):
+    queryset = Validation.objects.all()
+    serializer_class = ValidationSerializer

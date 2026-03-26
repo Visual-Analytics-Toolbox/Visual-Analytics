@@ -119,6 +119,7 @@ class AnnotationAdmin(ModelAdmin):
 class ValidationAdmin(ModelAdmin):
     list_display = ["id", "image"]
 
+
 class UnfoldAdminClass(ModelAdmin):
     raw_id_fields = ("annotation",)
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Annotation
+from .models import Annotation, Validation
 
 
 class AnnotationSerializer(serializers.ModelSerializer):
@@ -13,3 +13,9 @@ class AnnotationSerializer(serializers.ModelSerializer):
 
     def get_color(self, obj):
         return Annotation.Classes.get_color(obj.class_name)
+
+
+class ValidationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Validation
+        fields = "__all__"
