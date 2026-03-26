@@ -98,6 +98,7 @@ class Validation(models.Model):
     """
     AI generated annotations that need to be checked by a human
     """
+
     image = models.OneToOneField(NaoImage, on_delete=models.CASCADE)
 
 

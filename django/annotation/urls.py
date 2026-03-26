@@ -10,5 +10,6 @@ urlpatterns = [
 
 router = routers.DefaultRouter()
 router.register("annotations", views.AnnotationViewSet)
+router.register("validation", views.ValidationViewSet)
 
 urlpatterns += router.urls
