@@ -94,6 +94,13 @@ class VideoAnnotation(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
 
+class Validation(models.Model):
+    """
+    AI generated annotations that need to be checked by a human
+    """
+    image = models.OneToOneField(NaoImage, on_delete=models.CASCADE)
+
+
 # TODO build models for labeling situations
 
 # TODO build models for ball patches
