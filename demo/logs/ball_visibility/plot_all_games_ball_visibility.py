@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Ball Visibility Analysis - 4 Separate Plots
-Master's Thesis Analysis Tool
 """
 
 import pandas as pd
