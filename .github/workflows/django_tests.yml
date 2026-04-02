@@ -1,0 +1,44 @@
+name: Django CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+    - name: Set up Python
+      run: uv python install
+    - name: Install dependencies
+      run: |
+        cd django
+        uv sync
+    - name: Run tests
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        VAT_POSTGRES_DB: postgres
+        VAT_POSTGRES_USER: postgres
+        VAT_POSTGRES_PASS: postgres
+        VAT_POSTGRES_HOST: localhost
+        VAT_POSTGRES_PORT: 5432
+      run: |
+        cd django
+        uv run pytest

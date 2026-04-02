@@ -1,5 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
+import logging
 from unfold.contrib.filters.admin import SingleNumericFilter
 from .models import (
     CognitionFrame,
@@ -27,6 +28,8 @@ from .models import (
     WhistlePercept,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class CognitionFrameAdmin(ModelAdmin):
     search_fields = ["id", "log__id", "frame_number"]
@@ -38,8 +41,10 @@ class CognitionFrameAdmin(ModelAdmin):
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
+    show_full_result_count = False
+    list_select_related = ["log"]
     # makes sure not all motion frames have to be loaded
-    raw_id_fields = ('closest_motion_frame',)
+    raw_id_fields = ("closest_motion_frame",)
 
     def get_queryset(self, request):
         return super().get_queryset(request).order_by("-id")
@@ -57,6 +62,7 @@ class CognitionFrameAdmin(ModelAdmin):
 class FrameFilterAdmin(ModelAdmin):
     list_display = ("get_log_id", "get_user", "name")
     list_filter_submit = True
+    list_select_related = ["log"]
     list_filter = [
         ("log__id", SingleNumericFilter),
     ]
@@ -79,8 +85,11 @@ class CognitionModelAdmin(ModelAdmin):
         ("frame__frame_number", SingleNumericFilter),
     ]
     autocomplete_fields = ["frame"]
+    show_full_result_count = False
+    list_select_related = ["frame", "frame__log"]
 
     def get_log_id(self, obj):
+        logger.info(f"Querying data for log id")
         return obj.frame.log.id
 
     def get_frame_number(self, obj):
@@ -89,6 +98,7 @@ class CognitionModelAdmin(ModelAdmin):
     def get_id(self, obj):
         return obj.id
 
+    get_id.short_description = "ID"
     get_log_id.short_description = "Log ID"
     get_frame_number.short_description = "frame number"
 

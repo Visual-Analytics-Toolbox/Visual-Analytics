@@ -1,18 +1,39 @@
 from django.contrib import admin
-from .models import Event, Game, Log, LogStatus, Experiment
+from .models import (
+    Event,
+    Game,
+    Log,
+    LogStatus,
+    Experiment,
+    VideoRecording,
+    Team,
+    Robot,
+    HealthIssues,
+)
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import (
     DropdownFilter,
 )
 
-from django.contrib.admin.sites import site
-from django.contrib.auth.models import Group
 
-site.unregister(Group)
+class EventAdmin(ModelAdmin):
+    list_display = ("id", "name")
+
+
+class ExperimentAdmin(ModelAdmin):
+    list_display = ("id", "name", "type")
 
 
 class GameAdmin(ModelAdmin):
-    list_display = ("event_id", "get_id", "team1", "team2", "half", "is_testgame")
+    list_display = (
+        "event_id",
+        "get_id",
+        "team1__name",
+        "team2__name",
+        "half",
+        "is_testgame",
+    )
+    list_select_related = ["team1", "team2"]
 
     def get_id(self, obj):
         return obj.id
@@ -41,58 +62,49 @@ class GameExperimentFilter(DropdownFilter):
 
 
 class LogAdmin(ModelAdmin):
-    search_fields = [
-        "game_id__team1__icontains",
-        "game_id__team2__icontains",
-        "head_number",
-        "player_number",
-    ]
     list_display = [
-        "get_event_id",
-        "get_game_id",
+        "get_source_id",
         "get_id",
-        "get_team1",
-        "get_team2",
-        "get_half",
-        "player_number",
-        "head_number",
-        "get_start_time",
+        "get_source_name",
         "is_test",
     ]
+    list_select_related = [
+        "game",
+        "game__event",
+        "experiment",
+        "game__team1",
+        "game__team2",
+    ]
 
-    list_filter_submit = True  # Submit button at the bottom of the filter
-    list_filter = [GameExperimentFilter]
+    def get_source_id(self, obj):
+        if obj.game:
+            return f"Game: {obj.game.id}"
+        if obj.experiment:
+            return f"Exp: {obj.experiment.id}"
+        return "-"
 
-    def get_event_id(self, obj):
-        return obj.game.event.id
+    get_source_id.short_description = "Source ID"
 
-    def get_game_id(self, obj):
-        return obj.game.id
+    def get_source_name(self, obj):
+        if obj.game:
+            return f"{obj.game.team1} vs {obj.game.team2} - {obj.game.half}"
+        if obj.experiment:
+            return obj.experiment.name  # Assuming Experiment has a name field
+        return "-"
+
+    get_source_name.short_description = "Details"
 
     def get_id(self, obj):
         return obj.id
 
-    def get_team1(self, obj):
-        return obj.game.team1
-
-    def get_team2(self, obj):
-        return obj.game.team2
-
-    def get_half(self, obj):
-        return obj.game.half
-
-    def get_start_time(self, obj):
-        return obj.game.start_time
-
     def is_test(self, obj):
-        return obj.game.is_testgame
+        if obj.game:
+            return obj.game.is_testgame
+        if obj.experiment:
+            return True
 
     get_id.short_description = "Log ID"
-    get_game_id.short_description = "Game ID"
-    get_event_id.short_description = "Event ID"
-    get_start_time.short_description = "Time"
-    get_team1.short_description = "Team 1"
-    get_team2.short_description = "Team 2"
+    is_test.boolean = True
 
 
 class LogStatusAdmin(ModelAdmin):
@@ -110,13 +122,49 @@ class LogStatusAdmin(ModelAdmin):
     get_log_path.short_description = "Log Path"
 
 
+class VideoRecordingAdmin(ModelAdmin):
+    list_display = ["get_game_id", "video_path", "url", "type"]
+
+    def get_game_id(self, obj):
+        return obj.game.id
+
+
+class TeamAdmin(ModelAdmin):
+    list_display = ["id", "get_team_id", "get_team_name"]
+
+    def get_team_id(self, obj):
+        return obj.team_id
+
+    def get_team_name(self, obj):
+        return obj.name
+
+    get_team_id.short_description = "Team ID"
+    get_team_name.short_description = "Team Name"
+
+
+class RobotAdmin(ModelAdmin):
+    list_display = [
+        "head_number",
+        "model",
+        "version",
+        "body_serial",
+        "head_serial",
+        "purchased",
+        "warranty_end",
+    ]
+
+
 # this is required for every model
-@admin.register(Event)
-@admin.register(Experiment)
+@admin.register(HealthIssues)
 class CustomAdminClass(ModelAdmin):
     pass
 
 
+admin.site.register(Event, EventAdmin)
 admin.site.register(Game, GameAdmin)
+admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.register(LogStatus, LogStatusAdmin)
+admin.site.register(Team, TeamAdmin)
+admin.site.register(VideoRecording, VideoRecordingAdmin)
+admin.site.register(Robot, RobotAdmin)

@@ -1,6 +1,0 @@
-cert-manager:
-  enabled: true
-  installCRDs: true
-  prometheus:
-    enabled: false
-  dns01RecursiveNameserversOnly: true

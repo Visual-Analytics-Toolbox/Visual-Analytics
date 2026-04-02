@@ -5,6 +5,7 @@ from .models import Annotation
 class AnnotationSerializer(serializers.ModelSerializer):
     color = serializers.SerializerMethodField()
     frame_number = serializers.CharField(read_only=True)
+    image_url = serializers.CharField(read_only=True)
 
     class Meta:
         model = Annotation

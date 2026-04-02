@@ -30,6 +30,8 @@ class IMUData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="imudata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -46,6 +48,8 @@ class FSRData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="fsrdata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -62,6 +66,8 @@ class ButtonData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="buttondata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -78,6 +84,8 @@ class SensorJointData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="sensorjointdata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -96,6 +104,8 @@ class AccelerometerData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="accelerometerdata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -114,6 +124,8 @@ class InertialSensorData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="inertialsensordata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -132,6 +144,8 @@ class MotionStatus(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="motionstatus"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -150,6 +164,8 @@ class MotorJointData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="motorjointdata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):
@@ -168,6 +184,8 @@ class GyrometerData(models.Model):
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="gyrometerdata"
     )
+    start_pos = models.IntegerField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
     def __str__(self):

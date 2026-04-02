@@ -69,10 +69,11 @@
         <a href="{% if next_frame %}{% url 'image_detail' log_id next_frame %}?filter={{ selected_filter_name|urlencode }} {% else %}{% endif %}" class="next-button">Next</a>
     </div>
     <div class="timeline" id="timeline">
-        {% for frame in frame_numbers %}
-        <a href="{% url 'image_detail' log_id frame %}?filter={{ selected_filter_name|urlencode }}"
-            class="timeline-box {% if frame == current_frame %}timeline-active{% endif %}"></a>
+        <!--
+       {% for url in frame_urls %}
+            <a href="{{ url }}" class="timeline-box {% if frame == current_frame %}timeline-active{% endif %}"></a>
         {% endfor %}
+        -->
     </div>
 </div>
 </main>
@@ -87,6 +88,7 @@
 <script src="{% static 'js/image.js' %}"></script>
 
 <script>
+
     const csrfToken = "{{ csrf_token }}";  // Django template variable
     async function setup(){
         // TODO maybe return the image object here so we can get the id and use that to list out all annotations
@@ -94,15 +96,18 @@
         bottom_image_url = `https://logs.berlin-united.com/${a.image_url}`
         b = await get_image_url("TOP");
         top_image_url = `https://logs.berlin-united.com/${b.image_url}`
+
+        bottom_annotations = await get_annotations(a.id);
+        top_annotations = await get_annotations(b.id);
+        console.log(top_annotations)
         handle_validation()
-        
+
         setup_secondary_image()
         setUpKonvaCanvas()
         // TODO switch annotations also
-        bottom_annotations = await get_annotations(a.id);
-        top_annotations = await get_annotations(b.id);
+        
 
-        current_annotations = bottom_annotations;
+        
         draw_db_annotations();
     }
     document.addEventListener('DOMContentLoaded', () => {

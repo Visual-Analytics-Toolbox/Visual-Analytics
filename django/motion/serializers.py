@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import MotionFrame, IMUData, FSRData, AccelerometerData, InertialSensorData, MotionStatus, MotorJointData, GyrometerData
+from .models import (
+    MotionFrame,
+    IMUData,
+    FSRData,
+    AccelerometerData,
+    InertialSensorData,
+    MotionStatus,
+    SensorJointData,
+    MotorJointData,
+    GyrometerData,
+)
 
 
 class MotionFrameSerializer(serializers.ModelSerializer):
@@ -32,7 +42,6 @@ class InertialSensorDataSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class MotionStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = MotionStatus
@@ -44,6 +53,10 @@ class MotorJointDataSerializer(serializers.ModelSerializer):
         model = MotorJointData
         fields = "__all__"
 
+class SensorJointDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SensorJointData
+        fields = "__all__"
 
 class GyrometerDataSerializer(serializers.ModelSerializer):
     class Meta:

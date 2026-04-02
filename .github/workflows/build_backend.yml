@@ -1,13 +1,14 @@
 name: Build Django Image
 
 on:
+  workflow_dispatch:
   push:
     branches: ['main']
-    paths: ['django/**']
     
 # This creates an environment variable called `IMAGE_NAME ` with the value `ghtoken_product_demo`.
 env:
   IMAGE_NAME: django_backend
+  PYTHON_VERSION: '3.12'
 #
 jobs:
   # This pushes the image to GitHub Packages.
@@ -16,12 +17,11 @@ jobs:
     permissions:
       packages: write
       contents: read
-      #
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Build image
-        working-directory: ./django
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry

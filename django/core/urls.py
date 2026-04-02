@@ -1,30 +1,19 @@
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView
-from graphene_django.views import GraphQLView
-from django.views.decorators.csrf import csrf_exempt
-from .schema import schema
-
-
-# this is required to protect the graphql endpoint
-class LoginRequiredMiddleware:
-    def resolve(self, next, root, info, **args):
-        if info.context.user.is_anonymous:
-            raise Exception("Authentication credentials were not provided.")
-        return next(root, info, **args)
-
+from django.conf import settings
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import HttpResponse
 
 urlpatterns = [
-    path("", include("user.urls")),
+    path("users/", include("user.urls")),
+    path("accounts/", include("allauth.urls")),
     path(
-        "graphql/",
-        csrf_exempt(
-            GraphQLView.as_view(
-                graphiql=True, schema=schema, middleware=[LoginRequiredMiddleware()]
-            )
-        ),
+        "csrf/",
+        ensure_csrf_cookie(lambda request: HttpResponse(status=204)),
+        name="csrf",
     ),
-    path("", include("frontend.urls")),
+    path("_allauth/", include("allauth.headless.urls")),
     path("admin/", admin.site.urls),
     path("api/", include("common.urls")),
     path("api/", include("cognition.urls")),
@@ -34,3 +23,8 @@ urlpatterns = [
     path("api/", include("annotation.urls")),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
 ]
+
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+
+    urlpatterns = urlpatterns + debug_toolbar_urls()
