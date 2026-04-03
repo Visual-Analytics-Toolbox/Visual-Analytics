@@ -135,10 +135,16 @@ class LogStatusAdmin(ModelAdmin):
 
 
 class VideoRecordingAdmin(ModelAdmin):
-    list_display = ["get_game_id", "video_path", "url", "type"]
+    list_display = ["get_event", "get_game_id", "video_path", "url", "type"]
 
     def get_game_id(self, obj):
         return obj.game.id
+    
+    def get_event(self, obj):
+        return obj.game.event.name
+    
+    def get_ordering(self, request):
+        return [('-game_id')]
 
 
 class TeamAdmin(ModelAdmin):
