@@ -100,6 +100,7 @@ class VideoRecording(models.Model):
     video_path = models.CharField(max_length=200, blank=True, null=True)
     # urls should optionally include the youtube links
     url = models.CharField(max_length=120, blank=True, null=True)
+    labelstudio_url = models.CharField(max_length=200, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
