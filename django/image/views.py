@@ -158,7 +158,6 @@ class ImageUpdateView(APIView):
         for item in data:
             update_fields.update(key for key in item.keys() if key != "id")
 
-        starttime = time.time()
         # Build the case statements for each field
         case_statements = []
         for field in update_fields:
@@ -188,12 +187,10 @@ class ImageUpdateView(APIView):
             SET {", ".join(case_statements)}
             WHERE id IN ({",".join(ids)})
         """
-        print(sql)
 
         with connection.cursor() as cursor:
             cursor.execute(sql, update_values)
             return cursor.rowcount
-        print(time.time() - starttime)
 
 
 class ImageViewSet(viewsets.ModelViewSet):
