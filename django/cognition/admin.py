@@ -4,7 +4,6 @@ import logging
 from unfold.contrib.filters.admin import SingleNumericFilter
 from .models import (
     CognitionFrame,
-    FrameFilter,
     AudioData,
     BallModel,
     BallCandidates,
@@ -59,24 +58,6 @@ class CognitionFrameAdmin(ModelAdmin):
     get_frame_id.short_description = "Frame ID"
 
 
-class FrameFilterAdmin(ModelAdmin):
-    list_display = ("get_log_id", "get_user", "name")
-    list_filter_submit = True
-    list_select_related = ["log"]
-    list_filter = [
-        ("log__id", SingleNumericFilter),
-    ]
-
-    def get_log_id(self, obj):
-        return obj.log.id
-
-    def get_user(self, obj):
-        return obj.user
-
-    get_log_id.short_description = "Log ID"
-    get_user.short_description = "User"
-
-
 class CognitionModelAdmin(ModelAdmin):
     list_display = ("get_id", "get_log_id", "get_frame_number")
     list_filter_submit = True
@@ -103,7 +84,6 @@ class CognitionModelAdmin(ModelAdmin):
 
 
 admin.site.register(CognitionFrame, CognitionFrameAdmin)
-admin.site.register(FrameFilter, FrameFilterAdmin)
 admin.site.register(AudioData, CognitionModelAdmin)
 admin.site.register(BallModel, CognitionModelAdmin)
 admin.site.register(BallCandidates, CognitionModelAdmin)

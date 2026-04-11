@@ -24,6 +24,5 @@ router.register(
     views.DynamicModelViewSet,
     basename="dynamicmodel",
 )
-router.register("frame-filter", views.FrameFilterView)
 
 urlpatterns += router.urls

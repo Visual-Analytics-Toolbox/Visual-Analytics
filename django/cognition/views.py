@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import CognitionFrame, FrameFilter
+from .models import CognitionFrame
 from . import serializers
 from core.pagination import LargeResultsSetPagination
 from django.db import connection
@@ -234,21 +234,3 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_204_NO_CONTENT,
             )
         return super().destroy(request, *args, **kwargs)
-
-
-class FrameFilterView(viewsets.ModelViewSet):
-    serializer_class = serializers.FrameFilterSerializer
-    queryset = FrameFilter.objects.all()
-
-    # only return frame filter belonging to the user who requests them
-    def get_queryset(self):
-        qs = self.queryset.filter(user=self.request.user)
-        return qs
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        # Make sure the request is available in the serializer context
-        return context
-
-    def perform_create(self, serializer):
-        serializer.save()

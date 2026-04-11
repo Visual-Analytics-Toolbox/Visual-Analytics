@@ -25,17 +25,6 @@ class CognitionFrame(models.Model):
         unique_together = ("log", "frame_number")
 
 
-class FrameFilter(models.Model):
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="frame_filter")
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="frame_filter"
-    )
-    name = models.CharField(max_length=100)
-    frames = models.JSONField(blank=True, null=True)
-
-    unique_together = ("log", "user", "name")
-
-
 class AudioData(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="audiodata"
