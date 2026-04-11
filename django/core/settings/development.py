@@ -249,7 +249,7 @@ AUTH_USER_MODEL = "user.VATUser"
 # maximum fields allowed in one post request
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 30240
 
-CORS_ALLOW_METHODS = ["OPTIONS", "POST", "PUT", "DELETE"]
+CORS_ALLOW_METHODS = ["OPTIONS", "POST", "PUT", "DELETE","PATCH"]
 
 # If you need to allow specific headers
 CORS_ALLOW_HEADERS = [
