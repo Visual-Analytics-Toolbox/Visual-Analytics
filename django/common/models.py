@@ -46,7 +46,7 @@ class Game(models.Model):
     is_testgame = models.BooleanField(blank=True, null=True)
     referees = models.CharField(max_length=100, blank=True, null=True)
     field = models.CharField(max_length=100, blank=True, null=True)
-    start_time = models.DateTimeField(blank=True, null=True)
+    start_time = models.CharField(max_length=40, blank=True, null=True)
     score = models.CharField(max_length=100, blank=True, null=True)
     game_folder = models.CharField(max_length=200, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
