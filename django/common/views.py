@@ -20,6 +20,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
+from .common_filter import GameFilter
 import logging
 import requests
 
@@ -143,7 +144,7 @@ class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["event","is_testgame"]
+    filterset_class = GameFilter
 
     def get_queryset(self):
         queryset = models.Game.objects.prefetch_related("recordings").all()
