@@ -8,7 +8,7 @@ class GameFilter(filters.FilterSet):
 
     class Meta:
         model = Game
-        fields = ["event", "is_testgame", "game_folder", "start_time"]
+        fields = ["event", "is_testgame", "game_folder", "start_time", "half"]
 
     def filter_non_values(self, queryset, name, value):
         # If the incoming string is "None", return records where the field is actually NULL
