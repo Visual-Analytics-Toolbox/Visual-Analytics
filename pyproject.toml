@@ -34,6 +34,7 @@ dependencies = [
     "django-allauth[socialaccount]==65.13.0",
     "naoth>=0.4.1",
     "protobuf==3.20",
+    "label-studio-sdk>=2.0.19",
 ]
 
 [dependency-groups]
