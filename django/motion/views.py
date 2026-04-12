@@ -163,15 +163,13 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
 
 class MotionFrameCount(APIView):
+    queryset = MotionFrame.objects.all()
     def get(self, request):
         # Get filter parameters from query string
         log_id = request.query_params.get("log")
 
-        # start with all images
-        queryset = MotionFrame.objects.all()
-
-        # apply filters if provided
-        queryset = queryset.filter(log=log_id)
+        # query the data
+        queryset = MotionFrame.objects.filter(log=log_id)
 
         # get the count
         count = queryset.count()
@@ -264,7 +262,7 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = MotionFrame.objects.all()
-        
+
         return queryset
 
     def create(self, request, *args, **kwargs):
