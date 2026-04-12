@@ -109,6 +109,8 @@ class CognitionFrameCount(APIView):
 
 
 class CognitionFrameUpdate(APIView):
+    queryset = CognitionFrame.objects.all()
+
     def patch(self, request):
         data = self.request.data
         try:
