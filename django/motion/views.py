@@ -1,20 +1,21 @@
-from rest_framework import viewsets, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from .models import MotionFrame
-from . import serializers
+from django_filters.rest_framework import DjangoFilterBackend
 from google.protobuf.json_format import MessageToDict
 from core.pagination import LargeResultsSetPagination
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework import viewsets, status
+from psycopg2.extras import execute_values
+from rest_framework.views import APIView
+from .models import MotionFrame
+from . import serializers
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
-from psycopg2.extras import execute_values
 from pathlib import Path
 from naoth.log import Parser
 import mmap
 from contextlib import ExitStack
-
+from .filter import MotionFrameFilter
 
 class DynamicModelMixin:
     my_parser = Parser()
@@ -258,18 +259,13 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MotionFrameSerializer
     queryset = MotionFrame.objects.all()
     pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MotionFrameFilter
 
     def get_queryset(self):
         queryset = MotionFrame.objects.all()
-        query_params = self.request.query_params
-
-        filters = Q()
-        for field in MotionFrame._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                filters &= Q(**{field.name: param_value})
-
-        return queryset.filter(filters)
+        
+        return queryset
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)

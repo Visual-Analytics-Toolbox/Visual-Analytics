@@ -1,14 +1,16 @@
-from rest_framework import viewsets, status
-from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from core.pagination import LargeResultsSetPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import viewsets, status
+from psycopg2.extras import execute_values
+from rest_framework.views import APIView
+from .filter import CognitionFrameFilter
 from .models import CognitionFrame
-from . import serializers
-from core.pagination import LargeResultsSetPagination
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
-from psycopg2.extras import execute_values
+from . import serializers
 import json
 
 
@@ -189,22 +191,13 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CognitionFrameSerializer
     queryset = CognitionFrame.objects.all()
     pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CognitionFrameFilter
 
     def get_queryset(self):
         queryset = CognitionFrame.objects.all()
-        query_params = self.request.query_params.copy()
 
-        if "log" in query_params.keys():
-            log_id = int(query_params.pop("log")[0])
-            queryset = queryset.filter(log=log_id)
-
-        filters = Q()
-        for field in CognitionFrame._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                filters &= Q(**{field.name: param_value})
-        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
-        return queryset.filter(filters)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
