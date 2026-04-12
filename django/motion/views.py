@@ -178,6 +178,8 @@ class MotionFrameCount(APIView):
 
 
 class MotionFrameUpdate(APIView):
+    queryset = MotionFrame.objects.all()
+
     def patch(self, request):
         data = self.request.data
         try:
