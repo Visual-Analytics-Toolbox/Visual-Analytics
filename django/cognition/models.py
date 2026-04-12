@@ -1,6 +1,5 @@
 from django.db import models
 from common.models import Log
-from django.conf import settings
 
 
 class CognitionFrame(models.Model):
