@@ -15,8 +15,15 @@ class NaoImageFilter(filters.FilterSet):
     blurredness_value = filters.CharFilter(method='filter_non_values')
     class Meta:
         model = NaoImage
-        fields = ["frame", "frame_number", "log", "camera", "type", "validated", "labelstudio_url", "brightness_value", "blurredness_value"]
-
+        fields = {
+            "frame":["exact"],
+            "labelstudio_url":["exact"],
+            "brightness_value": ["gt", "lt", "gte", "lte"],
+            "blurredness_value": ["gt", "lt", "gte", "lte"],
+            "camera": ["exact"],
+            "type": ["exact"],
+            "validated": ["exact"],
+        }
     def filter_non_values(self, queryset, name, value):
         # If the incoming string is "None", return records where the field is actually NULL
         if value == "None":
