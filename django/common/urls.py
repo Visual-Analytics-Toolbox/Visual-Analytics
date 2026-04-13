@@ -10,7 +10,6 @@ urlpatterns = [
     path("upload/model/", views.ModelUploadView.as_view(), name="upload-model"),
     path("upload/dataset/", views.DatasetUploadView.as_view(), name="upload-dataset"),
     path("videos/slice", views.VideoSliceView.as_view(), name="ffmpeg-slice"),
-    path("video/annotation/<int:pk>",views.VideoAnnotation.as_view(),name="video-annotation")
 ]
 
 router = routers.DefaultRouter()

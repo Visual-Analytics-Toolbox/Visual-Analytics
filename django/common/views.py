@@ -346,20 +346,6 @@ class VideoSliceView(APIView):
             logger.error(f"Error serving file {json_response['output']}: {e}")
             return HttpResponseServerError("Error reading the generated video file.")
 
-class VideoAnnotation(APIView):
-    def get(self,request,pk):
-        video = get_object_or_404(models.VideoRecording, id=pk)
-
-        if video.labelstudio_url:
-            return Response(
-                {"result": video.labelstudio_url.split("task=")[-1]},
-                status=status.HTTP_200_OK,
-            )
-        
-        return Response(
-            {"error": "This video has no labelstudio url"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
         
 class FileUploadBaseView(APIView):
     """
