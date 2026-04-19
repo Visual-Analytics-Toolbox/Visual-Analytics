@@ -2,14 +2,17 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from label_studio_sdk import LabelStudio
 from label_studio_sdk.core import ApiError 
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from common.models import VideoRecording
 import os
 
-class VideoAnnotation(APIView):
+class VideoAnnotation(GenericAPIView):
+    queryset = VideoRecording.objects.all()
+
     def get(self,request,pk):
-        video = get_object_or_404(VideoRecording, id=pk)
+        video = self.get_object() 
+
         if video.labelstudio_url:
             task_id = video.labelstudio_url.split("task=")[-1]
             l_client = LabelStudio(
