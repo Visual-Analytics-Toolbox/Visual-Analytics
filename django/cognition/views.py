@@ -63,15 +63,15 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
         # Prepare the data for bulk insert
         rows_tuples = [
-            (row["frame"], json.dumps(row["representation_data"]))
+            (row["frame"], row["start_pos"], row["size"], json.dumps(row["representation_data"]))
             for row in request.data
         ]
 
         with connection.cursor() as cursor:
             query = f"""
-            INSERT INTO cognition_{model.__name__.lower()} (frame_id, representation_data)
+            INSERT INTO cognition_{model.__name__.lower()} (frame_id, start_pos, size, representation_data)
             VALUES %s
-            ON CONFLICT (frame_id) DO UPDATE SET representation_data = EXCLUDED.representation_data;
+            ON CONFLICT (frame_id) DO UPDATE SET start_pos = EXCLUDED.start_pos, size = EXCLUDED.size, representation_data = EXCLUDED.representation_data;
             """
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=500)
