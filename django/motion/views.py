@@ -72,7 +72,7 @@ class DynamicModelMixin:
                     continue
 
                 # Use select_related to make this a local attribute access
-                path = Path("/mnt/my_folder") / item.frame.log.sensor_log_path
+                path = Path("/mnt/logs") / item.frame.log.sensor_log_path
 
                 if path not in cache:
                     f = stack.enter_context(open(path, "rb"))
