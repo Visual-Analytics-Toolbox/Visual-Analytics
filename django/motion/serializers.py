@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import (
     MotionFrame,
+    ButtonData,
     IMUData,
     FSRData,
     AccelerometerData,
@@ -35,6 +36,10 @@ class IMUDataSerializer(serializers.ModelSerializer):
         ret["representation_data"] = getattr(instance, "representation_data", None)
         return ret
 
+class ButtonDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ButtonData
+        fields = "__all__"
 
 class FSRDataSerializer(serializers.ModelSerializer):
     class Meta:

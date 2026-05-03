@@ -15,7 +15,7 @@ from pathlib import Path
 from naoth.log import Parser
 import mmap
 from contextlib import ExitStack
-from .filter import MotionFrameFilter
+from .filter import MotionFrameFilter,MotionRepresentationFilter
 
 class DynamicModelMixin:
     my_parser = Parser()
@@ -34,21 +34,10 @@ class DynamicModelMixin:
         model = self.get_model()
         query_params = self.request.query_params.copy()
 
-        qs = model.objects.all()
+        qs = model.objects.select_related("frame__log").order_by("id")
+        filterset = MotionRepresentationFilter(data=query_params,queryset=qs)
 
-        # Filter by log if provided
-        if "log" in query_params:
-            log_id = query_params.pop("log")[0]
-            qs = qs.filter(frame__log=log_id)
-
-        # Apply other dynamic filters
-        filters = Q()
-        for field in model._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                filters &= Q(**{field.name: param_value})
-
-        return qs.filter(filters).select_related("frame__log").order_by("id")
+        return filterset.qs
 
     def list(self, request, *args, **kwargs):
         """Handle the binary data injection during the listing process."""
@@ -72,6 +61,10 @@ class DynamicModelMixin:
         with ExitStack() as stack:
             cache = {}
             for item in items:
+                # skip motion representations that don't have the required fields set for mmap to work
+                if not (item.start_pos and item.size):
+                    continue 
+
                 # Use select_related to make this a local attribute access
                 path = Path("/mnt/logs") / item.frame.log.sensor_log_path
 
