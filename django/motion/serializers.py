@@ -24,7 +24,7 @@ class IMUDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IMUData
-        fields = ["id", "frame", "representation_data"]
+        fields = ["id", "start_pos", "size", "frame", "representation_data"]
 
     def to_representation(self, instance):
         """
