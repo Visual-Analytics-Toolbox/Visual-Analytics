@@ -29,7 +29,6 @@ class NaoImage(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['frame', 'camera', 'type'], 
-                name='unique_frame_camera_type'
+                fields=["frame", "camera", "type"], name="unique_frame_camera_type"
             )
         ]

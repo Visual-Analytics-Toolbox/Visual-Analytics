@@ -4,13 +4,12 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('cognition', '0009_robotpose'),
+        ("cognition", "0009_robotpose"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='FrameFilter',
+            name="FrameFilter",
         ),
     ]

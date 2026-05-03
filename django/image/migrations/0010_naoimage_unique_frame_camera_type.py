@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('cognition', '0009_robotpose'),
-        ('image', '0009_naoimage_validated'),
+        ("cognition", "0009_robotpose"),
+        ("image", "0009_naoimage_validated"),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='naoimage',
-            constraint=models.UniqueConstraint(fields=('frame', 'camera', 'type'), name='unique_frame_camera_type'),
+            model_name="naoimage",
+            constraint=models.UniqueConstraint(
+                fields=("frame", "camera", "type"), name="unique_frame_camera_type"
+            ),
         ),
     ]

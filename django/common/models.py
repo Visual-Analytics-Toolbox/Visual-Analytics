@@ -52,7 +52,13 @@ class Game(models.Model):
     comment = models.TextField(blank=True, null=True)
     # playin, semifinal, final etc.
     game_type = models.CharField(max_length=60, blank=True, null=True)
-    division = models.CharField(max_length=60, choices=Division, default=Division.no_division, blank=False, null=False)
+    division = models.CharField(
+        max_length=60,
+        choices=Division,
+        default=Division.no_division,
+        blank=False,
+        null=False,
+    )
 
     class Meta:
         unique_together = ("event_id", "start_time", "half")

@@ -72,7 +72,7 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["name", "country","is_testevent"]
+    filterset_fields = ["name", "country", "is_testevent"]
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -346,7 +346,7 @@ class VideoSliceView(APIView):
             logger.error(f"Error serving file {json_response['output']}: {e}")
             return HttpResponseServerError("Error reading the generated video file.")
 
-        
+
 class FileUploadBaseView(APIView):
     """
     A base class for file uploads to avoid code duplication.

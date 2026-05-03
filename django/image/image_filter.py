@@ -10,24 +10,26 @@ class NaoImageFilter(filters.FilterSet):
     log = filters.NumberFilter(field_name="frame__log")
 
     # Define the filter explicitly to control its behavior
-    labelstudio_url = filters.CharFilter(method='filter_non_values')
-    brightness_value = filters.CharFilter(method='filter_non_values')
-    blurredness_value = filters.CharFilter(method='filter_non_values')
+    labelstudio_url = filters.CharFilter(method="filter_non_values")
+    brightness_value = filters.CharFilter(method="filter_non_values")
+    blurredness_value = filters.CharFilter(method="filter_non_values")
+
     class Meta:
         model = NaoImage
         fields = {
-            "frame":["exact"],
-            "labelstudio_url":["exact"],
+            "frame": ["exact"],
+            "labelstudio_url": ["exact"],
             "brightness_value": ["gt", "lt", "gte", "lte"],
             "blurredness_value": ["gt", "lt", "gte", "lte"],
             "camera": ["exact"],
             "type": ["exact"],
             "validated": ["exact"],
         }
+
     def filter_non_values(self, queryset, name, value):
         # If the incoming string is "None", return records where the field is actually NULL
         if value == "None":
             return queryset.filter(**{f"{name}__isnull": True})
-        
+
         # Otherwise, perform a standard exact match
         return queryset.filter(**{name: value})

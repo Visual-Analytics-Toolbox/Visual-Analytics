@@ -9,9 +9,7 @@ class Situation(models.Model):
     # optional content that describes the situation
     content = models.TextField(blank=True, null=True)
     # if situation is relativ to a log we need a reference to a log and the start and end frame
-    log = models.ForeignKey(
-        Log, on_delete=models.CASCADE, related_name="situation_log"
-    )
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="situation_log")
     start_frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="situation_start"
     )

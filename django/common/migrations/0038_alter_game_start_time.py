@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0037_videorecording_labelstudio_url'),
+        ("common", "0037_videorecording_labelstudio_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='game',
-            name='start_time',
+            model_name="game",
+            name="start_time",
             field=models.CharField(blank=True, max_length=40, null=True),
         ),
     ]

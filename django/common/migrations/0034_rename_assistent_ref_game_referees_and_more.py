@@ -4,19 +4,18 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0033_event_is_testevent'),
+        ("common", "0033_event_is_testevent"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='game',
-            old_name='assistent_ref',
-            new_name='referees',
+            model_name="game",
+            old_name="assistent_ref",
+            new_name="referees",
         ),
         migrations.RemoveField(
-            model_name='game',
-            name='head_ref',
+            model_name="game",
+            name="head_ref",
         ),
     ]

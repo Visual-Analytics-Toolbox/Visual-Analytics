@@ -21,6 +21,7 @@ import time
 
 class ImageCountView(APIView):
     queryset = models.NaoImage.objects.all()
+
     def get(self, request):
         # Get filter parameters from query string
         query_params = request.query_params.copy()
@@ -52,12 +53,17 @@ class ImageCountView(APIView):
 
 class ImageValidateView(APIView):
     queryset = models.NaoImage.objects.all()
+
     def post(self, request):
         # useful to check what else is send via webhook (we could get the annotation data here and put it in a different format for example)
-        #for k, v in request.data.items():
+        # for k, v in request.data.items():
         #    print(k, v)
         #    print()
-        image_id = request.data["task"]["data"]["markdown_description"].split('/')[-1].rstrip(')')
+        image_id = (
+            request.data["task"]["data"]["markdown_description"]
+            .split("/")[-1]
+            .rstrip(")")
+        )
         print(f"validated image {image_id}")
         image_instance = get_object_or_404(models.NaoImage, id=image_id)
         image_instance.validated = True
@@ -133,6 +139,7 @@ class SynchronizedImage(APIView):
 
 class ImageUpdateView(APIView):
     queryset = models.NaoImage.objects.all()
+
     def patch(self, request):
         data = self.request.data
         try:

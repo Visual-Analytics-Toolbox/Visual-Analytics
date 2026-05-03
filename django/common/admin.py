@@ -12,7 +12,9 @@ from .models import (
 )
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import (
-    DropdownFilter,MultipleRelatedDropdownFilter,BooleanRadioFilter
+    DropdownFilter,
+    MultipleRelatedDropdownFilter,
+    BooleanRadioFilter,
 )
 
 
@@ -37,7 +39,7 @@ class GameAdmin(ModelAdmin):
         "team2__name",
         "half",
         "is_testgame",
-        "score"
+        "score",
     )
     list_select_related = ["team1", "team2"]
 
@@ -139,12 +141,12 @@ class VideoRecordingAdmin(ModelAdmin):
 
     def get_game_id(self, obj):
         return obj.game.id
-    
+
     def get_event(self, obj):
         return obj.game.event.name
-    
+
     def get_ordering(self, request):
-        return [('-game_id')]
+        return [("-game_id")]
 
 
 class TeamAdmin(ModelAdmin):

@@ -15,7 +15,8 @@ from pathlib import Path
 from naoth.log import Parser
 import mmap
 from contextlib import ExitStack
-from .filter import MotionFrameFilter,MotionRepresentationFilter
+from .filter import MotionFrameFilter, MotionRepresentationFilter
+
 
 class DynamicModelMixin:
     my_parser = Parser()
@@ -35,7 +36,7 @@ class DynamicModelMixin:
         query_params = self.request.query_params.copy()
 
         qs = model.objects.select_related("frame__log").order_by("id")
-        filterset = MotionRepresentationFilter(data=query_params,queryset=qs)
+        filterset = MotionRepresentationFilter(data=query_params, queryset=qs)
 
         return filterset.qs
 
@@ -63,7 +64,7 @@ class DynamicModelMixin:
             for item in items:
                 # skip motion representations that don't have the required fields set for mmap to work
                 if not (item.start_pos and item.size):
-                    continue 
+                    continue
 
                 # Use select_related to make this a local attribute access
                 path = Path("/mnt/logs") / item.frame.log.sensor_log_path
@@ -157,6 +158,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
 class MotionFrameCount(APIView):
     queryset = MotionFrame.objects.all()
+
     def get(self, request):
         # Get filter parameters from query string
         log_id = request.query_params.get("log")

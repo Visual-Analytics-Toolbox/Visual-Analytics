@@ -4,20 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('common', '0034_rename_assistent_ref_game_referees_and_more'),
+        ("common", "0034_rename_assistent_ref_game_referees_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='game',
-            name='division',
-            field=models.CharField(choices=[('None', 'None'), ('Small', 'Small'), ('Middle', 'Middle'), ('Large', 'Large')], default='None', max_length=60),
+            model_name="game",
+            name="division",
+            field=models.CharField(
+                choices=[
+                    ("None", "None"),
+                    ("Small", "Small"),
+                    ("Middle", "Middle"),
+                    ("Large", "Large"),
+                ],
+                default="None",
+                max_length=60,
+            ),
         ),
         migrations.AddField(
-            model_name='game',
-            name='game_type',
+            model_name="game",
+            name="game_type",
             field=models.CharField(blank=True, max_length=60, null=True),
         ),
     ]

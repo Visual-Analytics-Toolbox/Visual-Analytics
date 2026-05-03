@@ -4,34 +4,33 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('annotation', '0010_validation'),
+        ("annotation", "0010_validation"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='validation',
-            name='image',
+            model_name="validation",
+            name="image",
         ),
         migrations.RemoveField(
-            model_name='videoannotation',
-            name='frame',
+            model_name="videoannotation",
+            name="frame",
         ),
         migrations.RemoveField(
-            model_name='videoframe',
-            name='video',
+            model_name="videoframe",
+            name="video",
         ),
         migrations.DeleteModel(
-            name='Annotation',
+            name="Annotation",
         ),
         migrations.DeleteModel(
-            name='Validation',
+            name="Validation",
         ),
         migrations.DeleteModel(
-            name='VideoAnnotation',
+            name="VideoAnnotation",
         ),
         migrations.DeleteModel(
-            name='VideoFrame',
+            name="VideoFrame",
         ),
     ]
