@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework.authtoken",
     "user",
+    "silk"
 ]
 # registers middleware components
 # these components process requests before reaching or leaving a view
@@ -92,6 +93,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.TokenAuthMiddleware",
     "core.middleware.AllauthStatusMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 # defines where the url patterns are defined
 #'core.urls' means urls.py in the core app
@@ -291,3 +293,5 @@ LOGGING = {
         },
     },
 }
+
+SILKY_PYTHON_PROFILER = True

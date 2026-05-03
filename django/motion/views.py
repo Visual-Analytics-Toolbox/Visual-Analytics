@@ -11,6 +11,7 @@ from . import serializers
 from django.db import connection
 from django.db.models import Q
 from django.apps import apps
+from django.conf import settings
 from pathlib import Path
 from naoth.log import Parser
 import mmap
@@ -39,7 +40,7 @@ class DynamicModelMixin:
         filterset = MotionRepresentationFilter(data=query_params, queryset=qs)
 
         return filterset.qs
-
+    
     def list(self, request, *args, **kwargs):
         """Handle the binary data injection during the listing process."""
         queryset = self.get_queryset()
@@ -56,6 +57,10 @@ class DynamicModelMixin:
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    if settings.DEBUG:
+        from silk.profiling.profiler import silk_profile
+        list = silk_profile()(list)
+
     def _inject_binary_data(self, items):
         """Helper to attach binary data to the instances in memory."""
         model_name = self.get_model().__name__
@@ -67,7 +72,7 @@ class DynamicModelMixin:
                     continue
 
                 # Use select_related to make this a local attribute access
-                path = Path("/mnt/logs") / item.frame.log.sensor_log_path
+                path = Path("/mnt/my_folder") / item.frame.log.sensor_log_path
 
                 if path not in cache:
                     f = stack.enter_context(open(path, "rb"))
