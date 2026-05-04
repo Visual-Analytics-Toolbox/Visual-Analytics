@@ -16,3 +16,20 @@ class GameFilter(filters.FilterSet):
 
         # Otherwise, perform a standard exact match
         return queryset.filter(**{name: value})
+
+
+class LogFilter(filters.FilterSet):
+    event = filters.NumberFilter(field_name="game__event")
+    head_number = filters.NumberFilter(field_name="robot__head_number")
+
+    class Meta:
+        model = Game
+        fields = ["game", "player_number"]
+
+    def filter_non_values(self, queryset, name, value):
+        # If the incoming string is "None", return records where the field is actually NULL
+        if value == "None":
+            return queryset.filter(**{f"{name}__isnull": True})
+
+        # Otherwise, perform a standard exact match
+        return queryset.filter(**{name: value})

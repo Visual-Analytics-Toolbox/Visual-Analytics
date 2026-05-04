@@ -20,7 +20,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.authentication import TokenAuthentication
 from pathlib import Path
-from .common_filter import GameFilter
+from .common_filter import GameFilter, LogFilter
 import logging
 import requests
 
@@ -199,7 +199,8 @@ class ExperimentViewSet(viewsets.ModelViewSet):
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["game", "player_number", "robot__head_number"]
+    filterset_class = LogFilter
+    
 
     def get_serializer_class(self):
         # Use the Read serializer for retrieving data
