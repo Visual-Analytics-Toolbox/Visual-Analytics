@@ -45,15 +45,18 @@ class DynamicModelMixin:
         """Handle the binary data injection during the listing process."""
         queryset = self.get_queryset()
 
+        query_params = self.request.query_params.copy()
+
         # Paginate
         page = self.paginate_queryset(queryset)
         if page is not None:
-            self._inject_binary_data(page)
+            if query_params.get("decode", "").lower() == "true":
+                self._inject_binary_data(page)
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        # Non-paginated fallback
-        self._inject_binary_data(queryset)
+        if query_params.get("decode", "").lower() == "true":
+            self._inject_binary_data(queryset)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
