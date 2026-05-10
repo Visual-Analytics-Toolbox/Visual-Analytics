@@ -56,9 +56,9 @@ class ImageValidateView(APIView):
 
     def post(self, request):
         # useful to check what else is send via webhook (we could get the annotation data here and put it in a different format for example)
-        # for k, v in request.data.items():
-        #    print(k, v)
-        #    print()
+        for k, v in request.data.items():
+            print(k, v)
+            print()
         image_id = (
             request.data["task"]["data"]["markdown_description"]
             .split("/")[-1]
@@ -66,6 +66,7 @@ class ImageValidateView(APIView):
         )
         print(f"validated image {image_id}")
         image_instance = get_object_or_404(models.NaoImage, id=image_id)
+        image_instance.annotation = request.data["annotation"]["result"]
         image_instance.validated = True
         image_instance.save()
         return JsonResponse({"status": "validated"})
