@@ -13,6 +13,7 @@ class NaoImageFilter(filters.FilterSet):
     labelstudio_url = filters.CharFilter(method="filter_non_values")
     brightness_value = filters.CharFilter(method="filter_non_values")
     blurredness_value = filters.CharFilter(method="filter_non_values")
+    annotation = filters.CharFilter(method="filter_non_values")
 
     class Meta:
         model = NaoImage
@@ -23,13 +24,20 @@ class NaoImageFilter(filters.FilterSet):
             "blurredness_value": ["gt", "lt", "gte", "lte"],
             "camera": ["exact"],
             "type": ["exact"],
-            "validated": ["exact"],
+            "has_annotations": ["exact"],
         }
 
     def filter_non_values(self, queryset, name, value):
         # If the incoming string is "None", return records where the field is actually NULL
         if value == "None":
             return queryset.filter(**{f"{name}__isnull": True})
+
+        if value == "Any":
+            return queryset.filter(**{f"{name}__isnull": False})
+
+        if value.lower() in ["true", "false"]:
+            bool_value = value.lower() == "true"
+            return queryset.filter(**{name: bool_value})
 
         # Otherwise, perform a standard exact match
         return queryset.filter(**{name: value})

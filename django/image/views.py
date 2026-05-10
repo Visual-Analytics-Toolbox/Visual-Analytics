@@ -56,20 +56,20 @@ class ImageValidateView(APIView):
 
     def post(self, request):
         # useful to check what else is send via webhook (we could get the annotation data here and put it in a different format for example)
-        for k, v in request.data.items():
-            print(k, v)
-            print()
+        #for k, v in request.data.items():
+        #    print(k, v)
+        #    print()
         image_id = (
             request.data["task"]["data"]["markdown_description"]
             .split("/")[-1]
             .rstrip(")")
         )
-        print(f"validated image {image_id}")
+
         image_instance = get_object_or_404(models.NaoImage, id=image_id)
         image_instance.annotation = request.data["annotation"]["result"]
-        image_instance.validated = True
+        image_instance.has_annotations = True
         image_instance.save()
-        return JsonResponse({"status": "validated"})
+        return JsonResponse({"status": "copied annotations"})
 
 
 class SynchronizedImage(APIView):
@@ -219,7 +219,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         qs = models.NaoImage.objects.all()
         qs = qs.select_related("frame").all()
 
-        return qs.order_by("frame")
+        return qs
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
