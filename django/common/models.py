@@ -21,7 +21,7 @@ class Event(models.Model):
 
 
 class Team(models.Model):
-    team_id = models.IntegerField()
+    team_id = models.PositiveIntegerField()
     name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):

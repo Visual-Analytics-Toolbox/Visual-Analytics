@@ -1,29 +1,29 @@
-import os
-from rest_framework import viewsets, status
-from django.shortcuts import get_object_or_404
-from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
-from . import models
-from . import schema
+from rest_framework.authentication import TokenAuthentication
+from django.views.decorators.http import require_GET
+from rest_framework.parsers import MultiPartParser
+from .common_filter import GameFilter, LogFilter
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework import viewsets, status
+from rest_framework.views import APIView
+from django.db import transaction
+from django.db.models import Q, F
+from django.template import loader
 from django.http import (
     JsonResponse,
     HttpResponse,
     FileResponse,
     HttpResponseServerError,
 )
-from django.views.decorators.http import require_GET
-from rest_framework.response import Response
-from django.contrib.auth import get_user_model
-from django.db import transaction
-from django.db.models import Q, F
-from django.template import loader
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
-from rest_framework.authentication import TokenAuthentication
+from . import serializers
 from pathlib import Path
-from .common_filter import GameFilter, LogFilter
-import logging
+from . import models
+from . import schema
 import requests
+import logging
+import os
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -45,6 +45,8 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = models.Team.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["team_id", "name"]
+    # Exclude 'put' by explicitly defining allowed methods
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
 
 class RobotViewSet(viewsets.ModelViewSet):
