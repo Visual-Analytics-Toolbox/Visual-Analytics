@@ -224,6 +224,7 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorFrameOptionSerializer
     queryset = models.BehaviorFrameOption.objects.all()
+    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = models.BehaviorFrameOption.objects.all()
