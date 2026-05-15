@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from . import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from . import models
+from . import schema
 from django.http import (
     JsonResponse,
     HttpResponse,
@@ -38,7 +39,7 @@ def scalar_doc(request):
 def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
-
+@schema.team_viewset_schema
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
