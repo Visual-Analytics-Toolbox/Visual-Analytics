@@ -16,11 +16,11 @@ from . import models
 
 
 class BehaviorFrameCountView(APIView):
+    queryset = models.BehaviorFrameOption.objects.all()
     def get(self, request):
         # Get filter parameters from query string
         log_id = request.query_params.get("log")
 
-        #
         queryset = models.BehaviorFrameOption.objects.filter(frame__log=log_id)
 
         # Get the count
