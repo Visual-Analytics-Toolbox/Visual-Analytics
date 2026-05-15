@@ -3,6 +3,7 @@ from core.pagination import LargeResultsSetPagination
 from .filter import BehaviorFrameOptionFilter
 from .filter import XabslSymbolSparseFilter
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from psycopg2.extras import execute_values
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -12,21 +13,9 @@ from django.db import connection
 from django.db.models import Q
 from . import serializers
 from . import models
+from . import schema
 import json
 import time
-
-
-class BehaviorFrameOptionCountView(APIView):
-    queryset = models.BehaviorFrameOption.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = BehaviorFrameOptionFilter
-
-    def get(self, request):
-        qs = models.BehaviorFrameOption.objects.all()
-        # Get the count
-        unique_frame_count = qs.values("frame").distinct().count()
-
-        return Response({"count": unique_frame_count}, status=status.HTTP_200_OK)
 
 
 class BehaviorSymbolCountView(APIView):
@@ -41,10 +30,12 @@ class BehaviorSymbolCountView(APIView):
 
         return Response({"count": unique_frame_count}, status=status.HTTP_200_OK)
 
-
+@schema.behavior_option_viewset_schema
 class BehaviorOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionSerializer
     queryset = models.BehaviorOption.objects.all()
+    # Exclude 'put' by explicitly defining allowed methods
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
         queryset = models.BehaviorOption.objects.all()
@@ -137,10 +128,12 @@ class BehaviorOptionViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-
+@schema.behavior_option_state_viewset_schema
 class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionsStateSerializer
     queryset = models.BehaviorOptionState.objects.all()
+    # Exclude 'put' by explicitly defining allowed methods
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
         queryset = models.BehaviorOptionState.objects.all()
@@ -222,10 +215,15 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
         )
 
 
+@schema.behavior_frame_option_viewset_schema
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorFrameOptionSerializer
     queryset = models.BehaviorFrameOption.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BehaviorFrameOptionFilter
     pagination_class = LargeResultsSetPagination
+    # Exclude 'put' by explicitly defining allowed methods
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
         queryset = models.BehaviorFrameOption.objects.all()
@@ -246,8 +244,6 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             print("error: input not a list")
             return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
-        starttime = time.time()
-
         rows_tuples = [
             (row["frame"], row["option"], row["active_state"])
             for row in request.data
@@ -260,8 +256,18 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             """
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=500)
-        print(time.time() - starttime)
         return Response({}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], url_path='count')
+    def count(self, request):
+        # 1. Use the viewset's filter_queryset method so that query parameters 
+        # from your BehaviorFrameOptionFilter actually filter the count!
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # 2. Calculate the unique frame count on the filtered results
+        unique_frame_count = queryset.values("frame").distinct().count()
+
+        return Response({"count": unique_frame_count}, status=status.HTTP_200_OK)
 
 
 class BehaviorFrameOptionAPIView(APIView):

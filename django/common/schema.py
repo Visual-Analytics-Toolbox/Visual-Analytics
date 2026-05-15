@@ -26,6 +26,32 @@ team_viewset_schema = extend_schema_view(
         description="Delete a RoboCup team by database id",
         tags=["Teams"]
     ),
+)
 
-
+game_viewset_schema = extend_schema_view(
+    list=extend_schema(
+        summary="List Game halves",
+        description="",
+        tags=["Games"]
+    ),
+    create=extend_schema(
+        summary="Add Game Half",
+        description="",
+        tags=["Games"]
+    ),
+    retrieve=extend_schema(
+        summary="Get Game Half",
+        description="",
+        tags=["Games"]
+    ),
+    partial_update=extend_schema(
+        summary="Patch Game Half",
+        description="",
+        tags=["Games"]
+    ),
+    destroy=extend_schema(
+        summary="Delete Game Half",
+        description="",
+        tags=["Games"]
+    ),
 )

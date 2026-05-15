@@ -19,11 +19,15 @@
       var configuration = {
         theme: 'purple',
         isEditable: false,
-
+        operationsSorter: 'method',
+        tagsSorter: 'alpha',
         hiddenClients: {
           php: true, // Example: Exclude all PHP clients
           python: ['python3'], // Example: Exclude all Python clients
           c: true,
+          dart:true,
+          rust: true,
+          fsharp: true,
           node: true, // We expect the (browser) javascript fetch client to still be available
           javascript: true, // Exclude specific JavaScript clients
           java: true,

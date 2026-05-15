@@ -76,6 +76,8 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = models.Event.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["name", "country", "is_testevent"]
+    # Exclude 'put' by explicitly defining allowed methods
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -142,12 +144,14 @@ class EventViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-
+@schema.game_viewset_schema
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = GameFilter
+    # Exclude 'put' by explicitly defining allowed methods
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
         queryset = models.Game.objects.prefetch_related("recordings").all()
