@@ -1,20 +1,21 @@
-from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from django.db.models import Q
-from django.db import connection
 from django_filters.rest_framework import DjangoFilterBackend
-from psycopg2.extras import execute_values
-from . import serializers
-from . import models
 from core.pagination import LargeResultsSetPagination
+from django.shortcuts import get_object_or_404
 from behavior.models import BehaviorFrameOption
-from cognition.models import CognitionFrame
 from django.forms.models import model_to_dict
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from cognition.models import CognitionFrame
+from psycopg2.extras import execute_values
+from rest_framework.views import APIView
 from .image_filter import NaoImageFilter
 from django.http import JsonResponse
+from rest_framework import viewsets
+from rest_framework import status
+from django.db import connection
+from django.db.models import Q
+from . import serializers
+from . import models
 import numpy as np
 import time
 
@@ -219,3 +220,12 @@ class ImageViewSet(viewsets.ModelViewSet):
         print(time.time() - starttime)
         # TODO calculate some statistics similar to what we did before here
         return Response({}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], url_path='count')
+    def count(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # get the count
+        count = queryset.count()
+
+        return Response({"count": count}, status=status.HTTP_200_OK)
