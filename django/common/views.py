@@ -207,7 +207,6 @@ class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = LogFilter
-    
 
     def get_serializer_class(self):
         # Use the Read serializer for retrieving data
