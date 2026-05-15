@@ -315,6 +315,7 @@ class BehaviorFrameOptionAPIView(APIView):
 class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.XabslSymbolSparseSerializer
     queryset = models.XabslSymbolSparse.objects.all()
+    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = models.XabslSymbolSparse.objects.all()
@@ -359,6 +360,7 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
 class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.XabslSymbolSparseSerializer
     queryset = models.XabslSymbolComplete.objects.all()
+    pagination_class = LargeResultsSetPagination
 
     def get_queryset(self):
         queryset = models.XabslSymbolComplete.objects.all()
