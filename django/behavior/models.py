@@ -1,16 +1,22 @@
+from cognition.models import CognitionFrame
 from django.db import models
 from common.models import Log
-from cognition.models import CognitionFrame
 
 
-# Create your models here.
 class BehaviorOption(models.Model):
-    # we need to keep the reference to the log here because the xabsl code could change between logs,
-    # changing the options and the states in it as well
+    """
+    Model for storing Xabsl Options e.g.
+    option search_ball
+    {
+        <states here>
+    }
+    Each log could have a different implementation of the behavior while the names of the options are still the same
+    TODO: deduplicate later if we can determine logs to from the same commit without changes in working tree
+    """
     log = models.ForeignKey(
         Log, on_delete=models.CASCADE, related_name="behavior_options"
     )
-    # this id depends on the order it appears in the BehaviorStateComplete representation
+    # xabsl_internal_option_id depends on the order it appears in the BehaviorStateComplete representation in the log
     # we need this to get the actual option id during insertion of BehaviorStateSparse
     # lookup looks like this: client.list(log_id=log_id, xabsl_internal_id=<id in BehaviorStateSparse>)
     xabsl_internal_option_id = models.IntegerField(blank=True, null=True)
@@ -22,17 +28,38 @@ class BehaviorOption(models.Model):
 
 class BehaviorOptionState(models.Model):
     """
+    Model for storing Xabsl States e.g.
+    option walk_forward
+    {
+        initial state idle{
+            decision{}
+            action{}
+        }
+        state forward{
+            decision {}
+            action{}
+        }
+        target state stand{
+            decision{}
+            action{}
+        }
+    }
     """
+
     log = models.ForeignKey(
         Log, on_delete=models.CASCADE, related_name="behavior_options_states"
     )
+    # e.g. forward in the example
+    name = models.CharField(max_length=40, blank=True, null=True)
+    # id of option walk_forward for the given log 
     option = models.ForeignKey(
         BehaviorOption, on_delete=models.CASCADE, related_name="behavior_options_states"
     )
     # state id within an option - this is the id BehaviorFrameOption.activeState refers to
     xabsl_internal_state_id = models.IntegerField(blank=True, null=True)
-    name = models.CharField(max_length=40, blank=True, null=True)
+    # wether the state is a target state e.g stand state would be a target state in the example
     target = models.BooleanField(blank=True, null=True)
+    # TODO: can we figure out if a state is an initial state?
 
     def __str__(self):
         return f"{self.log}-{self.name}"
