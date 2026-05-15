@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from core.pagination import LargeResultsSetPagination
 from .filter import BehaviorFrameOptionFilter
+from .filter import XabslSymbolSparseFilter
 from rest_framework.response import Response
 from psycopg2.extras import execute_values
 from rest_framework.views import APIView
@@ -15,28 +16,28 @@ import json
 import time
 
 
-class BehaviorFrameCountView(APIView):
+class BehaviorFrameOptionCountView(APIView):
     queryset = models.BehaviorFrameOption.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = BehaviorFrameOptionFilter
 
     def get(self, request):
+        qs = models.BehaviorFrameOption.objects.all()
         # Get the count
-        unique_frame_count = queryset.values("frame").distinct().count()
+        unique_frame_count = qs.values("frame").distinct().count()
 
         return Response({"count": unique_frame_count}, status=status.HTTP_200_OK)
 
 
 class BehaviorSymbolCountView(APIView):
     queryset = models.XabslSymbolSparse.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = XabslSymbolSparseFilter
     def get(self, request):
-        # Get filter parameters from query string
-        log_id = request.query_params.get("log")
-
-        queryset = models.XabslSymbolSparse.objects.filter(frame__log=log_id)
+        qs = models.XabslSymbolSparse.objects.all()
 
         # Get the count
-        unique_frame_count = queryset.values("frame").distinct().count()
+        unique_frame_count = qs.values("frame").distinct().count()
 
         return Response({"count": unique_frame_count}, status=status.HTTP_200_OK)
 
@@ -248,14 +249,14 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         starttime = time.time()
 
         rows_tuples = [
-            (row["frame"], row["options_id"], row["active_state"])
+            (row["frame"], row["option"], row["active_state"])
             for row in request.data
         ]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO behavior_behaviorframeoption (frame_id, options_id_id, active_state_id)
+            INSERT INTO behavior_behaviorframeoption (frame_id, option_id, active_state_id)
             VALUES %s
-            ON CONFLICT (frame_id, options_id_id, active_state_id) DO NOTHING;
+            ON CONFLICT (frame_id, option_id, active_state_id) DO NOTHING;
             """
             # rows is a list of tuples containing the data
             execute_values(cursor, query, rows_tuples, page_size=500)
@@ -283,7 +284,7 @@ class BehaviorFrameOptionAPIView(APIView):
         try:
             # Filter the BehaviorFrameOption records by the log_id
             behavior_data_combined = models.BehaviorFrameOption.objects.select_related(
-                "options_id",  # Joins BehaviorOption
+                "option",  # Joins BehaviorOption
                 "active_state",  # Joins BehaviorOptionState
                 "active_state__option_id",  # Joins BehaviorOption via BehaviorOptionState
             )

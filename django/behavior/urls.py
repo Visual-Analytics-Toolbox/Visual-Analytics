@@ -11,7 +11,7 @@ urlpatterns = [
         name="behavior-filter",
     ),
     path(
-        "behavior/count/", views.BehaviorFrameCountView.as_view(), name="behavior-count"
+        "behavior/count/", views.BehaviorFrameOptionCountView.as_view(), name="behavior-count"
     ),
     path(
         "behavior/symbol/count/",

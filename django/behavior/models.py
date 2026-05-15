@@ -21,10 +21,12 @@ class BehaviorOption(models.Model):
 
 
 class BehaviorOptionState(models.Model):
+    """
+    """
     log = models.ForeignKey(
         Log, on_delete=models.CASCADE, related_name="behavior_options_states"
     )
-    option_id = models.ForeignKey(
+    option = models.ForeignKey(
         BehaviorOption, on_delete=models.CASCADE, related_name="behavior_options_states"
     )
     # state id within an option - this is the id BehaviorFrameOption.activeState refers to
@@ -40,7 +42,7 @@ class BehaviorFrameOption(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="behavior_frame_option"
     )
-    options_id = models.ForeignKey(
+    option = models.ForeignKey(
         BehaviorOption, on_delete=models.CASCADE, related_name="behavior_frame_option"
     )
     active_state = models.ForeignKey(
@@ -60,9 +62,9 @@ class BehaviorFrameOption(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=["frame", "options_id"]),
+            models.Index(fields=["frame", "option"]),
         ]
-        unique_together = ("options_id", "frame", "active_state")
+        unique_together = ("option", "frame", "active_state")
 
 
 class XabslSymbolComplete(models.Model):
