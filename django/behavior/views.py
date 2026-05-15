@@ -1,28 +1,26 @@
-from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from core.pagination import LargeResultsSetPagination
+from .filter import BehaviorFrameOptionFilter
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-
-from django.db import transaction
-from django.db.models import Q
-from django.db import connection
 from psycopg2.extras import execute_values
-
-import json
-import time
-
+from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework import status
+from django.db import transaction
+from django.db import connection
+from django.db.models import Q
 from . import serializers
 from . import models
+import json
+import time
 
 
 class BehaviorFrameCountView(APIView):
     queryset = models.BehaviorFrameOption.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BehaviorFrameOptionFilter
+
     def get(self, request):
-        # Get filter parameters from query string
-        log_id = request.query_params.get("log")
-
-        queryset = models.BehaviorFrameOption.objects.filter(frame__log=log_id)
-
         # Get the count
         unique_frame_count = queryset.values("frame").distinct().count()
 
