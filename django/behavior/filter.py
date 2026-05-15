@@ -1,5 +1,4 @@
 from django_filters import rest_framework as filters
-from .models import BehaviorFrameOption, XabslSymbolSparse
 
 
 class BehaviorFrameOptionFilter(filters.FilterSet):
@@ -9,4 +8,3 @@ class BehaviorFrameOptionFilter(filters.FilterSet):
 
 class XabslSymbolSparseFilter(filters.FilterSet):
     log = filters.NumberFilter(field_name="frame__log")
-

@@ -1,8 +1,6 @@
-from django.db import models
-from image.models import NaoImage
 from common.models import VideoRecording, Log
 from cognition.models import CognitionFrame
-from django.utils.translation import gettext_lazy as _
+from django.db import models
 
 
 class Situation(models.Model):

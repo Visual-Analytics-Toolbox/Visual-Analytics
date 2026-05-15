@@ -1,10 +1,9 @@
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from label_studio_sdk import LabelStudio
-from label_studio_sdk.core import ApiError
 from rest_framework.generics import GenericAPIView
-from rest_framework import status
+from rest_framework.response import Response
+from label_studio_sdk.core import ApiError
+from label_studio_sdk import LabelStudio
 from common.models import VideoRecording
+from rest_framework import status
 import os
 
 

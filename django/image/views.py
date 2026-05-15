@@ -1,11 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from core.pagination import LargeResultsSetPagination
 from django.shortcuts import get_object_or_404
-from behavior.models import BehaviorFrameOption
-from django.forms.models import model_to_dict
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from cognition.models import CognitionFrame
 from psycopg2.extras import execute_values
 from rest_framework.views import APIView
 from .image_filter import NaoImageFilter
@@ -13,43 +10,9 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework import status
 from django.db import connection
-from django.db.models import Q
 from . import serializers
 from . import models
-import numpy as np
 import time
-
-
-class ImageCountView(APIView):
-    queryset = models.NaoImage.objects.all()
-
-    def get(self, request):
-        # Get filter parameters from query string
-        query_params = request.query_params.copy()
-        if "log" in query_params.keys():
-            log_id = int(query_params.pop("log")[0])
-
-            qs = models.NaoImage.objects.filter(frame__log=log_id)
-        else:
-            qs = models.NaoImage.objects.all()
-
-        filters = Q()
-        for field in models.NaoImage._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value == "None" or param_value == "null":
-                filters &= Q(**{f"{field.name}__isnull": True})
-                # print(f"filter with {field.name} = {param_value}")
-            elif param_value:
-                # print(f"filter with {field.name} = {param_value}")
-                filters &= Q(**{field.name: param_value})
-
-        # apply filters if provided
-        qs = qs.filter(filters)
-
-        # get the count
-        count = qs.count()
-
-        return Response({"count": count}, status=status.HTTP_200_OK)
 
 
 class ImageValidateView(APIView):
@@ -57,9 +20,9 @@ class ImageValidateView(APIView):
 
     def post(self, request):
         # useful to check what else is send via webhook (we could get the annotation data here and put it in a different format for example)
-        for k, v in request.data.items():
-            print(k, v)
-            print()
+        #for k, v in request.data.items():
+        #    print(k, v)
+        #    print()
         image_id = (
             request.data["task"]["data"]["markdown_description"]
             .split("/")[-1]
@@ -229,3 +192,30 @@ class ImageViewSet(viewsets.ModelViewSet):
         count = queryset.count()
 
         return Response({"count": count}, status=status.HTTP_200_OK)
+
+
+    @action(detail=False, methods=['post'], url_path='validate')
+    def validate(self, request):
+        """
+        detail is set to false even if this is related to a single image object because we don't use the endpoint in the form
+        /validate/<pk>
+        """
+
+        # useful to check what else is send via webhook (we could get the annotation data here and put it in a different format for example)
+        #for k, v in request.data.items():
+        #    print(k, v)
+        #    print()
+        image_id = (
+            request.data["task"]["data"]["markdown_description"]
+            .split("/")[-1]
+            .rstrip(")")
+        )
+
+        image_instance = get_object_or_404(models.NaoImage, id=image_id)
+        
+        if request.data["annotation"]["result"]:
+            image_instance.annotation = request.data["annotation"]["result"]
+            image_instance.has_annotations = True
+            image_instance.save()
+            return JsonResponse({"status": "copied annotations"})
+        return JsonResponse({"status": "ignored empty annotation"})

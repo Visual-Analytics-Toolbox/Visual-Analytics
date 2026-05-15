@@ -9,7 +9,6 @@ from rest_framework.views import APIView
 from .models import MotionFrame
 from . import serializers
 from django.db import connection
-from django.db.models import Q
 from django.apps import apps
 from pathlib import Path
 from naoth.log import Parser
