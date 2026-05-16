@@ -3,7 +3,6 @@ from core.pagination import LargeResultsSetPagination
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from psycopg2.extras import execute_values
 from .image_filter import NaoImageFilter
 from django.http import JsonResponse
 from rest_framework import viewsets
@@ -11,7 +10,6 @@ from rest_framework import status
 from django.db import connection
 from . import serializers
 from . import models
-import time
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -63,8 +61,6 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 
     def bulk_create(self, data):
-        # validated_data = serializer.validated_data
-        starttime = time.time()
         rows_tuples = [
             (
                 row["frame"],
@@ -79,13 +75,12 @@ class ImageViewSet(viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = """
             INSERT INTO image_naoimage (frame_id, camera, type, image_url, blurredness_value, brightness_value)
-            VALUES %s
+            VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (frame_id, camera, type) DO NOTHING;
             """
-            # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=1000)
-        print(time.time() - starttime)
-        # TODO calculate some statistics similar to what we did before here
+
+            cursor.executemany(query, rows_tuples)
+
         return Response({}, status=status.HTTP_200_OK)
 
 
