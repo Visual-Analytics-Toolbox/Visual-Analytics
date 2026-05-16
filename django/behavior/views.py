@@ -220,7 +220,7 @@ class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
 
 @schema.behavior_frame_option_viewset_schema
 class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.BehaviorFrameOptionSerializer
+    serializer_class = serializers.BehaviorFrameOptionWriteSerializer
     queryset = models.BehaviorFrameOption.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = BehaviorFrameOptionFilter
@@ -228,8 +228,24 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     # Exclude 'put' by explicitly defining allowed methods
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
+    def get_serializer_class(self):
+        # Use the Read serializer for retrieving data
+        if self.action in ("list", "retrieve"):
+            return serializers.BehaviorFrameOptionReadSerializer
+
+        # Use the Write serializer for creating/updating data
+        return serializers.BehaviorFrameOptionWriteSerializer
+
     def get_queryset(self):
         qs = models.BehaviorFrameOption.objects.all()
+
+        qs = models.BehaviorFrameOption.objects.select_related(
+                "option",  # Joins BehaviorOption
+                "active_state",  # Joins BehaviorOptionState
+                "active_state__option",  # Joins BehaviorOption via BehaviorOptionState
+                "frame",
+            )
+
         return qs
 
     def create(self, request, *args, **kwargs):

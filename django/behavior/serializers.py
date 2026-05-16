@@ -15,26 +15,21 @@ class BehaviorOptionsStateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class BehaviorFrameOptionSerializer(serializers.ModelSerializer):
+class BehaviorFrameOptionWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.BehaviorFrameOption
         fields = "__all__"
 
 
-class BehaviorFrameOptionCustomSerializer(serializers.ModelSerializer):
+class BehaviorFrameOptionReadSerializer(serializers.ModelSerializer):
     # those lines are really important otherwise you cant return the fields here
-    # option_name = serializers.CharField(source='options_id.option_name')  # Gets option_name from BehaviorOption
-    # state_name = serializers.CharField(source='active_state.name')        # Gets name from BehaviorOptionState
-    # frame = serializers.IntegerField()  # frame from BehaviorFrameOption
+    option_name = serializers.CharField(source='option.option_name')  # Gets option_name from BehaviorOption
+    state_name = serializers.CharField(source='active_state.name')        # Gets name from BehaviorOptionState
     frame = CognitionFrameSerializer(read_only=True)
-
-    def to_representation(self, instance):
-        # Get the serialized frame data (skips the outer "frame" wrapper)
-        return self.fields["frame"].to_representation(instance.frame)
 
     class Meta:
         model = models.BehaviorFrameOption
-        fields = ["frame"]
+        fields = "__all__"
 
 
 class XabslSymbolCompleteSerializer(serializers.ModelSerializer):
