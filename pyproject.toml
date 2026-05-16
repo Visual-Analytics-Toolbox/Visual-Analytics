@@ -21,7 +21,7 @@ dependencies = [
     "gunicorn==23.0.0",
     "inflection==0.5.1",
     "numpy==2.2.6",
-    "psycopg==3.3.4",
+    "psycopg[binary]==3.3.4",
     "pyjwt==2.10.1",
     "python-dotenv==1.1.1",
     "pytz==2025.2",
