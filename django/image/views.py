@@ -42,7 +42,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         else:
             return self.single_create(request.data)
 
- 
     def single_create(self, data):
         serializer = self.get_serializer(data=data, many=False)
         serializer.is_valid(raise_exception=True)
@@ -58,7 +57,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         serializer = serializers.ImageReadSerializer(instance)
         return Response(serializer.data, status=status_code)
-
 
     def bulk_create(self, data):
         rows_tuples = [
@@ -83,7 +81,6 @@ class ImageViewSet(viewsets.ModelViewSet):
 
         return Response({}, status=status.HTTP_200_OK)
 
-
     def update(self, request, *args, **kwargs):
         is_many = isinstance(request.data, list)
 
@@ -107,7 +104,6 @@ class ImageViewSet(viewsets.ModelViewSet):
                 )
         else:
             return super().update(request, *args, **kwargs)
-
 
     def bulk_update(self, data):
         update_fields = set()
@@ -149,7 +145,6 @@ class ImageViewSet(viewsets.ModelViewSet):
             cursor.execute(sql, update_values)
             return cursor.rowcount
 
-
     @action(detail=False, methods=["get"], url_path="count")
     def count(self, request):
         queryset = self.filter_queryset(self.get_queryset())
@@ -158,7 +153,6 @@ class ImageViewSet(viewsets.ModelViewSet):
         count = queryset.count()
 
         return Response({"count": count}, status=status.HTTP_200_OK)
-
 
     @action(detail=False, methods=["post"], url_path="validate")
     def validate(self, request):

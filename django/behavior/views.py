@@ -238,11 +238,11 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         qs = models.BehaviorFrameOption.objects.all()
 
         qs = models.BehaviorFrameOption.objects.select_related(
-                "option",  # Joins BehaviorOption
-                "active_state",  # Joins BehaviorOptionState
-                "active_state__option",  # Joins BehaviorOption via BehaviorOptionState
-                "frame",
-            )
+            "option",  # Joins BehaviorOption
+            "active_state",  # Joins BehaviorOptionState
+            "active_state__option",  # Joins BehaviorOption via BehaviorOptionState
+            "frame",
+        )
 
         return qs
 
