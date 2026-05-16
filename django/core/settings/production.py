@@ -130,7 +130,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 # loads env variables for database connection
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("VAT_POSTGRES_DB"),
         "USER": os.getenv("VAT_POSTGRES_USER"),
         "PASSWORD": os.getenv("VAT_POSTGRES_PASS"),
