@@ -2,29 +2,27 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserInfoSerializer
-from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from . import schema
 
 
-class CurrentUserViewSet(viewsets.ReadOnlyModelViewSet):
-    User = get_user_model()
-    queryset = User.objects.all()
-    serializer_class = UserInfoSerializer
-
-    def get_object(self):
-        return self.request.user
-
-    def list(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+@schema.current_user_viewset_schema
+class CurrentUserViewSet(viewsets.ViewSet):
+    def list(self, request):
+        serializer = UserInfoSerializer(request.user)
+        print(request.user)
+        return Response(serializer.data)
 
 
+@schema.token_view_schema
 class TokenView(APIView):
     def get(self, request):
         user_token, created = Token.objects.get_or_create(user=self.request.user)
         return Response({"token": user_token.key}, 200)
 
 
+@schema.refresh_token_view_schema
 class RefreshToken(APIView):
     # this is required to allow non admin users to refresh their token
     permission_classes = [IsAuthenticated]
