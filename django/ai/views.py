@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from . import schema
 import requests
 import hashlib
 import hmac
@@ -8,6 +9,7 @@ import time
 import os
 
 
+@schema.slack_gitlab_trigger_view_schema
 class SlackGitLabTriggerView(APIView):
     authentication_classes = []
     permission_classes = []

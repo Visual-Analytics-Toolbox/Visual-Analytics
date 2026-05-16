@@ -4,9 +4,11 @@ from label_studio_sdk.core import ApiError
 from label_studio_sdk import LabelStudio
 from common.models import VideoRecording
 from rest_framework import status
+from . import schema
 import os
 
 
+@schema.video_annotation_view_schema
 class VideoAnnotation(GenericAPIView):
     """
     Get Video Annotations from Labelstudio - used for visualization in the frontend
