@@ -226,16 +226,8 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
 
     def get_queryset(self):
-        queryset = models.BehaviorFrameOption.objects.all()
-        query_params = self.request.query_params
-
-        filters = Q()
-        for field in models.BehaviorFrameOption._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                filters &= Q(**{field.name: param_value})
-        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
-        return queryset.filter(filters)
+        qs = models.BehaviorFrameOption.objects.all()
+        return qs
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
