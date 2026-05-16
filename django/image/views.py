@@ -10,8 +10,10 @@ from rest_framework import status
 from django.db import connection
 from . import serializers
 from . import models
+from . import schema
 
 
+@schema.image_viewset_schema
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
     pagination_class = LargeResultsSetPagination

@@ -50,11 +50,13 @@ class TeamViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
 
+@schema.robot_viewset_schema
 class RobotViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.RobotSerializer
     queryset = models.Robot.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["model", "head_number", "body_serial", "head_serial"]
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -72,6 +74,7 @@ class RobotViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
+@schema.event_viewset_schema
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EventSerializer
     queryset = models.Event.objects.all()
@@ -176,11 +179,13 @@ class GameViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
+@schema.experiment_viewset_schema
 class ExperimentViewSet(viewsets.ModelViewSet):
     queryset = models.Experiment.objects.all()
     serializer_class = serializers.ExperimentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["event", "name", "type"]
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         queryset = models.Experiment.objects.select_related("event").annotate(
@@ -205,10 +210,12 @@ class ExperimentViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
+@schema.log_viewset_schema
 class LogViewSet(viewsets.ModelViewSet):
     queryset = models.Log.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = LogFilter
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_serializer_class(self):
         # Use the Read serializer for retrieving data
@@ -243,9 +250,11 @@ class LogViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
+@schema.logstatus_viewset_schema
 class LogStatusViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LogStatusSerializer
     queryset = models.LogStatus.objects.all()
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         queryset = models.LogStatus.objects.all()
@@ -279,12 +288,14 @@ class LogStatusViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
+@schema.video_viewset_schema
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = models.VideoRecording.objects.all()
     serializer_class = serializers.VideoRecordingSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["game", "experiment", "type"]
     # TODO maybe make it possible again to filter for log_id - if game has a recording the log has a recording as well
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -306,6 +317,7 @@ class VideoViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
 
+@schema.videoslice_viewset_schema
 class VideoSliceView(APIView):
     def get(self, request):
         # Get filter parameters from query string
@@ -413,6 +425,7 @@ class FileUploadBaseView(APIView):
         )
 
 
+@schema.model_upload_view_schema
 class ModelUploadView(FileUploadBaseView):
     """
     Handles file uploads to the 'models/' directory.
@@ -421,6 +434,7 @@ class ModelUploadView(FileUploadBaseView):
     destination_folder = "/mnt/models"
 
 
+@schema.dataset_upload_view_schema
 class DatasetUploadView(FileUploadBaseView):
     """
     Handles file uploads to the 'datasets/' directory.
@@ -429,6 +443,8 @@ class DatasetUploadView(FileUploadBaseView):
     destination_folder = "/mnt/datasets"
 
 
+@schema.healthissues_viewset_schema
 class HealthIssuesViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.HealthIssuesSerializer
     queryset = models.HealthIssues.objects.all()
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
