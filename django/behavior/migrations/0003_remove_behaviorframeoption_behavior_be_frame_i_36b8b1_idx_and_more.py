@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("behavior", "0002_initial"),
         ("cognition", "0010_delete_framefilter"),

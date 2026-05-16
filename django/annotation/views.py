@@ -11,6 +11,7 @@ class VideoAnnotation(GenericAPIView):
     """
     Get Video Annotations from Labelstudio - used for visualization in the frontend
     """
+
     queryset = VideoRecording.objects.all()
 
     def get(self, request, pk):

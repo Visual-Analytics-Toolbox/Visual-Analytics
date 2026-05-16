@@ -13,6 +13,7 @@ class BehaviorOption(models.Model):
     Each log could have a different implementation of the behavior while the names of the options are still the same
     TODO: deduplicate later if we can determine logs to from the same commit without changes in working tree
     """
+
     log = models.ForeignKey(
         Log, on_delete=models.CASCADE, related_name="behavior_options"
     )
@@ -51,7 +52,7 @@ class BehaviorOptionState(models.Model):
     )
     # e.g. forward in the example
     name = models.CharField(max_length=40, blank=True, null=True)
-    # id of option walk_forward for the given log 
+    # id of option walk_forward for the given log
     option = models.ForeignKey(
         BehaviorOption, on_delete=models.CASCADE, related_name="behavior_options_states"
     )

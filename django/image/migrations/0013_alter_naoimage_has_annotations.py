@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("image", "0012_rename_validated_naoimage_has_annotations"),
     ]

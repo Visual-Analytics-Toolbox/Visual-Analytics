@@ -22,6 +22,7 @@ class BehaviorSymbolCountView(APIView):
     queryset = models.XabslSymbolSparse.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = XabslSymbolSparseFilter
+
     def get(self, request):
         qs = models.XabslSymbolSparse.objects.all()
 
@@ -30,12 +31,13 @@ class BehaviorSymbolCountView(APIView):
 
         return Response({"count": unique_frame_count}, status=status.HTTP_200_OK)
 
+
 @schema.behavior_option_viewset_schema
 class BehaviorOptionViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionSerializer
     queryset = models.BehaviorOption.objects.all()
     # Exclude 'put' by explicitly defining allowed methods
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         queryset = models.BehaviorOption.objects.all()
@@ -128,12 +130,13 @@ class BehaviorOptionViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
+
 @schema.behavior_option_state_viewset_schema
 class BehaviorOptionStateViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BehaviorOptionsStateSerializer
     queryset = models.BehaviorOptionState.objects.all()
     # Exclude 'put' by explicitly defining allowed methods
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         queryset = models.BehaviorOptionState.objects.all()
@@ -223,7 +226,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
     filterset_class = BehaviorFrameOptionFilter
     pagination_class = LargeResultsSetPagination
     # Exclude 'put' by explicitly defining allowed methods
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         qs = models.BehaviorFrameOption.objects.all()
@@ -237,8 +240,7 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
         rows_tuples = [
-            (row["frame"], row["option"], row["active_state"])
-            for row in request.data
+            (row["frame"], row["option"], row["active_state"]) for row in request.data
         ]
         with connection.cursor() as cursor:
             query = """
@@ -250,12 +252,12 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
             execute_values(cursor, query, rows_tuples, page_size=500)
         return Response({}, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['get'], url_path='count')
+    @action(detail=False, methods=["get"], url_path="count")
     def count(self, request):
-        # 1. Use the viewset's filter_queryset method so that query parameters 
+        # 1. Use the viewset's filter_queryset method so that query parameters
         # from your BehaviorFrameOptionFilter actually filter the count!
         queryset = self.filter_queryset(self.get_queryset())
-        
+
         # 2. Calculate the unique frame count on the filtered results
         unique_frame_count = queryset.values("frame").distinct().count()
 

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("image", "0010_naoimage_unique_frame_camera_type"),
     ]

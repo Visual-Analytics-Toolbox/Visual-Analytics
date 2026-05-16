@@ -39,6 +39,7 @@ def scalar_doc(request):
 def health_check(request):
     return JsonResponse({"message": "UP"}, status=200)
 
+
 @schema.team_viewset_schema
 class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
@@ -46,7 +47,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["team_id", "name"]
     # Exclude 'put' by explicitly defining allowed methods
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
 
 class RobotViewSet(viewsets.ModelViewSet):
@@ -77,7 +78,7 @@ class EventViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["name", "country", "is_testevent"]
     # Exclude 'put' by explicitly defining allowed methods
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -144,6 +145,7 @@ class EventViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
+
 @schema.game_viewset_schema
 class GameViewSet(viewsets.ModelViewSet):
     queryset = models.Game.objects.all()
@@ -151,7 +153,7 @@ class GameViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = GameFilter
     # Exclude 'put' by explicitly defining allowed methods
-    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         queryset = models.Game.objects.prefetch_related("recordings").all()
