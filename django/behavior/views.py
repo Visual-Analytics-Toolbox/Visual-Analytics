@@ -4,7 +4,6 @@ from .filter import BehaviorFrameOptionFilter
 from .filter import XabslSymbolSparseFilter
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from psycopg2.extras import execute_values
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import status
@@ -15,7 +14,6 @@ from . import serializers
 from . import models
 from . import schema
 import json
-import time
 
 
 class BehaviorSymbolCountView(APIView):
@@ -261,11 +259,11 @@ class BehaviorFrameOptionViewSet(viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = """
             INSERT INTO behavior_behaviorframeoption (frame_id, option_id, active_state_id)
-            VALUES %s
+            VALUES (%s, %s, %s)
             ON CONFLICT (frame_id, option_id, active_state_id) DO NOTHING;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
+            cursor.executemany(query, rows_tuples)
         return Response({}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"], url_path="count")
@@ -348,10 +346,7 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
         return queryset.filter(filters)
 
     def create(self, request, *args, **kwargs):
-        starttime = time.time()
-        # FIXME should be for bulk insert
         data = self.request.data
-        # rows_tuples = [( data['log_id'], data['frame'], json.dumps( data['data']) )]
 
         rows_tuples = [
             (
@@ -364,12 +359,12 @@ class XabslSymbolSparseViewSet(viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = """
             INSERT INTO behavior_xabslsymbolsparse(frame_id, data)
-            VALUES %s
+            VALUES (%s, %s)
             ON CONFLICT (frame_id) DO NOTHING;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=1000)
-        print(time.time() - starttime)
+            cursor.executemany(query, rows_tuples)
+
         return Response({}, status=status.HTTP_200_OK)
 
 
@@ -387,21 +382,20 @@ class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
             param_value = query_params.get(field.name)
             if param_value:
                 filters &= Q(**{field.name: param_value})
-        # FIXME built in pagination here, otherwise it could crash something if someone tries to get all representations without filtering
+
         return queryset.filter(filters)
 
     def create(self, request, *args, **kwargs):
-        starttime = time.time()
         data = request.data["data"]
         rows_tuples = [(data["log"], json.dumps(data["data"]))]
 
         with connection.cursor() as cursor:
             query = """
             INSERT INTO behavior_xabslsymbolcomplete(log_id, data)
-            VALUES %s
+            VALUES (%s, %s)
             ON CONFLICT (log_id) DO NOTHING;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=1000)
-        print(time.time() - starttime)
+            cursor.executemany(query, rows_tuples)
+
         return Response({}, status=status.HTTP_200_OK)

@@ -3,7 +3,6 @@ from core.pagination import LargeResultsSetPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
-from psycopg2.extras import execute_values
 from rest_framework.views import APIView
 from .filter import CognitionFrameFilter
 from .models import CognitionFrame
@@ -74,12 +73,13 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
         with connection.cursor() as cursor:
             query = f"""
-            INSERT INTO cognition_{model.__name__.lower()} (frame_id, start_pos, size, representation_data)
-            VALUES %s
-            ON CONFLICT (frame_id) DO UPDATE SET start_pos = EXCLUDED.start_pos, size = EXCLUDED.size, representation_data = EXCLUDED.representation_data;
+                INSERT INTO cognition_{model.__name__.lower()}(frame_id, start_pos, size, representation_data)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (frame_id) 
+                DO UPDATE SET start_pos = EXCLUDED.start_pos, size = EXCLUDED.size, representation_data = EXCLUDED.representation_data;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
+            cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -219,11 +219,11 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = """
             INSERT INTO cognition_cognitionframe (log_id, frame_number, frame_time)
-            VALUES %s
+            VALUES (%s, %s, %s)
             ON CONFLICT (log_id, frame_number) DO NOTHING;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
+            cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
 

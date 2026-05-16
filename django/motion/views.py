@@ -4,7 +4,6 @@ from core.pagination import LargeResultsSetPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
-from psycopg2.extras import execute_values
 from rest_framework.views import APIView
 from .models import MotionFrame
 from . import serializers
@@ -129,11 +128,11 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = f"""
             INSERT INTO motion_{model.__name__.lower()} (frame_id, start_pos, size)
-            VALUES %s
+            VALUES (%s, %s, %s)
             ON CONFLICT (frame_id) DO UPDATE SET start_pos = EXCLUDED.start_pos, size = EXCLUDED.size;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
+            cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -273,11 +272,11 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             query = """
             INSERT INTO motion_motionframe (log_id, frame_number, frame_time)
-            VALUES %s
+            VALUES (%s, %s, %s)
             ON CONFLICT (log_id, frame_number) DO NOTHING;
             """
             # rows is a list of tuples containing the data
-            execute_values(cursor, query, rows_tuples, page_size=500)
+            cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
 
