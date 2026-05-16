@@ -19,6 +19,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = NaoImageFilter
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_serializer_class(self):
         # Use the Read serializer for retrieving data
