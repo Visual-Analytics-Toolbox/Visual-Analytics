@@ -11,7 +11,6 @@ from django.db import connection
 from . import serializers
 from . import models
 from . import schema
-import time
 
 
 @schema.image_viewset_schema

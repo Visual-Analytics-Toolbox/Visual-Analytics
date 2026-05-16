@@ -1,7 +1,3 @@
-from user.forms import SignupForm
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +5,7 @@ from .serializers import UserInfoSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+
 
 class CurrentUserViewSet(viewsets.ReadOnlyModelViewSet):
     User = get_user_model()
