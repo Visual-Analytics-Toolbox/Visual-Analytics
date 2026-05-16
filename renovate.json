@@ -1,3 +1,10 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["pep621", "uv"],
+  "packageRules": [
+    {
+      "matchManagers": ["pep621", "uv"],
+      "rangeStrategy": "bump"
+    }
+  ]
 }
