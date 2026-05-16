@@ -12,5 +12,5 @@ urlpatterns = [
 ]
 
 router = routers.DefaultRouter()
-router.register("user", CurrentUserViewSet)
+router.register("user", CurrentUserViewSet, basename="current_user")
 urlpatterns += router.urls
