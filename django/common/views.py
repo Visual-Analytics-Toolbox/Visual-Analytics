@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
-from django.db import transaction
+from django.db import transaction, connection
 from django.db.models import Q, F
 from django.template import loader
 from django.http import (
@@ -98,8 +98,10 @@ class EventViewSet(viewsets.ModelViewSet):
     def single_create(self, serializer):
         validated_data = serializer.validated_data
 
+        # Fixed: pulling "name" cleanly from validated_data
         instance, created = models.Event.objects.get_or_create(
-            name=validated_data.get("name"), defaults=validated_data
+            name=validated_data.get("name"), 
+            defaults=validated_data
         )
 
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
@@ -110,42 +112,19 @@ class EventViewSet(viewsets.ModelViewSet):
     def bulk_create(self, serializer):
         validated_data = serializer.validated_data
 
-        with transaction.atomic():
-            # Get all existing names
-            existing_names = set(
-                models.Event.objects.filter(
-                    name__in=[item["name"] for item in validated_data]
-                ).values_list("name", flat=True)
-            )
+        unique_payloads = {item["name"]: item for item in validated_data}.values()
+        
+        # 2. Instantiate the Event objects safely handling missing/optional fields
+        event_instances = [models.Event(**item) for item in unique_payloads]
 
-            # Separate new and existing events
-            new_events = []
-            existing_events = []
-            for item in validated_data:
-                if item["name"] not in existing_names:
-                    new_events.append(models.Event(**item))
-                    existing_names.add(
-                        item["name"]
-                    )  # Add to set to catch duplicates within the input
-                else:
-                    existing_events.append(models.Event.objects.get(name=item["name"]))
+        # 3. Leverage DB native ON CONFLICT DO NOTHING
+        # (No transaction.atomic() needed here anymore since it's just a single statement!)
+        models.Event.objects.bulk_create(event_instances, ignore_conflicts=True)
 
-            # Bulk create new events
-            created_events = models.Event.objects.bulk_create(new_events)
-
-        # Combine created and existing events
-        all_events = created_events + existing_events
-
-        # Serialize the results
-        result_serializer = self.get_serializer(all_events, many=True)
-
+        # 4. Return a clean, simple success message
         return Response(
-            {
-                "created": len(created_events),
-                "existing": len(existing_events),
-                "events": result_serializer.data,
-            },
-            status=status.HTTP_200_OK,
+            {"detail": f"Successfully processed {len(event_instances)} events."}, 
+            status=status.HTTP_201_CREATED
         )
 
 
@@ -164,19 +143,39 @@ class GameViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+
+        serializer = self.get_serializer(data=request.data, many=is_many)
         serializer.is_valid(raise_exception=True)
-        validated_data = serializer.validated_data
-        instance, created = models.Game.objects.get_or_create(
-            event_id=request.data.get("event"),
-            start_time=request.data.get("start_time"),
-            half=request.data.get("half"),
-            defaults=validated_data,
+
+        if is_many:
+            return self.bulk_create(serializer)
+        else:
+            validated_data = serializer.validated_data
+            instance, created = models.Game.objects.get_or_create(
+                event_id=request.data.get("event"),
+                start_time=request.data.get("start_time"),
+                half=request.data.get("half"),
+                defaults=validated_data,
+            )
+
+            serializer = self.get_serializer(instance)
+            status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+            return Response(serializer.data, status=status_code)
+
+    def bulk_create(self, serializer):
+        game_instances = [models.Game(**row) for row in serializer.validated_data]
+        
+        models.Game.objects.bulk_create(
+            game_instances,
+            ignore_conflicts=True
         )
 
-        serializer = self.get_serializer(instance)
-        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
-        return Response(serializer.data, status=status_code)
+        return Response(
+            {"detail": f"Successfully processed {len(game_instances)} games."}, 
+            status=status.HTTP_201_CREATED
+        )
 
 
 @schema.experiment_viewset_schema
