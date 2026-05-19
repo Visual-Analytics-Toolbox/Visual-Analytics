@@ -30,7 +30,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         return serializers.ImageWriteSerializer
 
     def get_queryset(self):
-        qs = models.NaoImage.objects.all()
+        qs = models.NaoImage.objects.all().order_by("id")
         qs = qs.select_related("frame").all()
 
         return qs
