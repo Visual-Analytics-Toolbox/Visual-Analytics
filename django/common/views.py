@@ -101,8 +101,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
         # Fixed: pulling "name" cleanly from validated_data
         instance, created = models.Event.objects.get_or_create(
-            name=validated_data.get("name"), 
-            defaults=validated_data
+            name=validated_data.get("name"), defaults=validated_data
         )
 
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
@@ -114,7 +113,7 @@ class EventViewSet(viewsets.ModelViewSet):
         validated_data = serializer.validated_data
 
         unique_payloads = {item["name"]: item for item in validated_data}.values()
-        
+
         # 2. Instantiate the Event objects safely handling missing/optional fields
         event_instances = [models.Event(**item) for item in unique_payloads]
 
@@ -124,8 +123,8 @@ class EventViewSet(viewsets.ModelViewSet):
 
         # 4. Return a clean, simple success message
         return Response(
-            {"detail": f"Successfully processed {len(event_instances)} events."}, 
-            status=status.HTTP_201_CREATED
+            {"detail": f"Successfully processed {len(event_instances)} events."},
+            status=status.HTTP_201_CREATED,
         )
 
 
@@ -168,15 +167,12 @@ class GameViewSet(viewsets.ModelViewSet):
 
     def bulk_create(self, serializer):
         game_instances = [models.Game(**row) for row in serializer.validated_data]
-        
-        models.Game.objects.bulk_create(
-            game_instances,
-            ignore_conflicts=True
-        )
+
+        models.Game.objects.bulk_create(game_instances, ignore_conflicts=True)
 
         return Response(
-            {"detail": f"Successfully processed {len(game_instances)} games."}, 
-            status=status.HTTP_201_CREATED
+            {"detail": f"Successfully processed {len(game_instances)} games."},
+            status=status.HTTP_201_CREATED,
         )
 
 
