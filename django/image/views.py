@@ -62,6 +62,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status_code)
 
     def bulk_create(self, data):
+        # FIXME use a better way to bulk create where I dont need all values
         rows_tuples = [
             (
                 row["frame"],
@@ -107,6 +108,19 @@ class ImageViewSet(viewsets.ModelViewSet):
                 )
         else:
             return super().update(request, *args, **kwargs)
+
+    @action(detail=False, methods=['patch'], url_path='bulk-update')
+    def bulk_update_endpoint(self, request):
+        # DRF expects the data to come from request.data
+        data = request.data 
+        
+        if not isinstance(data, list):
+            return Response({"detail": "Expected a list of items."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Call your custom SQL logic
+        rows_updated = self.bulk_update(data)
+        
+        return Response({"detail": f"Successfully updated {rows_updated} rows."}, status=status.HTTP_200_OK)
 
     def bulk_update(self, data):
         update_fields = set()
