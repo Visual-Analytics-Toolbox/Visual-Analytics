@@ -160,6 +160,8 @@ class Log(models.Model):
     sensor_log_path = models.CharField(max_length=200, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     git_commit = models.CharField(max_length=60, blank=True, null=True)
+    top_video_path = models.CharField(max_length=200, blank=True, null=True)
+    bottom_video_path = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return f"{self.log_path}"
