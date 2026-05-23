@@ -1,5 +1,6 @@
 from django.db import models
 from cognition.models import CognitionFrame
+from common.models import Log
 from django.utils.translation import gettext_lazy as _
 
 
@@ -14,6 +15,9 @@ class NaoImage(models.Model):
 
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="images"
+    )
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="image"
     )
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
