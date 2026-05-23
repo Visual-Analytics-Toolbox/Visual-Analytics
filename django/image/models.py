@@ -37,3 +37,10 @@ class NaoImage(models.Model):
                 fields=["frame", "camera", "type"], name="unique_frame_camera_type"
             )
         ]
+        indexes = [
+            # 1. The Ultimate Cursor Optimization Index
+            models.Index(fields=["log", "id"], name="naoimage_log_id_idx"),
+            
+            # 2. Recommended Filter Combinations (Optional but highly useful)
+            models.Index(fields=["log", "camera", "type"], name="naoimage_log_filter_idx"),
+        ]

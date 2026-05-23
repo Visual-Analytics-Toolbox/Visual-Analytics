@@ -7,7 +7,7 @@ class NaoImageFilter(filters.FilterSet):
     frame = filters.NumberFilter(field_name="frame__id")
     # You can also add other frame attributes
     frame_number = filters.NumberFilter(field_name="frame__frame_number")
-    log = filters.NumberFilter(field_name="frame__log")
+    log = filters.NumberFilter(field_name="log")
 
     # Define the filter explicitly to control its behavior
     labelstudio_url = filters.CharFilter(method="filter_non_values")

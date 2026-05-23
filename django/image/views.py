@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from core.pagination import LargeResultsSetPagination
+from core.pagination import LargeResultsSetPagination, CursorPagination
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -16,7 +16,7 @@ from . import schema
 @schema.image_viewset_schema
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = models.NaoImage.objects.all()
-    pagination_class = LargeResultsSetPagination
+    pagination_class = CursorPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = NaoImageFilter
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
@@ -30,10 +30,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         return serializers.ImageWriteSerializer
 
     def get_queryset(self):
-        qs = models.NaoImage.objects.all().order_by("id")
-        qs = qs.select_related("frame").all()
-
-        return qs
+        return models.NaoImage.objects.select_related("frame")
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -123,14 +120,23 @@ class ImageViewSet(viewsets.ModelViewSet):
         return Response({"detail": f"Successfully updated {rows_updated} rows."}, status=status.HTTP_200_OK)
 
     def bulk_update(self, data):
+        model = self.get_queryset().model
         update_fields = set()
 
         for item in data:
             update_fields.update(key for key in item.keys() if key != "id")
 
+        # Helper function to find the actual database column name
+        def get_db_column(field_name):
+            try:
+                return model._meta.get_field(field_name).column
+            except Exception:
+                return field_name  # Fallback if it's not a real model field
+
         # Build the case statements for each field
         case_statements = []
         for field in update_fields:
+            db_column = get_db_column(field) # e.g., converts 'log' to 'log_id'
             case_when_parts = []
             for item in data:
                 if field in item and item[field] is not None:
@@ -138,7 +144,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 
             if case_when_parts:
                 case_stmt = (
-                    f"""{field} = (CASE {" ".join(case_when_parts)} ELSE {field} END)"""
+                    f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
                 )
                 print(f"\t{case_stmt}")
                 case_statements.append(case_stmt)
