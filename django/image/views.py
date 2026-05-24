@@ -66,6 +66,7 @@ class ImageViewSet(viewsets.ModelViewSet):
                 row["camera"],
                 row["type"],
                 row["image_url"],
+                row["log"],
                 row["blurredness_value"],
                 row["brightness_value"],
             )
@@ -73,8 +74,8 @@ class ImageViewSet(viewsets.ModelViewSet):
         ]
         with connection.cursor() as cursor:
             query = """
-            INSERT INTO image_naoimage (frame_id, camera, type, image_url, blurredness_value, brightness_value)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO image_naoimage (frame_id, camera, type, image_url, log, blurredness_value, brightness_value)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (frame_id, camera, type) DO NOTHING;
             """
 
