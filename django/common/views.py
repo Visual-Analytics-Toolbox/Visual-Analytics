@@ -1,5 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authentication import TokenAuthentication
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_GET
 from rest_framework.parsers import MultiPartParser
 from .common_filter import GameFilter, LogFilter
@@ -137,6 +139,7 @@ class GameViewSet(viewsets.ModelViewSet):
     # Exclude 'put' by explicitly defining allowed methods
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
+    @method_decorator(cache_page(60 * 60 * 2))
     def get_queryset(self):
         queryset = models.Game.objects.prefetch_related("recordings").all()
 
