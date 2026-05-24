@@ -143,16 +143,14 @@ class ImageViewSet(viewsets.ModelViewSet):
         # Build the case statements for each field
         case_statements = []
         for field in update_fields:
-            db_column = get_db_column(field) # e.g., converts 'log' to 'log_id'
+            db_column = get_db_column(field)  # e.g., converts 'log' to 'log_id'
             case_when_parts = []
             for item in data:
                 if field in item and item[field] is not None:
                     case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
 
             if case_when_parts:
-                case_stmt = (
-                    f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
-                )
+                case_stmt = f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
                 print(f"\t{case_stmt}")
                 case_statements.append(case_stmt)
 

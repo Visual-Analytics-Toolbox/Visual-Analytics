@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cognition", "0010_delete_framefilter"),
         ("common", "0040_log_bottom_video_path_log_top_video_path"),
