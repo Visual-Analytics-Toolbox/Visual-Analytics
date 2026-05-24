@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("common", "0040_log_bottom_video_path_log_top_video_path"),
         ("image", "0013_alter_naoimage_has_annotations"),

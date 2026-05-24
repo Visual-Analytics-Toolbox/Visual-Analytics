@@ -16,9 +16,7 @@ class NaoImage(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="images"
     )
-    log = models.ForeignKey(
-        Log, on_delete=models.CASCADE, related_name="image"
-    )
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="image")
     camera = models.CharField(max_length=10, choices=Camera, blank=True, null=True)
     type = models.CharField(max_length=10, choices=Type, blank=True, null=True)
     image_url = models.CharField(max_length=200, blank=True, null=True)
@@ -40,7 +38,8 @@ class NaoImage(models.Model):
         indexes = [
             # 1. The Ultimate Cursor Optimization Index
             models.Index(fields=["log", "id"], name="naoimage_log_id_idx"),
-            
             # 2. Recommended Filter Combinations (Optional but highly useful)
-            models.Index(fields=["log", "camera", "type"], name="naoimage_log_filter_idx"),
+            models.Index(
+                fields=["log", "camera", "type"], name="naoimage_log_filter_idx"
+            ),
         ]

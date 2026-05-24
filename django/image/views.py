@@ -107,18 +107,24 @@ class ImageViewSet(viewsets.ModelViewSet):
         else:
             return super().update(request, *args, **kwargs)
 
-    @action(detail=False, methods=['patch'], url_path='bulk-update')
+    @action(detail=False, methods=["patch"], url_path="bulk-update")
     def bulk_update_endpoint(self, request):
         # DRF expects the data to come from request.data
-        data = request.data 
-        
+        data = request.data
+
         if not isinstance(data, list):
-            return Response({"detail": "Expected a list of items."}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"detail": "Expected a list of items."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         # Call your custom SQL logic
         rows_updated = self.bulk_update(data)
-        
-        return Response({"detail": f"Successfully updated {rows_updated} rows."}, status=status.HTTP_200_OK)
+
+        return Response(
+            {"detail": f"Successfully updated {rows_updated} rows."},
+            status=status.HTTP_200_OK,
+        )
 
     def bulk_update(self, data):
         model = self.get_queryset().model
@@ -137,16 +143,14 @@ class ImageViewSet(viewsets.ModelViewSet):
         # Build the case statements for each field
         case_statements = []
         for field in update_fields:
-            db_column = get_db_column(field) # e.g., converts 'log' to 'log_id'
+            db_column = get_db_column(field)  # e.g., converts 'log' to 'log_id'
             case_when_parts = []
             for item in data:
                 if field in item and item[field] is not None:
                     case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
 
             if case_when_parts:
-                case_stmt = (
-                    f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
-                )
+                case_stmt = f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
                 print(f"\t{case_stmt}")
                 case_statements.append(case_stmt)
 

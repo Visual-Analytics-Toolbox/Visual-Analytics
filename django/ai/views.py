@@ -14,29 +14,27 @@ class MattermostGitLabTriggerView(APIView):
     parser_classes = [FormParser, MultiPartParser]
 
     def post(self, request, *args, **kwargs):
-        auth_header = request.META.get('HTTP_AUTHORIZATION')
+        auth_header = request.META.get("HTTP_AUTHORIZATION")
 
-        if not auth_header or not auth_header.startswith('Token '):
+        if not auth_header or not auth_header.startswith("Token "):
             return Response(
-                {"text": "Missing or invalid authorization header."}, 
-                status=status.HTTP_401_UNAUTHORIZED
+                {"text": "Missing or invalid authorization header."},
+                status=status.HTTP_401_UNAUTHORIZED,
             )
-        
+
         # Split "Token <value>" to isolate the actual token string
         try:
-            incoming_token = auth_header.split(' ')[1]
+            incoming_token = auth_header.split(" ")[1]
         except IndexError:
             return Response(
-                {"text": "Malformed authorization header."}, 
-                status=status.HTTP_401_UNAUTHORIZED
+                {"text": "Malformed authorization header."},
+                status=status.HTTP_401_UNAUTHORIZED,
             )
 
         if incoming_token != os.environ.get("MATTERMOST_TOKEN", ""):
             return Response(
-                {"text": "Unauthorized token."}, 
-                status=status.HTTP_403_FORBIDDEN
+                {"text": "Unauthorized token."}, status=status.HTTP_403_FORBIDDEN
             )
-
 
         # 2. Extract Data
         # Slack sends data as 'application/x-www-form-urlencoded'

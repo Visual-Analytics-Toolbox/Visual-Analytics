@@ -4,7 +4,6 @@ from core.pagination import LargeResultsSetPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
-from rest_framework.views import APIView
 from .models import MotionFrame
 from . import serializers
 from django.db import connection
@@ -14,6 +13,7 @@ from naoth.log import Parser
 import mmap
 from contextlib import ExitStack
 from .filter import MotionFrameFilter, MotionRepresentationFilter
+from . import schema
 
 
 class DynamicModelMixin:
@@ -107,8 +107,10 @@ class DynamicModelMixin:
         """
 
 
+@schema.motion_repr_viewset_schema
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
@@ -137,7 +139,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         return Response({}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"], url_path="count")
-    def count_records(self, request, *args, **kwargs):
+    def count(self, request, *args, **kwargs):
         """
         Custom action to count records in the dynamic model.
         Accessible at /api/motion/<modelname>/count/
@@ -154,42 +156,59 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         return Response({"count": count})
 
 
-class MotionFrameCount(APIView):
+@schema.motion_frame_viewset_schema
+class MotionFrameViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.MotionFrameSerializer
     queryset = MotionFrame.objects.all()
+    pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MotionFrameFilter
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
-    def get(self, request):
-        # Get filter parameters from query string
-        log_id = request.query_params.get("log")
+    def get_queryset(self):
+        queryset = MotionFrame.objects.all()
 
-        # query the data
-        queryset = MotionFrame.objects.filter(log=log_id)
+        return queryset
 
-        # get the count
-        count = queryset.count()
-        return Response({"count": count}, status=status.HTTP_200_OK)
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            print("error: input not a list")
+            return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
 
+        rows_tuples = [
+            (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
+        ]
 
-class MotionFrameUpdate(APIView):
-    queryset = MotionFrame.objects.all()
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO motion_motionframe (log_id, frame_number, frame_time)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (log_id, frame_number) DO NOTHING;
+            """
+            # rows is a list of tuples containing the data
+            cursor.executemany(query, rows_tuples)
 
-    def patch(self, request):
-        data = self.request.data
-        try:
-            rows_updated = self.bulk_update(data)
+        return Response({}, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=["patch"], url_path="bulk-update")
+    def bulk_update_endpoint(self, request):
+        # DRF expects the data to come from request.data
+        data = request.data
+
+        if not isinstance(data, list):
             return Response(
-                {
-                    "success": True,
-                    "rows_updated": rows_updated,
-                    "message": f"Successfully updated {rows_updated} images",
-                },
-                status=status.HTTP_201_CREATED,
-            )
-        except Exception as e:
-            return Response(
-                {"success": False, "rows_updated": 0, "message": str(e)},
+                {"detail": "Expected a list of items."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        rows_updated = self.bulk_update(data)
+
+        return Response(
+            {"detail": f"Successfully updated {rows_updated} rows."},
+            status=status.HTTP_200_OK,
+        )
 
     def bulk_update(self, data):
         update_fields = set()
@@ -245,41 +264,6 @@ class MotionFrameUpdate(APIView):
             cursor.execute(sql, update_values)
             return cursor.rowcount
 
-
-class MotionFrameViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.MotionFrameSerializer
-    queryset = MotionFrame.objects.all()
-    pagination_class = LargeResultsSetPagination
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = MotionFrameFilter
-
-    def get_queryset(self):
-        queryset = MotionFrame.objects.all()
-
-        return queryset
-
-    def create(self, request, *args, **kwargs):
-        # Check if the data is a list (bulk create) or dict (single create)
-        is_many = isinstance(request.data, list)
-        if not is_many:
-            print("error: input not a list")
-            return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
-
-        rows_tuples = [
-            (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
-        ]
-
-        with connection.cursor() as cursor:
-            query = """
-            INSERT INTO motion_motionframe (log_id, frame_number, frame_time)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (log_id, frame_number) DO NOTHING;
-            """
-            # rows is a list of tuples containing the data
-            cursor.executemany(query, rows_tuples)
-
-        return Response({}, status=status.HTTP_200_OK)
-
     def destroy(self, request, *args, **kwargs):
         # Override destroy method to handle both single and bulk delete
         if kwargs.get("pk") == "all":
@@ -289,3 +273,11 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_204_NO_CONTENT,
             )
         return super().destroy(request, *args, **kwargs)
+
+    @action(detail=False, methods=["get"], url_path="count")
+    def count(self, request):
+        queryset = self.filter_queryset(self.queryset)
+
+        count = queryset.count()
+
+        return Response({"count": count}, status=status.HTTP_200_OK)
