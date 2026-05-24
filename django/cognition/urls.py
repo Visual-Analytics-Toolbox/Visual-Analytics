@@ -6,11 +6,6 @@ app_name = "cognition"
 
 urlpatterns = [
     path(
-        "cognitionframe/count/",
-        views.CognitionFrameCount.as_view(),
-        name="cognitionframe-count",
-    ),
-    path(
         "cognitionframe/update/",
         views.CognitionFrameUpdate.as_view(),
         name="cognitionframe-update",

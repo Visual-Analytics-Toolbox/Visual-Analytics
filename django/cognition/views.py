@@ -101,21 +101,6 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         return Response({"count": count})
 
 
-class CognitionFrameCount(APIView):
-    queryset = CognitionFrame.objects.all()
-
-    def get(self, request):
-        # Get filter parameters from query string
-        log_id = request.query_params.get("log")
-
-        # query the data
-        queryset = CognitionFrame.objects.filter(log=log_id)
-
-        # get the count
-        count = queryset.count()
-        return Response({"count": count}, status=status.HTTP_200_OK)
-
-
 class CognitionFrameUpdate(APIView):
     queryset = CognitionFrame.objects.all()
 
@@ -199,6 +184,7 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = CognitionFrameFilter
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         queryset = CognitionFrame.objects.all()
@@ -226,6 +212,15 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
             cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], url_path="count")
+    def count(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # get the count
+        count = queryset.count()
+
+        return Response({"count": count}, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         # Override destroy method to handle both single and bulk delete
