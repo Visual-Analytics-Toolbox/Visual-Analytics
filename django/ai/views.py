@@ -4,9 +4,6 @@ from rest_framework.views import APIView
 from rest_framework import status
 from . import schema
 import requests
-import hashlib
-import hmac
-import time
 import os
 
 

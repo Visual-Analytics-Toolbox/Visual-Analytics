@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from core.pagination import LargeResultsSetPagination, CursorPagination
+from core.pagination import CursorPagination
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action

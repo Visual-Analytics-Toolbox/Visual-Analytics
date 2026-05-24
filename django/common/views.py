@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
-from django.db import transaction, connection
 from django.db.models import Q, F
 from django.template import loader
 from django.http import (
