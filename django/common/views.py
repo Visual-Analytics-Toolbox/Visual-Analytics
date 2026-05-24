@@ -137,11 +137,15 @@ class GameViewSet(viewsets.ModelViewSet):
     # Exclude 'put' by explicitly defining allowed methods
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
-    @method_decorator(cache_page(60 * 60 * 2))
     def get_queryset(self):
         queryset = models.Game.objects.prefetch_related("recordings").all()
 
         return queryset
+
+    # Cache the actual HTTP response of the list action
+    @method_decorator(cache_page(60 * 60 * 2))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         # Check if the data is a list (bulk create) or dict (single create)
