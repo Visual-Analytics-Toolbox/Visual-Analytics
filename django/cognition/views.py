@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from core.pagination import LargeResultsSetPagination
+from core.pagination import LargeResultsSetPagination, CursorPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
@@ -42,7 +42,7 @@ class DynamicModelMixin:
 
 
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
-    pagination_class = LargeResultsSetPagination
+    pagination_class = CursorPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = CognitionRepresentationFilter
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]

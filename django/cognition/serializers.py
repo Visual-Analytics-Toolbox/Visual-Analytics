@@ -33,7 +33,7 @@ class CognitionFrameSerializer(serializers.ModelSerializer):
 
 
 class AudioDataSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = AudioData
@@ -41,7 +41,7 @@ class AudioDataSerializer(serializers.ModelSerializer):
 
 
 class BallModelSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = BallModel
@@ -49,7 +49,7 @@ class BallModelSerializer(serializers.ModelSerializer):
 
 
 class BallCandidatesSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = BallCandidates
@@ -57,7 +57,7 @@ class BallCandidatesSerializer(serializers.ModelSerializer):
 
 
 class BallCandidatesTopSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = BallCandidatesTop
@@ -65,7 +65,7 @@ class BallCandidatesTopSerializer(serializers.ModelSerializer):
 
 
 class CameraMatrixSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = CameraMatrix
@@ -73,7 +73,7 @@ class CameraMatrixSerializer(serializers.ModelSerializer):
 
 
 class CameraMatrixTopSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = CameraMatrixTop
@@ -81,7 +81,7 @@ class CameraMatrixTopSerializer(serializers.ModelSerializer):
 
 
 class OdometryDataSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = OdometryData
@@ -89,7 +89,7 @@ class OdometryDataSerializer(serializers.ModelSerializer):
 
 
 class FieldPerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = FieldPercept
@@ -97,7 +97,7 @@ class FieldPerceptSerializer(serializers.ModelSerializer):
 
 
 class FieldPerceptTopSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = FieldPerceptTop
@@ -105,7 +105,7 @@ class FieldPerceptTopSerializer(serializers.ModelSerializer):
 
 
 class GoalPerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = GoalPercept
@@ -113,7 +113,7 @@ class GoalPerceptSerializer(serializers.ModelSerializer):
 
 
 class GoalPerceptTopSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = GoalPerceptTop
@@ -121,7 +121,7 @@ class GoalPerceptTopSerializer(serializers.ModelSerializer):
 
 
 class MultiBallPerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = MultiBallPercept
@@ -129,7 +129,7 @@ class MultiBallPerceptSerializer(serializers.ModelSerializer):
 
 
 class RansacCirclePercept2018Serializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = RansacCirclePercept2018
@@ -137,7 +137,7 @@ class RansacCirclePercept2018Serializer(serializers.ModelSerializer):
 
 
 class RansacLinePerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = RansacLinePercept
@@ -145,7 +145,7 @@ class RansacLinePerceptSerializer(serializers.ModelSerializer):
 
 
 class RobotInfoSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = RobotInfo
@@ -153,7 +153,7 @@ class RobotInfoSerializer(serializers.ModelSerializer):
 
 
 class ShortLinePerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = ShortLinePercept
@@ -161,7 +161,7 @@ class ShortLinePerceptSerializer(serializers.ModelSerializer):
 
 
 class ScanLineEdgelPerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = ScanLineEdgelPercept
@@ -169,7 +169,7 @@ class ScanLineEdgelPerceptSerializer(serializers.ModelSerializer):
 
 
 class ScanLineEdgelPerceptTopSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = ScanLineEdgelPerceptTop
@@ -177,7 +177,7 @@ class ScanLineEdgelPerceptTopSerializer(serializers.ModelSerializer):
 
 
 class TeamMessageDecisionSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = TeamMessageDecision
@@ -185,7 +185,7 @@ class TeamMessageDecisionSerializer(serializers.ModelSerializer):
 
 
 class TeamstateSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = Teamstate
@@ -193,7 +193,7 @@ class TeamstateSerializer(serializers.ModelSerializer):
 
 
 class WhistlePerceptSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = WhistlePercept
@@ -201,7 +201,7 @@ class WhistlePerceptSerializer(serializers.ModelSerializer):
 
 
 class RobotPoseSerializer(serializers.ModelSerializer):
-    frame_number = serializers.ReadOnlyField()
+    frame = CognitionFrameSerializer(read_only=True)
 
     class Meta:
         model = RobotPose

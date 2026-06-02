@@ -32,10 +32,6 @@ class AudioData(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -54,10 +50,6 @@ class BallModel(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -75,10 +67,6 @@ class BallCandidates(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -100,10 +88,6 @@ class BallCandidatesTop(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -123,10 +107,6 @@ class CameraMatrix(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -148,10 +128,6 @@ class CameraMatrixTop(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -171,10 +147,6 @@ class OdometryData(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -196,10 +168,6 @@ class FieldPercept(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -219,10 +187,6 @@ class FieldPerceptTop(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -244,10 +208,6 @@ class GoalPercept(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -267,10 +227,6 @@ class GoalPerceptTop(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -292,10 +248,6 @@ class MultiBallPercept(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -315,10 +267,6 @@ class RansacCirclePercept2018(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -340,10 +288,6 @@ class RansacLinePercept(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -364,10 +308,6 @@ class RobotInfo(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -385,10 +325,6 @@ class ShortLinePercept(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -410,10 +346,6 @@ class ScanLineEdgelPercept(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -433,10 +365,6 @@ class ScanLineEdgelPerceptTop(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -458,10 +386,6 @@ class TeamMessageDecision(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -482,10 +406,6 @@ class Teamstate(models.Model):
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
-
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
 
@@ -503,10 +423,6 @@ class WhistlePercept(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
@@ -527,10 +443,6 @@ class RobotPose(models.Model):
     start_pos = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
-
-    @property
-    def frame_number(self):
-        return self.frame.frame_number
 
     def __str__(self):
         return f"{self.frame}--{self.__class__.__name__}"
