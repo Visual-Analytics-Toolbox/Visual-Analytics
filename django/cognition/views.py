@@ -25,20 +25,7 @@ class DynamicModelMixin:
     def get_queryset(self):
         # Override get_queryset to use the dynamic model
         model = self.get_model()
-        query_params = self.request.query_params.copy()
-
-        qs = model.objects.all()
-        # if log_id was set filter for it
-        if "log" in query_params.keys():
-            log_id = int(query_params.pop("log")[0])
-            qs = qs.filter(frame__log=log_id)
-
-        filters = Q()
-        for field in model._meta.fields:
-            param_value = query_params.get(field.name)
-            if param_value:
-                filters &= Q(**{field.name: param_value})
-        return qs.filter(filters)
+        return model.objects.select_related("frame")
 
 
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
@@ -159,10 +146,15 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
                 if field == "id":
                     continue
                 
+                # Check if the field is a foreign key by looking for its concrete DB column name
+                target_field = field
+                if hasattr(instance, f"{field}_id"):
+                    target_field = f"{field}_id"
+
                 # Check if the field actually exists on the model
-                if hasattr(instance, field):
-                    setattr(instance, field, value)
-                    fields_to_update.add(field)
+                if hasattr(instance, target_field):
+                    setattr(instance, target_field, value)
+                    fields_to_update.add(target_field)
             
             updated_instances.append(instance)
 
