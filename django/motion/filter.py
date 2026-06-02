@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 from .models import MotionFrame
-
+from django.db.models import Q
 
 class MotionFrameFilter(filters.FilterSet):
     # Define the filter explicitly to control its behavior
@@ -23,6 +23,7 @@ class MotionRepresentationFilter(filters.FilterSet):
     start_pos = filters.CharFilter(method="filter_non_values")
     size = filters.CharFilter(method="filter_non_values")
     log = filters.NumberFilter(field_name="frame__log")
+    representation_data_is_empty = filters.BooleanFilter(method="filter_empty_json")
 
     class Meta:
         fields = ["start_pos", "frame", "size", "frame__log"]
@@ -34,3 +35,19 @@ class MotionRepresentationFilter(filters.FilterSet):
 
         # Otherwise, perform a standard exact match
         return queryset.filter(**{name: value})
+
+    def filter_empty_json(self, queryset, name, value):
+        if value: 
+            # TRUE: This part was already working for you, keep it as is
+            return queryset.filter(
+                Q(representation_data__isnull=True) | 
+                Q(representation_data__len=0)
+            )
+        
+        # FALSE: Native Postgres query to get rows that have actual data
+        return queryset.filter(representation_data__isnull=False).extra(
+            where=[
+                "representation_data != '{}'::jsonb",
+                "representation_data != '[]'::jsonb"
+            ]
+        )

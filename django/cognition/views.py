@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from .filter import CognitionFrameFilter
+from .filter import CognitionRepresentationFilter
 from .models import CognitionFrame
 from django.db import connection
 from django.db.models import Q
@@ -41,6 +42,9 @@ class DynamicModelMixin:
 
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CognitionRepresentationFilter
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     # No need to define queryset or serializer_class here; they will be set dynamically
     def get_serializer_class(self):
@@ -89,11 +93,9 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         Custom action to count records in the dynamic model.
         Accessible at /api/cognition/<modelname>/count/
         """
-        # Get filter parameters from query string
-        log_id = request.query_params.get("log")
-
         model = self.get_model()
-        queryset = model.objects.filter(frame__log=log_id)
+        base_queryset = model.objects.all()
+        queryset = self.filter_queryset(base_queryset)
 
         # You can add any additional filtering here if needed
         count = queryset.count()

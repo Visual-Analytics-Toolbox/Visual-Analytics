@@ -110,6 +110,8 @@ class DynamicModelMixin:
 @schema.motion_repr_viewset_schema
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
     pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MotionRepresentationFilter
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def create(self, request, *args, **kwargs):
@@ -144,11 +146,9 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         Custom action to count records in the dynamic model.
         Accessible at /api/motion/<modelname>/count/
         """
-        # Get filter parameters from query string
-        log_id = request.query_params.get("log")
-
         model = self.get_model()
-        queryset = model.objects.filter(frame__log=log_id)
+        base_queryset = model.objects.all()
+        queryset = self.filter_queryset(base_queryset)
 
         # You can add any additional filtering here if needed
         count = queryset.count()
