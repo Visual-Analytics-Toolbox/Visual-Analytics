@@ -41,6 +41,14 @@ class AudioData(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_audiodata")
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="audiodata_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='audiodata_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class BallModel(models.Model):
@@ -64,7 +72,7 @@ class BallModel(models.Model):
             models.Index(fields=["log", "id"], name="ballmodel_log_id_idx"),
             models.Index(
                 fields=['frame'], 
-                name='idx_repr_has_data',
+                name='idx_data',
                 condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
@@ -89,6 +97,14 @@ class BallCandidates(models.Model):
                 fields=["frame"], name="unique_frame_id_ballcandidates"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="ballcandidates_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='ballcandidates_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class BallCandidatesTop(models.Model):
@@ -108,6 +124,14 @@ class BallCandidatesTop(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_ballcandidatestop"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="ballcandidatestop_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='ballcandidatestop_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -131,6 +155,14 @@ class CameraMatrix(models.Model):
                 fields=["frame"], name="unique_frame_id_cameramatrix"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="cameramatrix_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='cameramatrix_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class CameraMatrixTop(models.Model):
@@ -150,6 +182,14 @@ class CameraMatrixTop(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_cameramatrixtop"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="cameramatrixtop_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='cameramatrixtop_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -173,6 +213,14 @@ class OdometryData(models.Model):
                 fields=["frame"], name="unique_frame_id_odometrydata"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="odometrydata_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='odometrydata_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class FieldPercept(models.Model):
@@ -192,6 +240,14 @@ class FieldPercept(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_fieldpercept"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="fieldpercept_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='fieldpercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -215,6 +271,14 @@ class FieldPerceptTop(models.Model):
                 fields=["frame"], name="unique_frame_id_fieldpercepttop"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="fieldpercepttop_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='fieldpercepttop_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class GoalPercept(models.Model):
@@ -234,6 +298,14 @@ class GoalPercept(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_goalpercept"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="goalpercept_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='goalpercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -257,6 +329,14 @@ class GoalPerceptTop(models.Model):
                 fields=["frame"], name="unique_frame_id_goalpercepttop"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="goalpercepttop_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='goalpercepttop_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class MultiBallPercept(models.Model):
@@ -276,6 +356,14 @@ class MultiBallPercept(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_multiballpercept"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="multiballpercept_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='multiballpercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -299,6 +387,14 @@ class RansacCirclePercept2018(models.Model):
                 fields=["frame"], name="unique_frame_id_ransaccirclepercept2018"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="ransaccirclepercept2018_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='ransaccirclepercept2018_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class RansacLinePercept(models.Model):
@@ -320,6 +416,14 @@ class RansacLinePercept(models.Model):
                 fields=["frame"], name="unique_frame_id_ransaclinepercept"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="ransaclinepercept_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='ransaclinepercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class RobotInfo(models.Model):
@@ -338,6 +442,14 @@ class RobotInfo(models.Model):
         verbose_name_plural = "Robot Info"
         constraints = [
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_robotinfo")
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="robotinfo_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='robotinfo_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
         ]
 
 
@@ -358,6 +470,14 @@ class ShortLinePercept(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_shortlinepercept"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="shortlinepercept_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='shortlinepercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -381,6 +501,14 @@ class ScanLineEdgelPercept(models.Model):
                 fields=["frame"], name="unique_frame_id_scanlineedgelpercept"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="scanlineedgelpercept_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='scanlineedgelpercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class ScanLineEdgelPerceptTop(models.Model):
@@ -400,6 +528,14 @@ class ScanLineEdgelPerceptTop(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_scanlineedgelpercepttop"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="scanlineedgelpercepttop_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='scanlineedgelpercepttop_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
             )
         ]
 
@@ -423,6 +559,14 @@ class TeamMessageDecision(models.Model):
                 fields=["frame"], name="unique_frame_id_teammessagedecision"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="teammessagedecision_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='teammessagedecision_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class Teamstate(models.Model):
@@ -441,6 +585,14 @@ class Teamstate(models.Model):
         verbose_name_plural = "Team State"
         constraints = [
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_teamstate")
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="teamstate_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='teamstate_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
         ]
 
 
@@ -463,6 +615,14 @@ class WhistlePercept(models.Model):
                 fields=["frame"], name="unique_frame_id_whistlepercept"
             )
         ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="whistlepercept_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='whistlepercept_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
+        ]
 
 
 class RobotPose(models.Model):
@@ -481,4 +641,12 @@ class RobotPose(models.Model):
         verbose_name_plural = "Robot Pose"
         constraints = [
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_robotpose")
+        ]
+        indexes = [
+            models.Index(fields=["log", "id"], name="robotpose_log_id_idx"),
+            models.Index(
+                fields=['frame'], 
+                name='robotpose_data',
+                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
+            )
         ]
