@@ -140,6 +140,98 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
         return Response({}, status=status.HTTP_200_OK)
 
+    def update(self, request, *args, **kwargs):
+        is_many = isinstance(request.data, list)
+
+        if is_many:
+            data = self.request.data
+            try:
+                rows_updated = self.bulk_update(data)
+
+                return Response(
+                    {
+                        "success": True,
+                        "rows_updated": rows_updated,
+                        "message": f"Successfully updated {rows_updated} images",
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+            except Exception as e:
+                return Response(
+                    {"success": False, "rows_updated": 0, "message": str(e)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            return super().update(request, *args, **kwargs)
+    
+    @action(detail=False, methods=["patch"], url_path="bulk-update")
+    def bulk_update_endpoint(self, request):
+        # DRF expects the data to come from request.data
+        data = request.data
+
+        if not isinstance(data, list):
+            return Response(
+                {"detail": "Expected a list of items."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Call your custom SQL logic
+        rows_updated = self.bulk_update(data)
+
+        return Response(
+            {"detail": f"Successfully updated {rows_updated} rows."},
+            status=status.HTTP_200_OK,
+        )
+
+    def bulk_update(self, data):
+        model = self.get_queryset().model
+        print(f"#### {model._meta.db_table} ####")
+        update_fields = set()
+
+        for item in data:
+            update_fields.update(key for key in item.keys() if key != "id")
+
+        # Helper function to find the actual database column name
+        def get_db_column(field_name):
+            try:
+                return model._meta.get_field(field_name).column
+            except Exception:
+                return field_name  # Fallback if it's not a real model field
+
+        # Build the case statements for each field
+        case_statements = []
+        for field in update_fields:
+            db_column = get_db_column(field)  # e.g., converts 'log' to 'log_id'
+            case_when_parts = []
+            for item in data:
+                if field in item and item[field] is not None:
+                    case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
+
+            if case_when_parts:
+                case_stmt = f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
+                print(f"\t{case_stmt}")
+                case_statements.append(case_stmt)
+
+        # Collect all values for the parameterized query
+        update_values = []
+        for field in update_fields:
+            for item in data:
+                if field in item and item[field] is not None:
+                    update_values.append(item[field])
+
+        # Build the complete SQL query
+        ids = [str(item["id"]) for item in data]
+        sql = f"""
+            UPDATE {model._meta.db_table}
+            SET {", ".join(case_statements)}
+            WHERE id IN ({",".join(ids)})
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(sql, update_values)
+            return cursor.rowcount
+
+
     @action(detail=False, methods=["get"], url_path="count")
     def count(self, request, *args, **kwargs):
         """
@@ -150,7 +242,6 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         base_queryset = model.objects.all()
         queryset = self.filter_queryset(base_queryset)
 
-        # You can add any additional filtering here if needed
         count = queryset.count()
 
         return Response({"count": count})

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
+from django.db import transaction
 from .filter import CognitionFrameFilter
 from .filter import CognitionRepresentationFilter
 from .models import CognitionFrame
@@ -86,6 +87,94 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
             cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        is_many = isinstance(request.data, list)
+
+        if is_many:
+            data = self.request.data
+            try:
+                rows_updated = self.bulk_update(data)
+
+                return Response(
+                    {
+                        "success": True,
+                        "rows_updated": rows_updated,
+                        "message": f"Successfully updated {rows_updated} images",
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+            except Exception as e:
+                return Response(
+                    {"success": False, "rows_updated": 0, "message": str(e)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            return super().update(request, *args, **kwargs)
+
+    @action(detail=False, methods=["patch"], url_path="bulk-update")
+    def bulk_update_endpoint(self, request,*args, **kwargs):
+        # DRF expects the data to come from request.data
+        data = request.data
+
+        if not isinstance(data, list):
+            return Response(
+                {"detail": "Expected a list of items."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Call your custom SQL logic
+        rows_updated = self.bulk_update(data)
+
+        return Response(
+            {"detail": f"Successfully updated {rows_updated} rows."},
+            status=status.HTTP_200_OK,
+        )
+
+    def bulk_update(self, data):
+        model = self.get_queryset().model
+        
+        # 1. Gather all IDs from the payload
+        ids = [item["id"] for item in data if "id" in item]
+        if not ids:
+            return 0
+
+        # 2. Fetch existing instances to avoid overwriting omitted fields
+        # and to ensure we are only updating records that actually exist.
+        queryset = model.objects.filter(id__in=ids)
+        instance_map = {instance.id: instance for instance in queryset}
+
+        updated_instances = []
+        fields_to_update = set()
+
+        # 3. Populate instances with the incoming data safely
+        for item in data:
+            obj_id = item.get("id")
+            instance = instance_map.get(obj_id)
+            
+            if not instance:
+                continue  # Skip IDs that don't exist in the DB
+
+            for field, value in item.items():
+                if field == "id":
+                    continue
+                
+                # Check if the field actually exists on the model
+                if hasattr(instance, field):
+                    setattr(instance, field, value)
+                    fields_to_update.add(field)
+            
+            updated_instances.append(instance)
+
+        if not updated_instances or not fields_to_update:
+            return 0
+
+        # 4. Perform the bulk update inside a transaction safely
+        with transaction.atomic():
+            # Django automatically converts Python dicts to JSON strings here
+            model.objects.bulk_update(updated_instances, fields_to_update)
+            
+        return len(updated_instances)
 
     @action(detail=False, methods=["get"], url_path="count")
     def count_records(self, request, *args, **kwargs):
