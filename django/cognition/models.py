@@ -29,7 +29,7 @@ class AudioData(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="audiodata"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="audiodata2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -56,7 +56,7 @@ class BallModel(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="ballmodel"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ballmodel2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -83,7 +83,7 @@ class BallCandidates(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="ballcandidates"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ballcandidates2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -112,7 +112,7 @@ class BallCandidatesTop(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="ballcandidatestop"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ballcandidatestop2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -141,7 +141,7 @@ class CameraMatrix(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="cameramatrix"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="cameramatrix2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -170,7 +170,7 @@ class CameraMatrixTop(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="cameramatrixtop"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="cameramatrixtop2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -199,7 +199,7 @@ class OdometryData(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="odometrydata"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="odometrydata2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -228,7 +228,7 @@ class FieldPercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="fieldpercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="fieldpercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -257,7 +257,7 @@ class FieldPerceptTop(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="fieldpercepttop"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="fieldpercepttop2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -286,7 +286,7 @@ class GoalPercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="goalpercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="goalpercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -315,7 +315,7 @@ class GoalPerceptTop(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="goalpercepttop"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="goalpercepttop2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -344,7 +344,7 @@ class MultiBallPercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="multiballpercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="multiballpercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -373,7 +373,7 @@ class RansacCirclePercept2018(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="ransaccirclepercept2018"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ransaccirclepercept20182")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -402,7 +402,7 @@ class RansacLinePercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="ransaclinepercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ransaclinepercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -431,7 +431,7 @@ class RobotInfo(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="robotinfo"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="robotinfo2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -458,7 +458,7 @@ class ShortLinePercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="shortlinepercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="shortlinepercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -487,7 +487,7 @@ class ScanLineEdgelPercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="scanlineedgelpercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="scanlineedgelpercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -516,7 +516,7 @@ class ScanLineEdgelPerceptTop(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="scanlineedgelpercepttop"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="scanlineedgelpercepttop2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -545,7 +545,7 @@ class TeamMessageDecision(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="teammessagedecision"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="teammessagedecision2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -574,7 +574,7 @@ class Teamstate(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="teamstate"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="teamstate2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -601,7 +601,7 @@ class WhistlePercept(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="whistlepercept"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="whistlepercept2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
@@ -630,7 +630,7 @@ class RobotPose(models.Model):
         CognitionFrame, on_delete=models.CASCADE, related_name="robotpose"
     )
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="robotpose2")
-    start_pos = models.IntegerField(blank=True, null=True)
+    start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
 
