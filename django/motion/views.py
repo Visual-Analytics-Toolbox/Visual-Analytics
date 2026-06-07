@@ -163,7 +163,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
                 )
         else:
             return super().update(request, *args, **kwargs)
-    
+
     @action(detail=False, methods=["patch"], url_path="bulk-update")
     def bulk_update_endpoint(self, request):
         # DRF expects the data to come from request.data
@@ -230,7 +230,6 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         with connection.cursor() as cursor:
             cursor.execute(sql, update_values)
             return cursor.rowcount
-
 
     @action(detail=False, methods=["get"], url_path="count")
     def count(self, request, *args, **kwargs):

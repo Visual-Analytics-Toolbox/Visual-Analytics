@@ -9,7 +9,6 @@ from .filter import CognitionFrameFilter
 from .filter import CognitionRepresentationFilter
 from .models import CognitionFrame
 from django.db import connection
-from django.db.models import Q
 from django.apps import apps
 from . import serializers
 import json
@@ -101,7 +100,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
             return super().update(request, *args, **kwargs)
 
     @action(detail=False, methods=["patch"], url_path="bulk-update")
-    def bulk_update_endpoint(self, request,*args, **kwargs):
+    def bulk_update_endpoint(self, request, *args, **kwargs):
         # DRF expects the data to come from request.data
         data = request.data
 
@@ -121,7 +120,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
     def bulk_update(self, data):
         model = self.get_queryset().model
-        
+
         # 1. Gather all IDs from the payload
         ids = [item["id"] for item in data if "id" in item]
         if not ids:
@@ -139,14 +138,14 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         for item in data:
             obj_id = item.get("id")
             instance = instance_map.get(obj_id)
-            
+
             if not instance:
                 continue  # Skip IDs that don't exist in the DB
 
             for field, value in item.items():
                 if field == "id":
                     continue
-                
+
                 # Check if the field is a foreign key by looking for its concrete DB column name
                 target_field = field
                 if hasattr(instance, f"{field}_id"):
@@ -156,7 +155,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
                 if hasattr(instance, target_field):
                     setattr(instance, target_field, value)
                     fields_to_update.add(target_field)
-            
+
             updated_instances.append(instance)
 
         if not updated_instances or not fields_to_update:
@@ -166,7 +165,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         with transaction.atomic():
             # Django automatically converts Python dicts to JSON strings here
             model.objects.bulk_update(updated_instances, fields_to_update)
-            
+
         return len(updated_instances)
 
     @action(detail=False, methods=["get"], url_path="count")

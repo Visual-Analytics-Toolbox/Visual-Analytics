@@ -2,6 +2,7 @@ from django.db import models
 from common.models import Log
 from django.db.models import Q
 
+
 class CognitionFrame(models.Model):
     log = models.ForeignKey(
         Log, on_delete=models.CASCADE, related_name="cognitionframe"
@@ -44,10 +45,12 @@ class AudioData(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="audiodata_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='audiodata_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="audiodata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -71,10 +74,12 @@ class BallModel(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="ballmodel_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='idx_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="idx_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -82,7 +87,9 @@ class BallCandidates(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="ballcandidates"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ballcandidates2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="ballcandidates2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -100,10 +107,12 @@ class BallCandidates(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="ballcandidates_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='ballcandidates_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="ballcandidates_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -111,7 +120,9 @@ class BallCandidatesTop(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="ballcandidatestop"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ballcandidatestop2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="ballcandidatestop2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -129,10 +140,12 @@ class BallCandidatesTop(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="ballcandidatestop_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='ballcandidatestop_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="ballcandidatestop_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -158,10 +171,12 @@ class CameraMatrix(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="cameramatrix_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='cameramatrix_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="cameramatrix_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -169,7 +184,9 @@ class CameraMatrixTop(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="cameramatrixtop"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="cameramatrixtop2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="cameramatrixtop2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -187,10 +204,12 @@ class CameraMatrixTop(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="cameramatrixtop_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='cameramatrixtop_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="cameramatrixtop_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -216,10 +235,12 @@ class OdometryData(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="odometrydata_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='odometrydata_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="odometrydata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -245,10 +266,12 @@ class FieldPercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="fieldpercept_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='fieldpercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="fieldpercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -256,7 +279,9 @@ class FieldPerceptTop(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="fieldpercepttop"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="fieldpercepttop2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="fieldpercepttop2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -274,10 +299,12 @@ class FieldPerceptTop(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="fieldpercepttop_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='fieldpercepttop_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="fieldpercepttop_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -303,10 +330,12 @@ class GoalPercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="goalpercept_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='goalpercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="goalpercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -314,7 +343,9 @@ class GoalPerceptTop(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="goalpercepttop"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="goalpercepttop2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="goalpercepttop2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -332,10 +363,12 @@ class GoalPerceptTop(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="goalpercepttop_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='goalpercepttop_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="goalpercepttop_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -343,7 +376,9 @@ class MultiBallPercept(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="multiballpercept"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="multiballpercept2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="multiballpercept2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -361,10 +396,12 @@ class MultiBallPercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="multiballpercept_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='multiballpercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="multiballpercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -372,7 +409,9 @@ class RansacCirclePercept2018(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="ransaccirclepercept2018"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ransaccirclepercept20182")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="ransaccirclepercept20182"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -390,10 +429,12 @@ class RansacCirclePercept2018(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="ransaccirclepercept2018_idx"),
             models.Index(
-                fields=['frame'], 
-                name='ransaccirclepercept2018_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="ransaccirclepercept2018_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -401,7 +442,9 @@ class RansacLinePercept(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="ransaclinepercept"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="ransaclinepercept2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="ransaclinepercept2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -419,10 +462,12 @@ class RansacLinePercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="ransaclinepercept_idx"),
             models.Index(
-                fields=['frame'], 
-                name='ransaclinepercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="ransaclinepercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -446,10 +491,12 @@ class RobotInfo(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="robotinfo_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='robotinfo_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="robotinfo_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -457,7 +504,9 @@ class ShortLinePercept(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="shortlinepercept"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="shortlinepercept2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="shortlinepercept2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -475,10 +524,12 @@ class ShortLinePercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="shortlinepercept_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='shortlinepercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="shortlinepercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -486,7 +537,9 @@ class ScanLineEdgelPercept(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="scanlineedgelpercept"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="scanlineedgelpercept2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="scanlineedgelpercept2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -504,10 +557,12 @@ class ScanLineEdgelPercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="scanlineedgelpercept_idx"),
             models.Index(
-                fields=['frame'], 
-                name='scanlineedgelpercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="scanlineedgelpercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -515,7 +570,9 @@ class ScanLineEdgelPerceptTop(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="scanlineedgelpercepttop"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="scanlineedgelpercepttop2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="scanlineedgelpercepttop2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -533,10 +590,12 @@ class ScanLineEdgelPerceptTop(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="scanlineedgelpercepttop_idx"),
             models.Index(
-                fields=['frame'], 
-                name='scanlineedgelpercepttop_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="scanlineedgelpercepttop_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -544,7 +603,9 @@ class TeamMessageDecision(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="teammessagedecision"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="teammessagedecision2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="teammessagedecision2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -562,10 +623,12 @@ class TeamMessageDecision(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="teammessagedecision_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='teammessagedecision_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="teammessagedecision_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -589,10 +652,12 @@ class Teamstate(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="teamstate_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='teamstate_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="teamstate_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -600,7 +665,9 @@ class WhistlePercept(models.Model):
     frame = models.ForeignKey(
         CognitionFrame, on_delete=models.CASCADE, related_name="whistlepercept"
     )
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="whistlepercept2")
+    log = models.ForeignKey(
+        Log, on_delete=models.CASCADE, related_name="whistlepercept2"
+    )
     start_pos = models.BigIntegerField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True)
     representation_data = models.JSONField(blank=True, null=True)
@@ -618,10 +685,12 @@ class WhistlePercept(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="whistlepercept_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='whistlepercept_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="whistlepercept_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -645,8 +714,10 @@ class RobotPose(models.Model):
         indexes = [
             models.Index(fields=["log", "id"], name="robotpose_log_id_idx"),
             models.Index(
-                fields=['frame'], 
-                name='robotpose_data',
-                condition=~Q(representation_data__isnull=True) & ~Q(representation_data=[]) & ~Q(representation_data={})
-            )
+                fields=["frame"],
+                name="robotpose_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]

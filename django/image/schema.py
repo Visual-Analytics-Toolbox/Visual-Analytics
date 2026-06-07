@@ -13,18 +13,20 @@ image_viewset_schema = extend_schema_view(
     validate=extend_schema(summary="Validate Images", description="", tags=["Images"]),
 )
 
+
 class ImageSerializerExtension(OpenApiSerializerExtension):
-   
-    target_class = 'image.serializers.ImageReadSerializer'
+    target_class = "image.serializers.ImageReadSerializer"
 
     def map_serializer(self, auto_schema, direction):
-        schema = auto_schema._map_serializer(self.target, direction, bypass_extensions=True)
-        
-        if 'properties' in schema and 'image_url' in schema['properties']:
-            schema['properties']['image_url']['description'] = (
+        schema = auto_schema._map_serializer(
+            self.target, direction, bypass_extensions=True
+        )
+
+        if "properties" in schema and "image_url" in schema["properties"]:
+            schema["properties"]["image_url"]["description"] = (
                 "Relative path. \n\n"
                 "**PREFIX REQUIRED:** Prepend `https://logs.berlin-united.com/` "
                 "to this value to get the full image URL."
             )
-            
+
         return schema
