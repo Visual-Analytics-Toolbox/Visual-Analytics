@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cognition", "0015_rename_idx_repr_has_data_idx_data_and_more"),
     ]

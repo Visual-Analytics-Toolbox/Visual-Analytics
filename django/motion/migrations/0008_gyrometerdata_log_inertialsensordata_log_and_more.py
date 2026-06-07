@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("common", "0041_log_bottom_video_path_labelstudio_and_more"),
         ("motion", "0007_accelerometerdata_log_buttondata_log_fsrdata_log_and_more"),

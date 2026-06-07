@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cognition", "0013_audiodata_log_ballcandidates_log_and_more"),
         ("common", "0041_log_bottom_video_path_labelstudio_and_more"),

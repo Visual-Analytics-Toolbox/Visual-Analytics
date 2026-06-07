@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cognition", "0014_ballmodel_ballmodel_log_id_idx"),
         ("common", "0041_log_bottom_video_path_labelstudio_and_more"),

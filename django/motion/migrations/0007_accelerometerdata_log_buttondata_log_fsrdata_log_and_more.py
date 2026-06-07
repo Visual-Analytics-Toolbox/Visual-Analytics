@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("common", "0041_log_bottom_video_path_labelstudio_and_more"),
         ("motion", "0006_imudata_motion_imud_frame_i_491be9_idx"),
