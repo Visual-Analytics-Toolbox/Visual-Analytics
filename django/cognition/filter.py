@@ -27,6 +27,14 @@ class CognitionRepresentationFilter(filters.FilterSet):
     class Meta:
         fields = ["start_pos", "frame", "size", "frame__log"]
 
+    def filter_non_values(self, queryset, name, value):
+        # If the incoming string is "None", return records where the field is actually NULL
+        if value == "None":
+            return queryset.filter(**{f"{name}__isnull": True})
+
+        # Otherwise, perform a standard exact match
+        return queryset.filter(**{name: value})
+
     def filter_empty_json(self, queryset, name, value):
         if value: 
             # TRUE: This part was already working for you, keep it as is
