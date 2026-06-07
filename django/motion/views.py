@@ -1,19 +1,20 @@
+from .filter import MotionFrameFilter, MotionRepresentationFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from google.protobuf.json_format import MessageToDict
 from core.pagination import LargeResultsSetPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
-from .models import MotionFrame
-from . import serializers
+from django.db import transaction
 from django.db import connection
-from django.apps import apps
-from pathlib import Path
-from naoth.log import Parser
-import mmap
 from contextlib import ExitStack
-from .filter import MotionFrameFilter, MotionRepresentationFilter
+from .models import MotionFrame
+from naoth.log import Parser
+from django.apps import apps
+from . import serializers
+from pathlib import Path
 from . import schema
+import mmap
 
 
 class DynamicModelMixin:
@@ -165,7 +166,7 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
             return super().update(request, *args, **kwargs)
 
     @action(detail=False, methods=["patch"], url_path="bulk-update")
-    def bulk_update_endpoint(self, request):
+    def bulk_update_endpoint(self, request, *args, **kwargs):
         # DRF expects the data to come from request.data
         data = request.data
 
@@ -185,51 +186,53 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
     def bulk_update(self, data):
         model = self.get_queryset().model
-        print(f"#### {model._meta.db_table} ####")
-        update_fields = set()
 
+        # 1. Gather all IDs from the payload
+        ids = [item["id"] for item in data if "id" in item]
+        if not ids:
+            return 0
+
+        # 2. Fetch existing instances to avoid overwriting omitted fields
+        # and to ensure we are only updating records that actually exist.
+        queryset = model.objects.filter(id__in=ids)
+        instance_map = {instance.id: instance for instance in queryset}
+
+        updated_instances = []
+        fields_to_update = set()
+
+        # 3. Populate instances with the incoming data safely
         for item in data:
-            update_fields.update(key for key in item.keys() if key != "id")
+            obj_id = item.get("id")
+            instance = instance_map.get(obj_id)
 
-        # Helper function to find the actual database column name
-        def get_db_column(field_name):
-            try:
-                return model._meta.get_field(field_name).column
-            except Exception:
-                return field_name  # Fallback if it's not a real model field
+            if not instance:
+                continue  # Skip IDs that don't exist in the DB
 
-        # Build the case statements for each field
-        case_statements = []
-        for field in update_fields:
-            db_column = get_db_column(field)  # e.g., converts 'log' to 'log_id'
-            case_when_parts = []
-            for item in data:
-                if field in item and item[field] is not None:
-                    case_when_parts.append(f"WHEN id = {item['id']} THEN %s")
+            for field, value in item.items():
+                if field == "id":
+                    continue
 
-            if case_when_parts:
-                case_stmt = f"""{db_column} = (CASE {" ".join(case_when_parts)} ELSE {db_column} END)"""
-                print(f"\t{case_stmt}")
-                case_statements.append(case_stmt)
+                # Check if the field is a foreign key by looking for its concrete DB column name
+                target_field = field
+                if hasattr(instance, f"{field}_id"):
+                    target_field = f"{field}_id"
 
-        # Collect all values for the parameterized query
-        update_values = []
-        for field in update_fields:
-            for item in data:
-                if field in item and item[field] is not None:
-                    update_values.append(item[field])
+                # Check if the field actually exists on the model
+                if hasattr(instance, target_field):
+                    setattr(instance, target_field, value)
+                    fields_to_update.add(target_field)
 
-        # Build the complete SQL query
-        ids = [str(item["id"]) for item in data]
-        sql = f"""
-            UPDATE {model._meta.db_table}
-            SET {", ".join(case_statements)}
-            WHERE id IN ({",".join(ids)})
-        """
+            updated_instances.append(instance)
 
-        with connection.cursor() as cursor:
-            cursor.execute(sql, update_values)
-            return cursor.rowcount
+        if not updated_instances or not fields_to_update:
+            return 0
+
+        # 4. Perform the bulk update inside a transaction safely
+        with transaction.atomic():
+            # Django automatically converts Python dicts to JSON strings here
+            model.objects.bulk_update(updated_instances, fields_to_update)
+
+        return len(updated_instances)
 
     @action(detail=False, methods=["get"], url_path="count")
     def count(self, request, *args, **kwargs):
