@@ -135,6 +135,17 @@ class SensorJointData(models.Model):
             )
         ]
 
+        indexes = [
+            models.Index(fields=["log", "id"], name="sensorjointdata_idx"),
+            models.Index(
+                fields=["frame"],
+                name="sensorjointdata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
+        ]
+
 
 class AccelerometerData(models.Model):
     log = models.ForeignKey(
@@ -156,6 +167,17 @@ class AccelerometerData(models.Model):
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_accelerometerdata"
             )
+        ]
+
+        indexes = [
+            models.Index(fields=["log", "id"], name="accelerometerdata_idx"),
+            models.Index(
+                fields=["frame"],
+                name="accelerometerdata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -181,6 +203,17 @@ class InertialSensorData(models.Model):
             )
         ]
 
+        indexes = [
+            models.Index(fields=["log", "id"], name="inertialsensordata_idx"),
+            models.Index(
+                fields=["frame"],
+                name="inertialsensordata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
+        ]
+
 
 class MotionStatus(models.Model):
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="motionstatus2")
@@ -200,6 +233,17 @@ class MotionStatus(models.Model):
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_motionstatus"
             )
+        ]
+
+        indexes = [
+            models.Index(fields=["log", "id"], name="motionstatus_idx"),
+            models.Index(
+                fields=["frame"],
+                name="motionstatus_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -225,6 +269,17 @@ class MotorJointData(models.Model):
             )
         ]
 
+        indexes = [
+            models.Index(fields=["log", "id"], name="motorjointdata_idx"),
+            models.Index(
+                fields=["frame"],
+                name="motorjointdata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
+        ]
+
 
 class GyrometerData(models.Model):
     log = models.ForeignKey(
@@ -246,4 +301,15 @@ class GyrometerData(models.Model):
             models.UniqueConstraint(
                 fields=["frame"], name="unique_frame_id_gyrometerdata"
             )
+        ]
+
+        indexes = [
+            models.Index(fields=["log", "id"], name="gyrometerdata_idx"),
+            models.Index(
+                fields=["frame"],
+                name="gyrometerdata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
