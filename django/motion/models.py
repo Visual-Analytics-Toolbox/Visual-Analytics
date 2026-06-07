@@ -130,6 +130,7 @@ class AccelerometerData(models.Model):
 
 
 class InertialSensorData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="inertialsensordata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="inertialsensordata"
     )
@@ -150,6 +151,7 @@ class InertialSensorData(models.Model):
 
 
 class MotionStatus(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="motionstatus2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="motionstatus"
     )
@@ -170,6 +172,7 @@ class MotionStatus(models.Model):
 
 
 class MotorJointData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="motorjointdata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="motorjointdata"
     )
@@ -190,6 +193,7 @@ class MotorJointData(models.Model):
 
 
 class GyrometerData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="gyrometerdata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="gyrometerdata"
     )
