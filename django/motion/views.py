@@ -1,7 +1,7 @@
 from .filter import MotionFrameFilter, MotionRepresentationFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from google.protobuf.json_format import MessageToDict
-from core.pagination import LargeResultsSetPagination
+from core.pagination import LargeResultsSetPagination, CursorPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
@@ -110,7 +110,7 @@ class DynamicModelMixin:
 
 @schema.motion_repr_viewset_schema
 class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
-    pagination_class = LargeResultsSetPagination
+    pagination_class = CursorPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = MotionRepresentationFilter
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]

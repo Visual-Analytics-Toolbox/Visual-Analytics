@@ -1,9 +1,6 @@
-from django.db import models
+from django.db.models import Q
 from common.models import Log
-
-"""
-    All Models for Motion Representations
-"""
+from django.db import models
 
 
 class MotionFrame(models.Model):
@@ -45,7 +42,14 @@ class IMUData(models.Model):
         ]
 
         indexes = [
-            models.Index(fields=["frame"]),
+            models.Index(fields=["log", "id"], name="imudata_log_id_idx"),
+            models.Index(
+                fields=["frame"],
+                name="imudata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
@@ -67,6 +71,17 @@ class FSRData(models.Model):
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_fsrdata")
         ]
 
+        indexes = [
+            models.Index(fields=["log", "id"], name="fsrdata_log_id_idx"),
+            models.Index(
+                fields=["frame"],
+                name="fsrdata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
+        ]
+
 
 class ButtonData(models.Model):
     log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="buttondata2")
@@ -84,6 +99,17 @@ class ButtonData(models.Model):
         verbose_name_plural = "Button Data"
         constraints = [
             models.UniqueConstraint(fields=["frame"], name="unique_frame_id_buttondata")
+        ]
+
+        indexes = [
+            models.Index(fields=["log", "id"], name="buttondata_log_id_idx"),
+            models.Index(
+                fields=["frame"],
+                name="buttondata_data",
+                condition=~Q(representation_data__isnull=True)
+                & ~Q(representation_data=[])
+                & ~Q(representation_data={}),
+            ),
         ]
 
 
