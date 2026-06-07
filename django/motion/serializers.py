@@ -20,6 +20,7 @@ class MotionFrameSerializer(serializers.ModelSerializer):
 
 
 class IMUDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
     representation_data = serializers.JSONField(read_only=True)
 
     class Meta:
@@ -38,48 +39,64 @@ class IMUDataSerializer(serializers.ModelSerializer):
 
 
 class ButtonDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = ButtonData
         fields = "__all__"
 
 
 class FSRDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = FSRData
         fields = "__all__"
 
 
 class AccelerometerDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = AccelerometerData
         fields = "__all__"
 
 
 class InertialSensorDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = InertialSensorData
         fields = "__all__"
 
 
 class MotionStatusSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = MotionStatus
         fields = "__all__"
 
 
 class MotorJointDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = MotorJointData
         fields = "__all__"
 
 
 class SensorJointDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = SensorJointData
         fields = "__all__"
 
 
 class GyrometerDataSerializer(serializers.ModelSerializer):
+    frame = MotionFrameSerializer(read_only=True)
+
     class Meta:
         model = GyrometerData
         fields = "__all__"
