@@ -27,6 +27,7 @@ class MotionFrame(models.Model):
 
 
 class IMUData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="imudata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="imudata"
     )
@@ -49,6 +50,7 @@ class IMUData(models.Model):
 
 
 class FSRData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="fsrdata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="fsrdata"
     )
@@ -67,6 +69,7 @@ class FSRData(models.Model):
 
 
 class ButtonData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="buttondata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="buttondata"
     )
@@ -85,6 +88,7 @@ class ButtonData(models.Model):
 
 
 class SensorJointData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="sensorjointdata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="sensorjointdata"
     )
@@ -105,6 +109,7 @@ class SensorJointData(models.Model):
 
 
 class AccelerometerData(models.Model):
+    log = models.ForeignKey(Log, on_delete=models.CASCADE, related_name="accelerometerdata2")
     frame = models.ForeignKey(
         MotionFrame, on_delete=models.CASCADE, related_name="accelerometerdata"
     )
