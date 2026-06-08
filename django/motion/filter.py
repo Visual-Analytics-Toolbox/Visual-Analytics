@@ -24,6 +24,7 @@ class MotionRepresentationFilter(filters.FilterSet):
     start_pos = filters.CharFilter(method="filter_non_values")
     size = filters.CharFilter(method="filter_non_values")
     log = filters.NumberFilter(field_name="log")
+    frame = filters.NumberFilter(field_name="frame__id")
     representation_data_is_empty = filters.BooleanFilter(method="filter_empty_json")
 
     class Meta:
