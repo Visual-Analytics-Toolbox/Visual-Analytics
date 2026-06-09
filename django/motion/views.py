@@ -267,8 +267,7 @@ class MotionFrameViewSet(viewsets.ModelViewSet):
         # Check if the data is a list (bulk create) or dict (single create)
         is_many = isinstance(request.data, list)
         if not is_many:
-            print("error: input not a list")
-            return Response({}, status=status.HTTP_411_LENGTH_REQUIRED)
+            return super().create(request)
 
         rows_tuples = [
             (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
