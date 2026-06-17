@@ -26,3 +26,9 @@ class Situation(models.Model):
 
     # gamecontroller frame
     # TODO: not sure what we get from the gamecontroller exactly
+
+class RawGCSituation(models.Model):
+    """
+    Situations recorded with the android app that have not been added to a game
+    """
+    json_data = models.JSONField(blank=True, null=True)

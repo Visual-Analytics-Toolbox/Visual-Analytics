@@ -9,10 +9,10 @@ urlpatterns = [
         "video/annotation/<int:pk>",
         views.VideoAnnotation.as_view(),
         name="video-annotation",
-    )
+    ),
 ]
 
 router = routers.DefaultRouter()
-
+router.register("situations/gc", views.RawGCSituationViewSet)
 
 urlpatterns += router.urls

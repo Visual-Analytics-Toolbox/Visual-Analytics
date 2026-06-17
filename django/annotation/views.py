@@ -6,6 +6,9 @@ from common.models import VideoRecording
 from rest_framework import status
 from . import schema
 import os
+from .models import RawGCSituation
+from .serializers import RawGCSituationSerializer
+from rest_framework import viewsets
 
 
 @schema.video_annotation_view_schema
@@ -41,3 +44,9 @@ class VideoAnnotation(GenericAPIView):
             {"error": "This video has no labelstudio url"},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+class RawGCSituationViewSet(viewsets.ModelViewSet):
+    queryset = RawGCSituation.objects.all()
+    serializer_class = RawGCSituationSerializer
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
