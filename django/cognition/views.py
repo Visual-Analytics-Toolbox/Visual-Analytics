@@ -3,7 +3,6 @@ from core.pagination import LargeResultsSetPagination, CursorPagination
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
-from rest_framework.views import APIView
 from django.db import transaction
 from .filter import CognitionFrameFilter
 from .filter import CognitionRepresentationFilter
@@ -16,8 +15,7 @@ import json
 
 class DynamicModelMixin:
     def get_model(self):
-        # Get the model name from the URL kwargs
-        model_name = self.kwargs.get("model_name")
+        model_name = self.basename
         # Get the model class from the app's models
         return apps.get_model("cognition", model_name)
 
@@ -184,27 +182,57 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
         return Response({"count": count})
 
 
-class CognitionFrameUpdate(APIView):
+class CognitionFrameViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.CognitionFrameSerializer
     queryset = CognitionFrame.objects.all()
+    pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CognitionFrameFilter
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
-    def patch(self, request):
-        data = self.request.data
-        try:
-            rows_updated = self.bulk_update(data)
+    def get_queryset(self):
+        queryset = CognitionFrame.objects.all()
 
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        # Check if the data is a list (bulk create) or dict (single create)
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            return super().create(request)
+
+        rows_tuples = [
+            (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
+        ]
+
+        with connection.cursor() as cursor:
+            query = """
+            INSERT INTO cognition_cognitionframe (log_id, frame_number, frame_time)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (log_id, frame_number) DO NOTHING;
+            """
+            # rows is a list of tuples containing the data
+            cursor.executemany(query, rows_tuples)
+
+        return Response({}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["patch"], url_path="bulk-update")
+    def bulk_update_endpoint(self, request):
+        # DRF expects the data to come from request.data
+        data = request.data
+
+        if not isinstance(data, list):
             return Response(
-                {
-                    "success": True,
-                    "rows_updated": rows_updated,
-                    "message": f"Successfully updated {rows_updated} images",
-                },
-                status=status.HTTP_201_CREATED,
-            )
-        except Exception as e:
-            return Response(
-                {"success": False, "rows_updated": 0, "message": str(e)},
+                {"detail": "Expected a list of items."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        rows_updated = self.bulk_update(data)
+
+        return Response(
+            {"detail": f"Successfully updated {rows_updated} rows."},
+            status=status.HTTP_200_OK,
+        )
 
     def bulk_update(self, data):
         update_fields = set()
@@ -259,41 +287,6 @@ class CognitionFrameUpdate(APIView):
         with connection.cursor() as cursor:
             cursor.execute(sql, update_values)
             return cursor.rowcount
-
-
-class CognitionFrameViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.CognitionFrameSerializer
-    queryset = CognitionFrame.objects.all()
-    pagination_class = LargeResultsSetPagination
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = CognitionFrameFilter
-    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
-
-    def get_queryset(self):
-        queryset = CognitionFrame.objects.all()
-
-        return queryset
-
-    def create(self, request, *args, **kwargs):
-        # Check if the data is a list (bulk create) or dict (single create)
-        is_many = isinstance(request.data, list)
-        if not is_many:
-            return super().create(request)
-
-        rows_tuples = [
-            (row["log"], row["frame_number"], row["frame_time"]) for row in request.data
-        ]
-
-        with connection.cursor() as cursor:
-            query = """
-            INSERT INTO cognition_cognitionframe (log_id, frame_number, frame_time)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (log_id, frame_number) DO NOTHING;
-            """
-            # rows is a list of tuples containing the data
-            cursor.executemany(query, rows_tuples)
-
-        return Response({}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["get"], url_path="count")
     def count(self, request):
