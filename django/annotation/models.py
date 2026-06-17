@@ -1,7 +1,7 @@
 from common.models import VideoRecording, Log
 from cognition.models import CognitionFrame
 from django.db import models
-
+import uuid
 
 class Situation(models.Model):
     # optional content that describes the situation
@@ -31,4 +31,9 @@ class RawGCSituation(models.Model):
     """
     Situations recorded with the android app that have not been added to a game
     """
+    uuid = models.UUIDField(
+        blank=True, null=True,
+        unique=True,
+        editable=True
+    )
     json_data = models.JSONField(blank=True, null=True)
