@@ -10,6 +10,11 @@ urlpatterns = [
         views.VideoAnnotation.as_view(),
         name="video-annotation",
     ),
+    path(
+        "situations/gc/audio/",
+        views.RawGCSituationAudioUpload.as_view(),
+        name="raw-gc-audio",
+    ),
 ]
 
 router = routers.DefaultRouter()
