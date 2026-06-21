@@ -23,6 +23,7 @@ from .models import (
     Teamstate,
     WhistlePercept,
     RobotPose,
+    LogFirstFrame,
 )
 
 
@@ -205,4 +206,10 @@ class RobotPoseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RobotPose
+        fields = "__all__"
+
+
+class LogFirstFrameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LogFirstFrame
         fields = "__all__"

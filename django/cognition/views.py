@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from django.db import transaction
 from .filter import CognitionFrameFilter
 from .filter import CognitionRepresentationFilter
-from .models import CognitionFrame
+from .models import CognitionFrame, LogFirstFrame
 from django.db import connection
 from django.apps import apps
 from . import serializers
@@ -313,3 +313,9 @@ class CognitionFrameViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_204_NO_CONTENT,
             )
         return super().destroy(request, *args, **kwargs)
+
+
+class LogFirstFrame(viewsets.ModelViewSet):
+    serializer_class = serializers.LogFirstFrameSerializer
+    queryset = LogFirstFrame.objects.all()
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]

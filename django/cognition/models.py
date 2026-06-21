@@ -721,3 +721,18 @@ class RobotPose(models.Model):
                 & ~Q(representation_data={}),
             ),
         ]
+
+
+class LogFirstFrame(models.Model):
+    log = models.OneToOneField(
+        Log, on_delete=models.CASCADE, related_name="log_first_frame", primary_key=True
+    )
+    first_standby_frame = models.ForeignKey(
+        CognitionFrame, on_delete=models.CASCADE, related_name="first_standby_frame"
+    )
+    first_set_frame = models.ForeignKey(
+        CognitionFrame, on_delete=models.CASCADE, related_name="first_set_frame"
+    )
+    first_ready_frame = models.ForeignKey(
+        CognitionFrame, on_delete=models.CASCADE, related_name="first_ready_frame"
+    )

@@ -25,6 +25,7 @@ from .models import (
     TeamMessageDecision,
     Teamstate,
     WhistlePercept,
+    LogFirstFrame,
 )
 
 logger = logging.getLogger(__name__)
@@ -83,6 +84,19 @@ class CognitionModelAdmin(ModelAdmin):
     get_frame_number.short_description = "frame number"
 
 
+class LogFirstFrameAdmin(ModelAdmin):
+    list_filter = [
+        ("log__id", SingleNumericFilter),
+    ]
+
+    raw_id_fields = [
+        "log",
+        "first_standby_frame",
+        "first_set_frame",
+        "first_ready_frame",
+    ]
+
+
 admin.site.register(CognitionFrame, CognitionFrameAdmin)
 admin.site.register(AudioData, CognitionModelAdmin)
 admin.site.register(BallModel, CognitionModelAdmin)
@@ -105,3 +119,4 @@ admin.site.register(ScanLineEdgelPerceptTop, CognitionModelAdmin)
 admin.site.register(TeamMessageDecision, CognitionModelAdmin)
 admin.site.register(Teamstate, CognitionModelAdmin)
 admin.site.register(WhistlePercept, CognitionModelAdmin)
+admin.site.register(LogFirstFrame, LogFirstFrameAdmin)

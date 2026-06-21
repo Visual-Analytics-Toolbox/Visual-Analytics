@@ -19,5 +19,6 @@ router.register(
     views.DynamicModelViewSet,
     basename="dynamicmodel",
 )
+router.register("log-first-frame", views.LogFirstFrame)
 
 urlpatterns += router.urls
