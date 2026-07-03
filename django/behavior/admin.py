@@ -11,6 +11,7 @@ from unfold.contrib.filters.admin import SingleNumericFilter
 
 
 class BehaviorOptionAdmin(ModelAdmin):
+    search_fields = ["option_name"]
     list_display = ("get_log_id", "id", "xabsl_internal_option_id", "option_name")
     list_filter_submit = True
     list_filter = [
@@ -34,11 +35,15 @@ class BehaviorOptionStateAdmin(ModelAdmin):
         "xabsl_internal_state_id",
         "get_name",
     )
-    search_fields = ["option_id__option_name"]
+    search_fields = ["option__option_name"]
     list_filter_submit = True
-    list_select_related = ["log", "option_id"]
+    raw_id_fields = ["log"]
+    autocomplete_fields = ["option"]
+
     list_filter = [
         ("log__id", SingleNumericFilter),
+        ("xabsl_internal_state_id",SingleNumericFilter),
+        ("option__xabsl_internal_option_id",SingleNumericFilter)
     ]
     show_full_result_count = False
 
@@ -46,10 +51,10 @@ class BehaviorOptionStateAdmin(ModelAdmin):
         return obj.log.id
 
     def get_option_id(self, obj):
-        return obj.option_id.id
+        return obj.option.id
 
     def get_option_name(self, obj):
-        return obj.option_id.option_name
+        return obj.option.option_name
 
     def get_name(self, obj):
         return obj.name
@@ -67,18 +72,18 @@ class BehaviorFrameOptionAdmin(ModelAdmin):
         "get_active_state",
         "frame",
     )
-    search_fields = ["options_id__option_name"]
+    search_fields = ["option__option_name"]
     list_filter_submit = True
     list_filter = [("frame__frame_number", SingleNumericFilter)]
-    list_select_related = ["frame", "options_id", "active_state"]
-    autocomplete_fields = ["frame"]
+    list_select_related = ["frame", "option", "active_state"]
+    autocomplete_fields = ["frame","option","active_state"]
     show_full_result_count = False
 
     def get_option_id(self, obj):
-        return obj.options_id.id
+        return obj.option.id
 
     def get_option_name(self, obj):
-        return obj.options_id.option_name
+        return obj.option.option_name
 
     def get_active_state(self, obj):
         return obj.active_state.name
