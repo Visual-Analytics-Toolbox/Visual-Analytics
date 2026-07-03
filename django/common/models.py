@@ -22,12 +22,15 @@ class Event(models.Model):
 
 class Team(models.Model):
     team_id = models.PositiveIntegerField()
-    name = models.CharField(max_length=30, unique=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="teams",null=True)
+    name = models.CharField(max_length=30)
 
     def __str__(self):
         return f"{self.name}"
 
-
+    class Meta:
+        unique_together = ("event","team_id","name")
+        
 class Game(models.Model):
     class Division(models.TextChoices):
         no_division = "None", _("None")
