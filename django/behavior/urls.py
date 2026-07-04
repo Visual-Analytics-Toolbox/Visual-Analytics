@@ -15,6 +15,11 @@ urlpatterns = [
         views.BehaviorSymbolCountView.as_view(),
         name="behavior-count",
     ),
+    path(
+        "behavior/syncgameview/<pk>",
+        views.SyncGameView.as_view(),
+        name="sync-game-view",
+    ),
 ]
 
 router = routers.DefaultRouter()

@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 class CognitionFrameAdmin(ModelAdmin):
     search_fields = ["id", "log__id", "frame_number"]
-    list_display = ("get_log_id", "get_frame_id", "frame_number")
+    list_display = ("get_log_id", "get_frame_id", "frame_number", "frame_time")
     ordering = [
         "-id"
     ]  # removes a warning when using this model with autocomplete_fields

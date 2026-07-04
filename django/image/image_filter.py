@@ -3,6 +3,7 @@ from .models import NaoImage
 from django.db.models import Func, IntegerField
 from django.db.models.fields.json import KeyTransform
 
+
 class NaoImageFilter(filters.FilterSet):
     # This allows filtering by ?frame=3155214
     frame = filters.NumberFilter(field_name="frame__id")
@@ -29,7 +30,6 @@ class NaoImageFilter(filters.FilterSet):
             "type": ["exact"],
         }
 
-
     def filter_known_ball(self, queryset, name, value):
         """
         Traverses: NaoImage -> CognitionFrame -> BallModel -> JSONField
@@ -37,36 +37,46 @@ class NaoImageFilter(filters.FilterSet):
         """
         if value is True:
             # 1. Check the 'camera' query parameter (defaults to 'ballcandidates' if not TOP)
-            camera_value = self.data.get('camera')
-            candidate_relation = 'ballcandidatestop' if camera_value == 'TOP' else 'ballcandidates'
-            
+            camera_value = self.data.get("camera")
+            candidate_relation = (
+                "ballcandidatestop" if camera_value == "TOP" else "ballcandidates"
+            )
+
             # 2. Dynamically construct the filter arguments
             filter_kwargs = {
-                "frame__ballmodel__representation_data__contains": {"knows": True, "valid": True},
-                f"frame__{candidate_relation}__representation_data__has_key": 'patches'
+                "frame__ballmodel__representation_data__contains": {
+                    "knows": True,
+                    "valid": True,
+                },
+                f"frame__{candidate_relation}__representation_data__has_key": "patches",
             }
-            
-            # 3. Construct the dynamic path for the KeyTransform
-            transform_path = f'frame__{candidate_relation}__representation_data'
 
-            return queryset.filter(**filter_kwargs).annotate(
-                # Extract the array and count its length using Postgres
-                patches_count=Func(
-                    KeyTransform('patches', transform_path),
-                    function='jsonb_array_length',
-                    output_field=IntegerField()
+            # 3. Construct the dynamic path for the KeyTransform
+            transform_path = f"frame__{candidate_relation}__representation_data"
+
+            return (
+                queryset.filter(**filter_kwargs)
+                .annotate(
+                    # Extract the array and count its length using Postgres
+                    patches_count=Func(
+                        KeyTransform("patches", transform_path),
+                        function="jsonb_array_length",
+                        output_field=IntegerField(),
+                    )
                 )
-            ).filter(
-                # Filter for at least 2 items (as per your gte=2 logic)
-                patches_count__gte=2
-            ).distinct()
-            
+                .filter(
+                    # Filter for at least 2 items (as per your gte=2 logic)
+                    patches_count__gte=2
+                )
+                .distinct()
+            )
+
         elif value is False:
             # Excludes images that have a known ball
             return queryset.exclude(
                 frame__ballmodel__representation_data__contains={"knows": True}
             ).distinct()
-            
+
         return queryset
 
     def filter_non_values(self, queryset, name, value):

@@ -13,6 +13,10 @@ from django.db.models import Q
 from . import serializers
 from . import models
 from . import schema
+from image.models import NaoImage
+from image.serializers import ImageReadSerializer
+from common.models import Log
+from cognition.models import LogFirstFrame
 import json
 
 
@@ -399,3 +403,101 @@ class XabslSymbolCompleteViewSet(viewsets.ModelViewSet):
             cursor.executemany(query, rows_tuples)
 
         return Response({}, status=status.HTTP_200_OK)
+
+
+class SyncGameView(APIView):
+    def get(self, request, pk):
+        # 1. Parse Offset and Limit from request (default: limit=10 per log)
+        try:
+            offset = int(request.query_params.get("offset", 0))
+            limit = int(request.query_params.get("limit", 10))
+        except ValueError:
+            return Response(
+                {"error": "Invalid offset or limit"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # 2. Get all logs for this game (ordered so the grouping remains consistent across pages)
+        logs = Log.objects.filter(game=pk).order_by("id")
+        if not logs.exists():
+            return Response({"results": []}, status=status.HTTP_200_OK)
+
+        # 3. Fetch existing LogFirstFrame records in bulk
+        first_frames = LogFirstFrame.objects.filter(log__in=logs).select_related(
+            "first_ready_frame"
+        )
+        first_frame_map = {ff.log_id: ff for ff in first_frames}
+
+        for log in logs:
+            if log.id not in first_frame_map:
+                ready_frames = (
+                    models.BehaviorFrameOption.objects.filter(
+                        active_state__log=log,
+                        active_state__xabsl_internal_state_id=2,
+                        active_state__option__xabsl_internal_option_id=8,
+                    )
+                    .select_related("frame")
+                    .order_by("frame__frame_time")
+                )
+
+                if ready_frames.exists():
+                    first_ready_frame = ready_frames.first().frame
+
+                    newLFF = LogFirstFrame.objects.create(
+                        log=log,
+                        first_ready_frame=first_ready_frame,
+                        first_set_frame=first_ready_frame,
+                        first_standby_frame=first_ready_frame,
+                    )
+                    first_frame_map[log.id] = newLFF
+
+        all_images = []
+        has_more = False  # Flag to determine if a 'next' page exists
+
+        for log in logs:
+            if log.id not in first_frame_map:
+                continue
+
+            lff = first_frame_map[log.id]
+
+            log_images_query = (
+                NaoImage.objects.filter(
+                    camera="TOP",
+                    log_id=log.id,
+                    frame__frame_number__gte=lff.first_ready_frame.frame_number,
+                )
+                .select_related("frame")
+                .order_by("frame__frame_number", "id")
+            )[offset : offset + limit + 1]
+
+            log_images = list(log_images_query)
+
+            if len(log_images) > limit:
+                has_more = True
+                log_images = log_images[:limit]
+
+            all_images.extend(log_images)
+
+        # 6. Serialize
+        serializer = ImageReadSerializer(all_images, many=True)
+        serialized_data = serializer.data
+
+        # We no longer need to annotate 'frame_number' since we bypassed CursorPagination constraints!
+        for data, img in zip(serialized_data, all_images):
+            data["log_id"] = img.log_id
+            data["frame_number"] = img.frame.frame_number
+
+        # 7. Construct Pagination Response matching DRF's standard format
+        base_url = request.build_absolute_uri(request.path)
+
+        next_url = (
+            f"{base_url}?offset={offset + limit}&limit={limit}" if has_more else None
+        )
+        prev_url = (
+            f"{base_url}?offset={max(0, offset - limit)}&limit={limit}"
+            if offset > 0
+            else None
+        )
+
+        return Response(
+            {"next": next_url, "previous": prev_url, "results": serialized_data}
+        )
