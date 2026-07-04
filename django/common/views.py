@@ -46,7 +46,11 @@ class TeamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeamSerializer
     queryset = models.Team.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = {"team_id":["exact"],"name":["exact"],"event":["exact","isnull"]}
+    filterset_fields = {
+        "team_id": ["exact"],
+        "name": ["exact"],
+        "event": ["exact", "isnull"],
+    }
     # Exclude 'put' by explicitly defining allowed methods
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 

@@ -15,7 +15,7 @@ from unfold.contrib.filters.admin import (
     DropdownFilter,
     MultipleRelatedDropdownFilter,
     BooleanRadioFilter,
-    SingleNumericFilter
+    SingleNumericFilter,
 )
 
 
@@ -151,8 +151,8 @@ class VideoRecordingAdmin(ModelAdmin):
 
 
 class TeamAdmin(ModelAdmin):
-    list_display = ["id", "get_team_id", "get_team_name","event"]
-    
+    list_display = ["id", "get_team_id", "get_team_name", "event"]
+
     list_filter = [
         ("event__id", SingleNumericFilter),
     ]

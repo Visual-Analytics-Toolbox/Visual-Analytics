@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("common", "0043_alter_team_name_alter_team_unique_together"),
     ]

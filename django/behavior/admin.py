@@ -42,8 +42,8 @@ class BehaviorOptionStateAdmin(ModelAdmin):
 
     list_filter = [
         ("log__id", SingleNumericFilter),
-        ("xabsl_internal_state_id",SingleNumericFilter),
-        ("option__xabsl_internal_option_id",SingleNumericFilter)
+        ("xabsl_internal_state_id", SingleNumericFilter),
+        ("option__xabsl_internal_option_id", SingleNumericFilter),
     ]
     show_full_result_count = False
 
@@ -76,7 +76,7 @@ class BehaviorFrameOptionAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = [("frame__frame_number", SingleNumericFilter)]
     list_select_related = ["frame", "option", "active_state"]
-    autocomplete_fields = ["frame","option","active_state"]
+    autocomplete_fields = ["frame", "option", "active_state"]
     show_full_result_count = False
 
     def get_option_id(self, obj):
