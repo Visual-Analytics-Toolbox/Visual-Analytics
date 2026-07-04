@@ -1,24 +1,43 @@
-from django.urls import path
 from . import views
 from rest_framework import routers
 
+representation_models = [
+    "audiodata",
+    "ballmodel",
+    "ballcandidates",
+    "ballcandidatestop",
+    "cameramatrix",
+    "cameramatrixtop",
+    "odometrydata",
+    "fieldpercept",
+    "fieldpercepttop",
+    "goalpercept",
+    "goalpercepttop",
+    "multiballpercept",
+    "ransaccirclepercept2018",
+    "ransaclinepercept",
+    "robotinfo",
+    "shortlinepercept",
+    "scanlineedgelpercept",
+    "scanlineedgelpercepttop",
+    "teammessagedecision",
+    "teamstate",
+    "whistlepercept",
+    "robotpose",
+]
+
 app_name = "cognition"
 
-urlpatterns = [
-    path(
-        "cognitionframe/update/",
-        views.CognitionFrameUpdate.as_view(),
-        name="cognitionframe-update",
-    ),
-]
+urlpatterns = []
 
 router = routers.DefaultRouter()
 router.register("cognitionframe", views.CognitionFrameViewSet)
-router.register(
-    "cognition/(?P<model_name>[^/.]+)",
-    views.DynamicModelViewSet,
-    basename="dynamicmodel",
-)
-router.register("log-first-frame", views.LogFirstFrame)
+
+for repr_model in representation_models:
+    router.register(
+        repr_model,
+        views.DynamicModelViewSet,
+        basename=repr_model,
+    )
 
 urlpatterns += router.urls

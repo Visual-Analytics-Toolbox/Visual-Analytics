@@ -21,7 +21,7 @@ class DynamicModelMixin:
     my_parser = Parser()
 
     def get_model(self):
-        model_name = self.kwargs.get("model_name")
+        model_name = self.basename
         return apps.get_model("motion", model_name)
 
     def get_serializer_class(self):
@@ -127,7 +127,8 @@ class DynamicModelViewSet(DynamicModelMixin, viewsets.ModelViewSet):
 
         # Prepare the data for bulk insert
         rows_tuples = [
-            (row["frame"], row["start_pos"], row["size"]) for row in request.data
+            (row["log"], row["frame"], row["start_pos"], row["size"])
+            for row in request.data
         ]
 
         with connection.cursor() as cursor:
